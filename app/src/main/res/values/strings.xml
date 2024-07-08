@@ -1,0 +1,30 @@
+<resources>
+
+    // Authentication screen
+    <string name="app_name" translatable="false">JetiTable</string>
+    <string name="app_name_description">Schedule information system</string>
+    <string name="corporate_email_label">Email</string>
+    <string name="wrong_credentials">Wrong email or password</string>
+    <string name="corporate_email_description">Use the university\'s corporate email.</string>
+    <string name="password_label">Password</string>
+    <string name="forgot_password_label">Forgot password?</string>
+    <string name="sign_in">Sign in</string>
+    <string name="not_yet_implemented">This feature is not yet implemented. Stay tuned! :)</string>
+
+    // Home screen
+    <string name="welcome_title">Welcome!</string>
+    <string name="lecture">lecture</string>
+    <string name="practices">practice</string>
+    <string name="lab">lab</string>
+    <string name="next_learning_activity">%1$s %2$s starts in %3$s</string>
+    <string name="schedule_for_day">Schedule for %1$s</string>
+
+    // Subjects
+    <string name="programming">Programming</string>
+    <string name="software_protection">Software protection</string>
+    <string name="mobile_programming">Programming for mobile platforms</string>
+
+    // About screen
+    <string name="about_screen_title">About</string>
+
+</resources>
