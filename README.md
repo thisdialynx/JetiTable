@@ -4,7 +4,12 @@ An __experimental__ app for Volodymyr Dahl East Ukrainian National University (S
 #### You need a university-provided account to use this application.
 
 __What's working?__ 
-Sign in (navigation is broken at the moment)
+- Sign in ~~(navigation is broken at the moment)~~
 
 __What's planned?__
-Selective course selection catalog, showing the current schedule for the day, notifications of next classes and maybe something else
+- Catalog of selective disciplines
+- Daily class schedule
+- Notifications for next class
+- Full semester schedule (with details)
+
+The project is being developed from March 31, 2024
