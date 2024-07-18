@@ -16,10 +16,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -35,21 +31,16 @@ import lnx.jetitable.R
 import lnx.jetitable.timetable.api.login.AuthViewModel
 
 @Composable
-fun AuthScreen() {
+fun AuthScreen(
+    onAuthComplete: () -> Unit = {}
+) {
     val authViewModel: AuthViewModel = viewModel()
     val context = LocalContext.current
-    val err = authViewModel.errorMessage
-    var visible by remember {
-        mutableStateOf(true)
-    }
 
-    LaunchedEffect(err) {
-        if (err != null) {
-            Toast.makeText(
-                context,
-                err,
-                Toast.LENGTH_SHORT
-            ).show()
+    LaunchedEffect(authViewModel.isAuthorized) {
+        if (authViewModel.isAuthorized) {
+            Toast.makeText(context, "Authorized", Toast.LENGTH_SHORT).show()
+            onAuthComplete()
         }
     }
 
@@ -80,7 +71,7 @@ fun AuthScreen() {
                 OutlinedTextField(
                     modifier = Modifier.fillMaxWidth(),
                     value = authViewModel.login,
-                    onValueChange = { authViewModel.updateLogin(it) },
+                    onValueChange = authViewModel::updateLogin,
                     label = { Text(text = stringResource(id = R.string.corporate_email_label)) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                     placeholder = { Text(text = "example@snu.edu.ua")}
@@ -93,7 +84,7 @@ fun AuthScreen() {
                 OutlinedTextField(
                     modifier = Modifier.fillMaxWidth(),
                     value = authViewModel.password,
-                    onValueChange = { authViewModel.updatePassword(it)},
+                    onValueChange = authViewModel::updatePassword,
                     label = { Text(text = stringResource(id = R.string.password_label)) },
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
@@ -110,13 +101,7 @@ fun AuthScreen() {
 
             Row {
                 Button(
-                    onClick = {
-                        authViewModel.run {
-                            updateLogin(login)
-                            updatePassword(password)
-                            checkCredentials()
-                        }
-                    },
+                    onClick = authViewModel::checkCredentials,
                 ) {
                     Text(text = stringResource(id = R.string.sign_in))
                 }

@@ -40,7 +40,15 @@ fun AppNavigation() {
     NavHost(navController = navController,
         startDestination = Loading.route) {
         composable(Auth.route) {
-            AuthScreen()
+            AuthScreen(
+                onAuthComplete = {
+                    navController.navigate(Home.route) {
+                        popUpTo(Auth.route) {
+                            inclusive = true
+                        }
+                    }
+                }
+            )
         }
         composable(Home.route) {
             HomeScreen(navController)

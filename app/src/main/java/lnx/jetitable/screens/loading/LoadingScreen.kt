@@ -1,6 +1,7 @@
 package lnx.jetitable.screens.loading
 
 import android.app.Application
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
@@ -21,6 +22,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import lnx.jetitable.navigation.Auth
+import lnx.jetitable.navigation.Loading
 import lnx.jetitable.prefdatastore.DataStoreManager
 
 @Composable
@@ -31,18 +34,16 @@ fun LoadingScreen(navController: NavHostController) {
     LaunchedEffect(isAuthorized) {
         when(isAuthorized) {
             true -> {
-                navController.navigate("Home") {
-                    popUpTo("Loading") { inclusive = true }
+                navController.navigate(Auth.route) {
+                    popUpTo(Loading.route) { inclusive = true }
                 }
             }
             false -> {
-                navController.navigate("Auth") {
-                    popUpTo("Loading") { inclusive = true }
+                navController.navigate(Auth.route) {
+                    popUpTo(Loading.route) { inclusive = true }
                 }
             }
-            null -> {
-                loadingViewModel.checkToken()
-            }
+            null -> loadingViewModel.checkToken()
         }
     }
     Surface(
@@ -69,6 +70,7 @@ class LoadingViewModel(application: Application) : AndroidViewModel(application)
         viewModelScope.launch {
             val token = dataStore.getToken().first()
             isAuthorized = !token.isNullOrEmpty()
+            Log.d("LoadingViewModel", "isAuthorized: $isAuthorized")
         }
     }
 
