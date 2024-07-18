@@ -1,4 +1,4 @@
-package lnx.jetitable
+package lnx.jetitable.activity
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -9,16 +9,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import lnx.jetitable.core.About
-import lnx.jetitable.core.Auth
-import lnx.jetitable.core.Home
-import lnx.jetitable.core.Loading
-import lnx.jetitable.core.Settings
-import lnx.jetitable.ui.screens.AboutScreen
-import lnx.jetitable.ui.screens.AuthScreen
-import lnx.jetitable.ui.screens.HomeScreen
-import lnx.jetitable.ui.screens.LoadingScreen
-import lnx.jetitable.ui.screens.SettingsScreen
+import lnx.jetitable.navigation.About
+import lnx.jetitable.navigation.Auth
+import lnx.jetitable.navigation.Home
+import lnx.jetitable.navigation.Loading
+import lnx.jetitable.navigation.Settings
+import lnx.jetitable.screens.about.AboutScreen
+import lnx.jetitable.screens.auth.AuthScreen
+import lnx.jetitable.screens.home.HomeScreen
+import lnx.jetitable.screens.loading.LoadingScreen
+import lnx.jetitable.screens.settings.SettingsScreen
 import lnx.jetitable.ui.theme.JetiTableTheme
 
 class MainActivity : ComponentActivity() {

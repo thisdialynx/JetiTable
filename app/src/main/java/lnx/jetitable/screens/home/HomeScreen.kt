@@ -1,4 +1,4 @@
-package lnx.jetitable.ui.screens
+package lnx.jetitable.screens.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -34,8 +34,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import lnx.jetitable.R
-import lnx.jetitable.core.About
-import lnx.jetitable.core.Settings
+import lnx.jetitable.navigation.About
+import lnx.jetitable.navigation.Settings
 import lnx.jetitable.timetable.data.DailySchedules
 import lnx.jetitable.timetable.data.Schedule
 import lnx.jetitable.timetable.data.Subject

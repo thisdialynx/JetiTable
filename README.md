@@ -1,4 +1,4 @@
-## Jetitable
+## JetiTable
 An __experimental__ app for Volodymyr Dahl East Ukrainian National University (SNU) schedule system (TimeTable). Built on Jetpack Compose
 
 #### You need a university-provided account to use this application.
