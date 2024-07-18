@@ -2,6 +2,8 @@ package lnx.jetitable.timetable.api.login
 
 import lnx.jetitable.timetable.api.login.data.LoginRequest
 import lnx.jetitable.timetable.api.login.data.LoginResponse
+import lnx.jetitable.timetable.api.login.data.MailRequest
+import lnx.jetitable.timetable.api.login.data.MailResponse
 import retrofit2.http.Body
 import retrofit2.http.Header
 import retrofit2.http.POST
@@ -12,4 +14,8 @@ interface AuthService {
         @Header("placeholder") token: String,
         @Body request: LoginRequest
     ): LoginResponse
+    @POST("placeholder")
+    suspend fun sendMail(
+        @Body request: MailRequest
+    ): MailResponse
 }
