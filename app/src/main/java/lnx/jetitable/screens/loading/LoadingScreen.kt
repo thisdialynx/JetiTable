@@ -1,4 +1,4 @@
-package lnx.jetitable.ui.screens
+package lnx.jetitable.screens.loading
 
 import android.app.Application
 import androidx.compose.foundation.layout.Box
@@ -19,9 +19,10 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import lnx.jetitable.core.UserSettings
-import lnx.jetitable.timetable.api.login.AuthViewModel
+import lnx.jetitable.UserSettings
+import lnx.jetitable.prefdatastore.DataStoreManager
 
 @Composable
 fun LoadingScreen(navController: NavHostController) {
@@ -61,13 +62,15 @@ fun LoadingScreen(navController: NavHostController) {
 class LoadingViewModel(application: Application) : AndroidViewModel(application) {
     private val context
         get() = getApplication<Application>().applicationContext
-    private val userSettings = UserSettings(context)
+    private val dataStore = DataStoreManager(context)
     var isAuthorized by mutableStateOf<Boolean?>(null)
         private set
 
     fun checkToken() {
-        val token = userSettings.getAuthToken()
-        isAuthorized = !token.isNullOrEmpty()
+        viewModelScope.launch {
+            val token = dataStore.getToken().first()
+            isAuthorized = !token.isNullOrEmpty()
+        }
     }
 
 }

@@ -1,4 +1,4 @@
-package lnx.jetitable.core
+package lnx.jetitable.navigation
 
 interface Destinations {
     val route: String

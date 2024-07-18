@@ -1,4 +1,4 @@
-package lnx.jetitable.ui.screens
+package lnx.jetitable.screens.settings
 
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Text

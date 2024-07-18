@@ -1,4 +1,4 @@
-package lnx.jetitable.ui.screens
+package lnx.jetitable.screens.about
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import lnx.jetitable.R
-import lnx.jetitable.core.Home
+import lnx.jetitable.navigation.Home
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
