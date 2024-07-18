@@ -4,7 +4,7 @@ An __experimental__ app for Volodymyr Dahl East Ukrainian National University (S
 #### You need a university-provided account to use this application.
 
 __What's working?__ 
-- Sign in ~~(navigation is broken at the moment)~~
+- Sign in
 
 __What's planned?__
 - Catalog of selective disciplines
