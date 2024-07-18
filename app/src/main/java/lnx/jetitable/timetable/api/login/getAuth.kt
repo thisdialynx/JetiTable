@@ -8,7 +8,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import lnx.jetitable.R
-import lnx.jetitable.core.UserSettings
+import lnx.jetitable.prefdatastore.DataStoreManager
+import lnx.jetitable.timetable.api.ApiService
 import lnx.jetitable.timetable.api.login.data.LoginRequest
 import okhttp3.Credentials
 import retrofit2.Retrofit
@@ -19,10 +20,10 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         .baseUrl("https://timetable.lond.lg.ua")
         .addConverterFactory(GsonConverterFactory.create())
         .build()
-    private val service = retrofit.create(AuthService::class.java)
+    private val service = retrofit.create(ApiService::class.java)
     private val context
         get() = getApplication<Application>().applicationContext
-    private val userSettings = UserSettings(context)
+    private val dataStore = DataStoreManager(context)
 
     fun updatePassword(value: String) {
         password = value
@@ -35,10 +36,10 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         private set
     var login by mutableStateOf("")
         private set
-    private var errorMessage: Int? = null
+    var errorMessage: Int? = null
 
 
-    fun checkPassword() {
+    fun checkCredentials() {
         if (!login.endsWith("@snu.edu.ua") || login.isBlank() || password.isBlank()) {
             errorMessage = R.string.corporate_email_description
             return
@@ -50,7 +51,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                     LoginRequest("checkPassword", login, password)
                 )
                 if (response.status == "ok") {
-                    userSettings.saveAuthToken(response.token)
+                    dataStore.saveToken(response.token)
                 }
             } catch (e: Exception) {
                 errorMessage = R.string.wrong_credentials
