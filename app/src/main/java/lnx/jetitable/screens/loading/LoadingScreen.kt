@@ -21,7 +21,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import lnx.jetitable.UserSettings
 import lnx.jetitable.prefdatastore.DataStoreManager
 
 @Composable
