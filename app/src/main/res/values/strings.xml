@@ -9,7 +9,8 @@
     <string name="password_label">Password</string>
     <string name="forgot_password_label">Forgot password?</string>
     <string name="sign_in">Sign in</string>
-    <string name="not_yet_implemented">This feature is not yet implemented. Stay tuned! :)</string>
+    <string name="corporate_email_error">Email must end with "@snu.edu.ua"</string>
+    <string name="authorized">Authorization successful!</string>
 
     // Home screen
     <string name="welcome_title">Welcome!</string>

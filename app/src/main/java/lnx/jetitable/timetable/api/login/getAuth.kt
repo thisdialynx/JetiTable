@@ -1,7 +1,9 @@
 package lnx.jetitable.timetable.api.login
 
 import android.app.Application
+import android.util.Log
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
@@ -47,6 +49,9 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     fun updateLogin(value: String) {
         login = value
     }
+    fun clearErrorMessage() {
+        errorMessage = 0
+    }
 
     var isAuthorized by mutableStateOf(false)
         private set
@@ -55,12 +60,13 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         private set
     var login by mutableStateOf("")
         private set
-    var errorMessage: Int? = null
+    var errorMessage by mutableIntStateOf(0)
+        private set
 
 
     fun checkCredentials() {
-        if (!login.endsWith("@snu.edu.ua") || login.isBlank() || password.isBlank()) {
-            errorMessage = R.string.corporate_email_description
+        if (!login.endsWith("@snu.edu.ua")) {
+            errorMessage = R.string.corporate_email_error
             return
         }
         viewModelScope.launch {
@@ -75,6 +81,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                 }
             } catch (e: Exception) {
                 errorMessage = R.string.wrong_credentials
+                Log.d("AuthViewModel", "isAuthorized: $isAuthorized")
             }
         }
     }

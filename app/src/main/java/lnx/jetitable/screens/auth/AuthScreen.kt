@@ -32,15 +32,21 @@ import lnx.jetitable.timetable.api.login.AuthViewModel
 
 @Composable
 fun AuthScreen(
-    onAuthComplete: () -> Unit = {}
+    onAuthComplete: () -> Unit = {},
 ) {
     val authViewModel: AuthViewModel = viewModel()
     val context = LocalContext.current
 
     LaunchedEffect(authViewModel.isAuthorized) {
         if (authViewModel.isAuthorized) {
-            Toast.makeText(context, "Authorized", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, R.string.authorized, Toast.LENGTH_SHORT).show()
             onAuthComplete()
+        }
+    }
+    LaunchedEffect(authViewModel.errorMessage) {
+        if (authViewModel.errorMessage != 0) {
+            Toast.makeText(context, authViewModel.errorMessage, Toast.LENGTH_SHORT).show()
+            authViewModel.clearErrorMessage()
         }
     }
 
