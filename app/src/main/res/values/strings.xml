@@ -26,5 +26,6 @@
 
     // About screen
     <string name="about_screen_title">About</string>
+    <string name="university">University</string>
 
 </resources>

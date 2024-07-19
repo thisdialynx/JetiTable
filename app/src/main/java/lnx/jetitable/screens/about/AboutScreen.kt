@@ -80,7 +80,7 @@ fun AboutScreen(navController: NavHostController) {
             ) {
                 Row {
                     UrlIconCard(icon = R.drawable.ic_github, description = "Github", shortUri = "github.com/thisdialynx/JetiTable", localUriHandler = localUriHandler)
-                    UrlIconCard(icon = R.drawable.ic_captive_portal, description = "University", shortUri = "snu.edu.ua", localUriHandler = localUriHandler)
+                    UrlIconCard(icon = R.drawable.ic_captive_portal, description = stringResource(id = R.string.university), shortUri = "snu.edu.ua", localUriHandler = localUriHandler)
                     UrlIconCard(icon = R.drawable.ic_calendar, description = "TimeTable", shortUri = "timetable.lond.lg.ua", localUriHandler = localUriHandler)
                 }
             }
