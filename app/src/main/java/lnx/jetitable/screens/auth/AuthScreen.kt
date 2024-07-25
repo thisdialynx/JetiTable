@@ -1,7 +1,6 @@
 package lnx.jetitable.screens.auth
 
 import android.widget.Toast
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,18 +8,24 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,7 +33,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import lnx.jetitable.R
-import lnx.jetitable.timetable.api.login.AuthViewModel
 
 @Composable
 fun AuthScreen(
@@ -36,6 +40,7 @@ fun AuthScreen(
 ) {
     val authViewModel: AuthViewModel = viewModel()
     val context = LocalContext.current
+    val openDialog = remember { mutableStateOf(false) }
 
     LaunchedEffect(authViewModel.isAuthorized) {
         if (authViewModel.isAuthorized) {
@@ -79,8 +84,12 @@ fun AuthScreen(
                     value = authViewModel.login,
                     onValueChange = authViewModel::updateLogin,
                     label = { Text(text = stringResource(id = R.string.corporate_email_label)) },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                    placeholder = { Text(text = "example@snu.edu.ua")}
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Email,
+                        imeAction = ImeAction.Next
+                    ),
+                    placeholder = { Text(text = "example@snu.edu.ua")},
+                    singleLine = true
                 )
                 Text(
                     text = stringResource(id = R.string.corporate_email_description),
@@ -93,26 +102,65 @@ fun AuthScreen(
                     onValueChange = authViewModel::updatePassword,
                     label = { Text(text = stringResource(id = R.string.password_label)) },
                     visualTransformation = PasswordVisualTransformation(),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
-                )
-                Text(
-                    modifier = Modifier.clickable {
-                    },
-                    text = stringResource(id = R.string.forgot_password_label),
-                    fontSize = 14.sp
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Password,
+                        imeAction = ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = { authViewModel.checkCredentials() }
+                    ),
+                    singleLine = true
                 )
             }
 
             Spacer(modifier = Modifier.padding(12.dp))
 
-            Row {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
                 Button(
                     onClick = authViewModel::checkCredentials,
                 ) {
                     Text(text = stringResource(id = R.string.sign_in))
                 }
+                TextButton(onClick = { openDialog.value = true }) {
+                    Text(text = stringResource(id = R.string.forgot_password_label))
+                }
+                if (openDialog.value) {
+                    AlertDialog(
+                        onDismissRequest = { openDialog.value = false },
+                        confirmButton = {
+                            Button(onClick = {
+                                openDialog.value = false
+                                authViewModel.sendMail()
+                            }) { Text(text = stringResource(id = R.string.send)) }
+                        },
+                        title = { Text(text = stringResource(id = R.string.forgot_password_dialog_title)) },
+                        text = {
+                            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                Text(text = stringResource(id = R.string.forgot_password_dialog_description))
+                                OutlinedTextField(
+                                    value = authViewModel.login,
+                                    onValueChange = authViewModel::updateLogin,
+                                    label = { Text(text = stringResource(id = R.string.corporate_email_label)) },
+                                    keyboardOptions = KeyboardOptions(
+                                        keyboardType = KeyboardType.Email,
+                                        imeAction = ImeAction.Done
+                                    ),
+                                    placeholder = { Text(text = "example@snu.edu.ua")},
+                                    singleLine = true
+                                )
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(onClick = { openDialog.value = false }) {
+                                Text(text = stringResource(id = R.string.dismiss))
+                            }
+                        }
+                    )
+                }
             }
-
 
         }
     }

@@ -9,13 +9,19 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface ApiService {
+    companion object {
+        const val BASE_URL = "https://timetable.lond.lg.ua"
+    }
+
     @POST("php/Avtorization.php")
     suspend fun checkPassword(
         @Header("Authorization") token: String,
         @Body request: LoginRequest
     ): LoginResponse
+
     @POST("php/Avtorization.php")
     suspend fun sendMail(
         @Body request: MailRequest
     ): MailResponse
+
 }

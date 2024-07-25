@@ -5,12 +5,19 @@
     <string name="app_name_description">Schedule information system</string>
     <string name="corporate_email_label">Email</string>
     <string name="wrong_credentials">Wrong email or password</string>
-    <string name="corporate_email_description">Use the university\'s corporate email.</string>
+    <string name="corporate_email_description">Use the corporate email provided by the university</string>
     <string name="password_label">Password</string>
     <string name="forgot_password_label">Forgot password?</string>
     <string name="sign_in">Sign in</string>
     <string name="corporate_email_error">Email must end with "@snu.edu.ua"</string>
+    <string name="password_sent">An email has been sent</string>
+    <string name="invalid_email">Invalid email</string>
     <string name="authorized">Authorization successful!</string>
+    <string name="forgot_password_dialog_title">Password sending</string>
+    <string name="forgot_password_dialog_description">You will receive an email with your password if provided data is correct.</string>
+    <string name="send">Send</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="email_enter_label">Enter your email here</string>
 
     // Home screen
     <string name="welcome_title">Welcome!</string>
