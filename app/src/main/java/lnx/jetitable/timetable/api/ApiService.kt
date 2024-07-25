@@ -1,4 +1,4 @@
-package lnx.jetitable.timetable.api.login
+package lnx.jetitable.timetable.api
 
 import lnx.jetitable.timetable.api.login.data.LoginRequest
 import lnx.jetitable.timetable.api.login.data.LoginResponse
@@ -8,12 +8,17 @@ import retrofit2.http.Body
 import retrofit2.http.Header
 import retrofit2.http.POST
 
-interface AuthService {
+interface ApiService {
+    companion object {
+        const val BASE_URL = "https://placeholder.com"
+    }
+
     @POST("placeholder")
     suspend fun checkPassword(
-        @Header("placeholder") token: String,
+        @Header("Authorization") token: String,
         @Body request: LoginRequest
     ): LoginResponse
+
     @POST("placeholder")
     suspend fun sendMail(
         @Body request: MailRequest

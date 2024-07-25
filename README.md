@@ -5,11 +5,9 @@ An __experimental__ app for Volodymyr Dahl East Ukrainian National University (S
 
 __What's working?__ 
 - Sign in
+- Password recover
 
 __What's planned?__
-- Catalog of selective disciplines
-- Daily class schedule
-- Notifications for next class
-- Full semester schedule (with details)
-
-The project is being developed from March 31, 2024
+- Selective course selection catalog 
+- Schedules for the day
+- Notifications of next classes and maybe something else
