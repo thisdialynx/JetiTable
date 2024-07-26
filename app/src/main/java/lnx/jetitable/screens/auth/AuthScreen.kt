@@ -120,7 +120,7 @@ fun AuthScreen(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Button(
-                    onClick = authViewModel::checkCredentials,
+                    onClick = authViewModel::checkCredentials
                 ) {
                     Text(text = stringResource(id = R.string.sign_in))
                 }
