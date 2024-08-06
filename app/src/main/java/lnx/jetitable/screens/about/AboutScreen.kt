@@ -3,15 +3,20 @@ package lnx.jetitable.screens.about
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -24,6 +29,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
@@ -52,7 +58,7 @@ fun AboutScreen(navController: NavHostController) {
                 navigationIcon = {
                     IconButton(onClick = { navController.navigate(Home.route) }) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
                             contentDescription = "Back"
                         )
                     }
@@ -64,25 +70,70 @@ fun AboutScreen(navController: NavHostController) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(vertical = 8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             val localUriHandler = LocalUriHandler.current
-
-            AppInfo()
-            Spacer(modifier = Modifier.padding(8.dp))
-            Card(
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
-                    .wrapContentWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
-                )
+                    .fillMaxWidth()
+                    .wrapContentHeight()
             ) {
-                Row {
-                    UrlIconCard(icon = R.drawable.ic_github, description = "Github", shortUri = "github.com/thisdialynx/JetiTable", localUriHandler = localUriHandler)
-                    UrlIconCard(icon = R.drawable.ic_captive_portal, description = stringResource(id = R.string.university), shortUri = "snu.edu.ua", localUriHandler = localUriHandler)
-                    UrlIconCard(icon = R.drawable.ic_calendar, description = "TimeTable", shortUri = "timetable.lond.lg.ua", localUriHandler = localUriHandler)
+                AppInfo()
+                Spacer(modifier = Modifier.padding(8.dp))
+                Card(
+                    modifier = Modifier.wrapContentWidth(),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainer
+                    )
+                ) {
+                    Row {
+                        UrlIconTile(
+                            icon = R.drawable.ic_github,
+                            description = "Github", shortUri = "github.com/thisdialynx/JetiTable",
+                            localUriHandler = localUriHandler
+                        )
+                        UrlIconTile(
+                            icon = R.drawable.ic_captive_portal,
+                            description = stringResource(id = R.string.university),
+                            shortUri = "snu.edu.ua",
+                            localUriHandler = localUriHandler
+                        )
+                        UrlIconTile(
+                            icon = R.drawable.ic_calendar,
+                            description = "TimeTable",
+                            shortUri = "timetable.lond.lg.ua",
+                            localUriHandler = localUriHandler
+                        )
+                    }
                 }
+            }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight(),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Spacer(modifier = Modifier.padding(4.dp))
+                ContributorCard(
+                    profilePicture = 0,
+                    title = "Dialynx",
+                    description = "Developer",
+                    icon = R.drawable.ic_telegram,
+                    iconDescription = "Telegram",
+                    localUriHandler = localUriHandler,
+                    shortUri = "t.me/placeholder"
+                )
+                ContributorCard(
+                    profilePicture = 0,
+                    title = "Denys Ratov",
+                    description = "TimeTable developer",
+                    icon = R.drawable.ic_telegram,
+                    iconDescription = "Telegram",
+                    localUriHandler = localUriHandler,
+                    shortUri = "t.me/placeholder"
+                )
             }
         }
     }
@@ -95,24 +146,25 @@ fun AppInfo() {
     val version = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
     Image(
         drawable.toBitmap(config = Bitmap.Config.ARGB_8888).asImageBitmap(),
-        contentDescription = "Image", modifier = Modifier
+        contentDescription = "App Icon", modifier = Modifier
             .size(100.dp)
             .padding(8.dp)
-
     )
     Text(
         text = stringResource(id = R.string.app_name),
         color = MaterialTheme.colorScheme.primary,
+        style = MaterialTheme.typography.labelMedium,
         fontSize = 20.sp
     )
     Text(
         text = version,
-        color = MaterialTheme.colorScheme.secondary
+        color = MaterialTheme.colorScheme.secondary,
+        style = MaterialTheme.typography.bodyMedium
     )
 }
 
 @Composable
-fun UrlIconCard(icon: Int, description: String, shortUri: String, localUriHandler: UriHandler) {
+fun UrlIconTile(icon: Int, description: String, shortUri: String, localUriHandler: UriHandler) {
     Card(
         modifier = Modifier
             .clickable { localUriHandler.openUri("https://$shortUri") }
@@ -127,9 +179,73 @@ fun UrlIconCard(icon: Int, description: String, shortUri: String, localUriHandle
         ) {
             Icon(
                 painter = painterResource(id = icon),
-                contentDescription = "",
+                contentDescription = description,
+                tint = MaterialTheme.colorScheme.onSurface
+            )
+            Text(
+                text = description,
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+        }
+    }
+}
+
+@Composable
+fun ContributorCard(profilePicture: Int, title: String, description: String, icon: Int, iconDescription: String, localUriHandler: UriHandler, shortUri: String) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainer
+        )
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp), Alignment.CenterVertically
+        ) {
+            Image(
+                painter = painterResource(id = profilePicture),
+                contentDescription = "$title $description",
+                modifier = Modifier
+                    .fillMaxWidth(0.15f)
+                    .aspectRatio(1f)
+                    .clip(CircleShape)
+            )
+            Column(
+                verticalArrangement = Arrangement.spacedBy(2.dp),
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    text = title,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontSize = 18.sp
                 )
-            Text(text = description)
+                Text(
+                    text = description,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+            Card(
+                modifier = Modifier.wrapContentWidth()
+                    .clickable {
+                        localUriHandler.openUri("https://$shortUri")
+                    },
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                )
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(8.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(id = icon),
+                        contentDescription = iconDescription
+                    )
+                }
+            }
         }
     }
 }
