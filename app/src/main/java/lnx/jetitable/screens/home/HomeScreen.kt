@@ -117,7 +117,10 @@ fun HomeScreen(navController: NavHostController) {
                         .padding(horizontal = 16.dp)
                         .padding(top = 16.dp)
                 ) {
-                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         Icon(painter = painterResource(id = R.drawable.ic_calendar), contentDescription = "")
                         Text(
                             text = stringResource(id = R.string.schedule_for_day),
@@ -152,7 +155,8 @@ fun HomeScreen(navController: NavHostController) {
                             lessonsList.lessons.isEmpty() -> {
                                 Text(
                                     text = stringResource(id = R.string.no_lessons),
-                                    style = MaterialTheme.typography.bodyMedium
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    modifier = Modifier.padding(16.dp)
                                 )
                             }
                             else -> {
