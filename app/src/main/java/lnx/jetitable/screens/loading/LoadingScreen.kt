@@ -37,15 +37,9 @@ fun LoadingScreen(navController: NavHostController) {
             null -> loadingViewModel.checkToken()
         }
     }
-    Surface(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Box(
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator(
-                strokeCap = StrokeCap.Round
-            )
+    Surface(modifier = Modifier.fillMaxSize()) {
+        Box(contentAlignment = Alignment.Center) {
+            CircularProgressIndicator(strokeCap = StrokeCap.Round)
         }
     }
 }
