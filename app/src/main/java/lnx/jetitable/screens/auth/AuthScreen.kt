@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -74,15 +75,13 @@ fun AuthScreen(
                 fontSize = 18.sp
             )
 
-            Spacer(modifier = Modifier.padding(12.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
-            Column(
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 OutlinedTextField(
                     modifier = Modifier.fillMaxWidth(),
-                    value = authViewModel.login,
-                    onValueChange = authViewModel::updateLogin,
+                    value = authViewModel.email,
+                    onValueChange = authViewModel::updateEmail,
                     label = { Text(text = stringResource(id = R.string.corporate_email_label)) },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Email,
@@ -112,16 +111,12 @@ fun AuthScreen(
                     singleLine = true
                 )
             }
-
             Spacer(modifier = Modifier.padding(12.dp))
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Button(
-                    onClick = authViewModel::checkCredentials
-                ) {
+                Button(onClick = authViewModel::checkCredentials) {
                     Text(text = stringResource(id = R.string.sign_in))
                 }
                 TextButton(onClick = { openDialog.value = true }) {
@@ -141,8 +136,8 @@ fun AuthScreen(
                             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                                 Text(text = stringResource(id = R.string.forgot_password_dialog_description))
                                 OutlinedTextField(
-                                    value = authViewModel.login,
-                                    onValueChange = authViewModel::updateLogin,
+                                    value = authViewModel.email,
+                                    onValueChange = authViewModel::updateEmail,
                                     label = { Text(text = stringResource(id = R.string.corporate_email_label)) },
                                     keyboardOptions = KeyboardOptions(
                                         keyboardType = KeyboardType.Email,
