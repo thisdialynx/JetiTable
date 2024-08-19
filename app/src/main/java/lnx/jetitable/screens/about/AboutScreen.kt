@@ -2,7 +2,6 @@ package lnx.jetitable.screens.about
 
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,6 +25,7 @@ import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -74,6 +74,7 @@ fun AboutScreen(navController: NavHostController) {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             val localUriHandler = LocalUriHandler.current
+
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
@@ -85,7 +86,7 @@ fun AboutScreen(navController: NavHostController) {
                 Card(
                     modifier = Modifier.wrapContentWidth(),
                     colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceContainer
+                        containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)
                     )
                 ) {
                     Row {
@@ -119,7 +120,7 @@ fun AboutScreen(navController: NavHostController) {
                 ContributorCard(
                     profilePicture = 0,
                     title = "Dialynx",
-                    description = "Developer",
+                    description = R.string.developer,
                     icon = R.drawable.ic_telegram,
                     iconDescription = "Telegram",
                     localUriHandler = localUriHandler,
@@ -128,7 +129,7 @@ fun AboutScreen(navController: NavHostController) {
                 ContributorCard(
                     profilePicture = 0,
                     title = "Denys Ratov",
-                    description = "TimeTable developer",
+                    description = R.string.timetable_developer,
                     icon = R.drawable.ic_telegram,
                     iconDescription = "Telegram",
                     localUriHandler = localUriHandler,
@@ -144,6 +145,7 @@ fun AppInfo() {
     val packageManager = LocalContext.current.packageManager
     val drawable = packageManager.getApplicationIcon("lnx.jetitable")
     val version = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
+
     Image(
         drawable.toBitmap(config = Bitmap.Config.ARGB_8888).asImageBitmap(),
         contentDescription = "App Icon", modifier = Modifier
@@ -166,12 +168,11 @@ fun AppInfo() {
 @Composable
 fun UrlIconTile(icon: Int, description: String, shortUri: String, localUriHandler: UriHandler) {
     Card(
-        modifier = Modifier
-            .clickable { localUriHandler.openUri("https://$shortUri") }
-            .padding(8.dp),
+        modifier = Modifier.padding(8.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-        )
+            containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(10.dp),
+        ),
+        onClick = { localUriHandler.openUri("https://$shortUri") }
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -192,11 +193,11 @@ fun UrlIconTile(icon: Int, description: String, shortUri: String, localUriHandle
 }
 
 @Composable
-fun ContributorCard(profilePicture: Int, title: String, description: String, icon: Int, iconDescription: String, localUriHandler: UriHandler, shortUri: String) {
+fun ContributorCard(profilePicture: Int, title: String, description: Int, icon: Int, iconDescription: String, localUriHandler: UriHandler, shortUri: String) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainer
+            containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)
         )
     ) {
         Row(
@@ -222,27 +223,23 @@ fun ContributorCard(profilePicture: Int, title: String, description: String, ico
                     fontSize = 18.sp
                 )
                 Text(
-                    text = description,
+                    text = stringResource(id = description),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
             Card(
-                modifier = Modifier.wrapContentWidth()
-                    .clickable {
-                        localUriHandler.openUri("https://$shortUri")
-                    },
+                modifier = Modifier.wrapContentWidth(),
                 colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
-                )
+                    containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(10.dp)
+                ),
+                onClick = { localUriHandler.openUri("https://$shortUri") }
             ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(8.dp)
-                ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Icon(
                         painter = painterResource(id = icon),
-                        contentDescription = iconDescription
+                        contentDescription = iconDescription,
+                        modifier = Modifier.padding(8.dp)
                     )
                 }
             }
