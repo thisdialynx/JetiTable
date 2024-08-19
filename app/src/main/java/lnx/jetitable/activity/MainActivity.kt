@@ -40,8 +40,10 @@ class MainActivity : ComponentActivity() {
 fun AppNavigation() {
     val navController = rememberNavController()
 
-    NavHost(navController = navController,
-        startDestination = Loading.route) {
+    NavHost(
+        navController = navController,
+        startDestination = Loading.route
+    ) {
         composable(Auth.route) {
             AuthScreen(
                 onAuthComplete = {
@@ -60,7 +62,7 @@ fun AppNavigation() {
             AboutScreen(navController)
         }
         composable(Settings.route) {
-            SettingsScreen()
+            SettingsScreen(navController)
         }
         composable(Loading.route) {
             LoadingScreen(navController)
