@@ -4,7 +4,7 @@
     <string name="app_name" translatable="false">JetiTable</string>
     <string name="app_name_description">Schedule information system</string>
     <string name="corporate_email_label">Email</string>
-    <string name="wrong_credentials">Wrong email or password</string>
+    <string name="wrong_credentials">Invalid email or password</string>
     <string name="corporate_email_description">Use the corporate email provided by the university</string>
     <string name="password_label">Password</string>
     <string name="forgot_password_label">Forgot password?</string>
@@ -17,15 +17,13 @@
     <string name="forgot_password_dialog_description">You will receive an email with your password if provided data is correct.</string>
     <string name="send">Send</string>
     <string name="dismiss">Dismiss</string>
-    <string name="email_enter_label">Enter your email here</string>
 
     // Home screen
-    <string name="welcome_title">Welcome!</string>
-    <string name="lecture">lecture</string>
-    <string name="practices">practice</string>
-    <string name="lab">lab</string>
+    <string name="welcome_title">Welcome, %1$s!</string>
     <string name="next_learning_activity">%1$s %2$s starts in %3$s</string>
-    <string name="schedule_for_day">Schedule for %1$s</string>
+    <string name="schedule_for_day">Schedule for </string>
+    <string name="failed_to_fetch_data">failed to fetch data</string>
+    <string name="no_lessons">No lessons for today!</string>
 
     // Subjects
     <string name="programming">Programming</string>
@@ -35,5 +33,15 @@
     // About screen
     <string name="about_screen_title">About</string>
     <string name="university">University</string>
+    <string name="developer">Developer</string>
+    <string name="timetable_developer">TimeTable developer</string>
+
+    // Settings screen
+    <string name="part_time">Part-time study</string>
+    <string name="full_time">Full-time study</string>
+    <string name="timetable" translatable="false">TimeTable</string>
+    <string name="timetable_account">%1$s account</string>
+    <string name="spring_semester">Spring semester</string>
+    <string name="autumn_semester">Autumn semester</string>
 
 </resources>

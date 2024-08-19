@@ -1,66 +1,94 @@
 package lnx.jetitable.screens.home
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.rounded.Info
+import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DividerDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDefaults
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
+import androidx.compose.material3.LocalMinimumInteractiveComponentEnforcement
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import lnx.jetitable.R
 import lnx.jetitable.navigation.About
 import lnx.jetitable.navigation.Settings
-import lnx.jetitable.timetable.data.DailySchedules
-import lnx.jetitable.timetable.data.Schedule
-import lnx.jetitable.timetable.data.Subject
+import lnx.jetitable.timetable.api.query.data.Lesson
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavHostController) {
+    val homeViewModel: HomeViewModel = viewModel()
+    val fullName = homeViewModel.fullName
+    val lessonsList = homeViewModel.dailyLessonList
+
+    LaunchedEffect(Unit) {
+        homeViewModel.getDailyLessonList()
+    }
+
     Scaffold(
         topBar = {
             LargeTopAppBar(
                 title = {
                     Text(
-                        text = stringResource(id = R.string.welcome_title)
+                        text = stringResource(id = R.string.welcome_title, fullName ?: R.string.failed_to_fetch_data)
                     )
                 },
                 actions = {
                     IconButton(onClick = { navController.navigate(Settings.route) }) {
                         Icon(
-                            imageVector = Icons.Default.Settings,
+                            imageVector = Icons.Rounded.Settings,
                             contentDescription = "Settings"
                         )
                     }
                     IconButton(onClick = { navController.navigate(About.route) }) {
                         Icon(
-                            imageVector = Icons.Default.Info,
+                            imageVector = Icons.Rounded.Info,
                             contentDescription = "About"
                         )
                     }
@@ -69,110 +97,198 @@ fun HomeScreen(navController: NavHostController) {
         }
     ) {
         paddingValues ->
-        Column(modifier = Modifier
-            .padding(paddingValues)
-            .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)) {
-
-            val todaySchedule = DailySchedules.first()
-            NextSubjectCard(subject = todaySchedule.subjects.first())
-            DailyScheduleCard(schedule = todaySchedule)
-        }
-    }
-}
-
-@Composable
-fun NextSubjectCard(subject: Subject) {
-    val subjectTypeText = subject.type
-    val subjectNameText = subject.name
-    val startTime = subject.startTime
-    val highlightText = buildAnnotatedString {
-        val builtText = stringResource(id = R.string.next_learning_activity,
-            subjectNameText, subjectTypeText, startTime)
-
-        val subjectNameStartIndex = builtText.indexOf(subjectNameText)
-        val subjectNameEndIndex = subjectNameStartIndex + subjectNameText.length
-        addStyle(SpanStyle(color = MaterialTheme.colorScheme.primary), subjectNameStartIndex, subjectNameEndIndex)
-
-        val subjectTypeStartIndex = builtText.indexOf(subjectTypeText)
-        val subjectTypeEndIndex = subjectTypeStartIndex + subjectTypeText.length
-        addStyle(SpanStyle(color = MaterialTheme.colorScheme.secondary), subjectTypeStartIndex, subjectTypeEndIndex)
-
-        val startTimeStartIndex = builtText.indexOf(startTime)
-        val startTimeEndIndex = startTimeStartIndex + startTime.length
-        addStyle(SpanStyle(color = MaterialTheme.colorScheme.tertiary), startTimeStartIndex, startTimeEndIndex)
-        append(builtText)
-    }
-
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.secondaryContainer,
-        )
-    ) {
-        Text(
-            modifier = Modifier.padding(16.dp),
-            text = highlightText
-        )
-    }
-}
-
-@Composable
-fun DailyScheduleCard(schedule: Schedule) {
-    Card(
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainer,
-        )
-    ) {
-        Row {
-            Text(
-                text = stringResource(id = R.string.schedule_for_day, schedule.date),
-                modifier = Modifier.padding(16.dp),
-                fontSize = 18.sp,
-                fontWeight = FontWeight.SemiBold
-            )
-        }
-        HorizontalDivider(
-            modifier = Modifier.padding(horizontal = 16.dp),
-            thickness = DividerDefaults.Thickness,
-            color = DividerDefaults.color
-        )
-        LazyColumn(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
+                .padding(paddingValues)
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            items(schedule.subjects) { subject ->
-                ScheduleRow(subject = subject)
+            Card(
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)
+                ),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .padding(top = 16.dp)
+                ) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Icon(painter = painterResource(id = R.drawable.ic_calendar), contentDescription = "")
+                        Text(
+                            text = stringResource(id = R.string.schedule_for_day),
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                        DatePickerExtended()
+                    }
+
+                }
+
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(10.dp)
+                    )
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .animateContentSize(animationSpec = spring(stiffness = Spring.StiffnessHigh)),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        when {
+                            lessonsList == null -> {
+                                CircularProgressIndicator(
+                                    strokeCap = StrokeCap.Round,
+                                    modifier = Modifier.padding(16.dp)
+                                )
+                            }
+                            lessonsList.lessons.isEmpty() -> {
+                                Text(
+                                    text = stringResource(id = R.string.no_lessons),
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            }
+                            else -> {
+                                lessonsList.lessons.forEachIndexed { index, lesson ->
+                                    ExpandableScheduleRow(lesson = lesson, index = index)
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
-
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScheduleRow(subject: Subject) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = "${subject.startTime}-${subject.endTime}",
-            fontSize = 14.sp,
-            modifier = Modifier.weight(0.5f)
-        )
-        Text(
-            text = subject.name,
-            modifier = Modifier.weight(1f),
+fun ExpandableScheduleRow(lesson: Lesson, index: Int) {
+    var expanded by remember { mutableStateOf(false) }
+    val localUriHandler = LocalUriHandler.current
 
-            )
-        Text(
-            text = subject.type,
-            modifier = Modifier.weight(0.1f),
+    if (index > 0) {
+        HorizontalDivider(
+            color = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp),
+            thickness = 2.dp
         )
     }
+    Column(modifier = Modifier.clickable { expanded = !expanded }) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier.padding(10.dp)
+        ) {
+            Text(
+                text = "${lesson.timeBeg}\n${lesson.timeEnd}",
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Text(
+                text = lesson.lesson,
+                modifier = Modifier.weight(1f),
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Text(
+                text = lesson.type,
+                style = MaterialTheme.typography.bodyMedium
+            )
+            CompositionLocalProvider(value = LocalMinimumInteractiveComponentEnforcement provides false) {
+                Card(
+                    onClick = { localUriHandler.openUri(lesson.loadZoom) },
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)
+                    ),
+                    modifier = Modifier.size(40.dp)
+                ) {
+                    Icon(
+                        painter = when {
+                            lesson.loadZoom.contains("zoom.us") -> painterResource(id = R.drawable.ic_zoom_meeting)
+                            lesson.loadZoom.contains("meet.google.com") -> painterResource(id = R.drawable.ic_google_meet)
+                            lesson.loadZoom.contains("team.microsoft.com") -> painterResource(id = R.drawable.ic_ms_teams)
+                            else -> painterResource(id = R.drawable.ic_captive_portal)
+                        },
+                        contentDescription = "",
+                        modifier = Modifier.padding(8.dp),
+                        tint = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+            }
+        }
+    }
+        
+    
+
+    AnimatedVisibility(
+        visible = expanded,
+        enter = expandVertically(animationSpec = tween(durationMillis = 300)),
+        exit = shrinkVertically(animationSpec = tween(durationMillis = 300))
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "${lesson.fio}, ${lesson.group}",
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.weight(1f)
+            )
+
+
+            if (lesson.loadMoodleStudent.contains("moodle2.snu.edu.ua")) {
+                CompositionLocalProvider(value = LocalMinimumInteractiveComponentEnforcement provides false) {
+                    Card(
+                        onClick = { localUriHandler.openUri(lesson.loadMoodleStudent) },
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)
+                        ),
+                        modifier = Modifier.size(40.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_moodle),
+                            contentDescription = "",
+                            modifier = Modifier.padding(8.dp),
+                            tint = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DatePickerExtended() {
+    var showDialog by remember { mutableStateOf(false) }
+    val datePickerState = rememberDatePickerState()
+
+    if (showDialog) {
+        DatePickerDialog(
+            onDismissRequest = { showDialog = false },
+            confirmButton = {}
+        ) {
+            DatePicker(
+                state = datePickerState,
+                modifier = Modifier.padding(16.dp)
+            )
+        }
+    }
+    Text(
+        text = datePickerState.selectedDateMillis?.let { millis ->
+            val formatter = remember { DatePickerDefaults.dateFormatter() }
+            val locale = Locale.getDefault()
+            formatter.formatDate(millis, locale)
+        } ?: "[no date selected]",
+        color = MaterialTheme.colorScheme.onPrimaryContainer,
+        style = MaterialTheme.typography.titleMedium,
+        modifier = Modifier.clickable { showDialog = true }
+    )
 }
 
 @Composable

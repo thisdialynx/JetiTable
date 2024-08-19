@@ -14,7 +14,7 @@ import okhttp3.HttpUrl
 
 private val Context.dataStore by preferencesDataStore(name = "cookies")
 
-class DataStoreCookieManager(context: Context) : CookieJar {
+class CookieManager(context: Context) : CookieJar {
     private val dataStore = context.dataStore
 
     override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
@@ -39,5 +39,12 @@ class DataStoreCookieManager(context: Context) : CookieJar {
         }
 
         return cookieString?.split(";")?.mapNotNull { Cookie.parse(url, it) } ?: emptyList()
+    }
+    fun clearCookies() {
+        runBlocking {
+            dataStore.edit { preferences ->
+                preferences.clear()
+            }
+        }
     }
 }
