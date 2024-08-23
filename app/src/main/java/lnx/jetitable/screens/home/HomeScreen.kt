@@ -10,9 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Info
-import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -61,13 +58,13 @@ fun HomeScreen(navController: NavHostController) {
                 actions = {
                     IconButton(onClick = { navController.navigate(Settings.route) }) {
                         Icon(
-                            imageVector = Icons.Rounded.Settings,
+                            imageVector = lnx.jetitable.ui.icons.google.Settings,
                             contentDescription = "Settings"
                         )
                     }
                     IconButton(onClick = { navController.navigate(About.route) }) {
                         Icon(
-                            imageVector = Icons.Rounded.Info,
+                            imageVector = lnx.jetitable.ui.icons.google.Info,
                             contentDescription = "About"
                         )
                     }
