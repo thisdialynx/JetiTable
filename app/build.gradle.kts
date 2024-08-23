@@ -52,6 +52,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.material.icons.extended)
     implementation(libs.retrofit2.converter.scalars)
     implementation(libs.jsoup.jsoup)
     implementation(libs.androidx.datastore.preferences)
