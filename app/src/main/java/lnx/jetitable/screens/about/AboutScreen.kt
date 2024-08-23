@@ -31,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.UriHandler
@@ -91,18 +92,18 @@ fun AboutScreen(navController: NavHostController) {
                 ) {
                     Row {
                         UrlIconTile(
-                            icon = R.drawable.ic_github,
+                            icon = lnx.jetitable.ui.icons.Github,
                             description = "Github", shortUri = "github.com/thisdialynx/JetiTable",
                             localUriHandler = localUriHandler
                         )
                         UrlIconTile(
-                            icon = R.drawable.ic_captive_portal,
+                            icon = lnx.jetitable.ui.icons.Snu,
                             description = stringResource(id = R.string.university),
                             shortUri = "snu.edu.ua",
                             localUriHandler = localUriHandler
                         )
                         UrlIconTile(
-                            icon = R.drawable.ic_calendar,
+                            icon = lnx.jetitable.ui.icons.google.CalendarMonth,
                             description = "TimeTable",
                             shortUri = "timetable.lond.lg.ua",
                             localUriHandler = localUriHandler
@@ -121,7 +122,7 @@ fun AboutScreen(navController: NavHostController) {
                     profilePicture = 0,
                     title = "Dialynx",
                     description = R.string.developer,
-                    icon = R.drawable.ic_telegram,
+                    icon = lnx.jetitable.ui.icons.Telegram,
                     iconDescription = "Telegram",
                     localUriHandler = localUriHandler,
                     shortUri = "t.me/placeholder"
@@ -130,7 +131,7 @@ fun AboutScreen(navController: NavHostController) {
                     profilePicture = 0,
                     title = "Denys Ratov",
                     description = R.string.timetable_developer,
-                    icon = R.drawable.ic_telegram,
+                    icon = lnx.jetitable.ui.icons.Telegram,
                     iconDescription = "Telegram",
                     localUriHandler = localUriHandler,
                     shortUri = "t.me/placeholder"
@@ -166,7 +167,7 @@ fun AppInfo() {
 }
 
 @Composable
-fun UrlIconTile(icon: Int, description: String, shortUri: String, localUriHandler: UriHandler) {
+fun UrlIconTile(icon: ImageVector, description: String, shortUri: String, localUriHandler: UriHandler) {
     Card(
         modifier = Modifier.padding(8.dp),
         colors = CardDefaults.cardColors(
@@ -179,7 +180,7 @@ fun UrlIconTile(icon: Int, description: String, shortUri: String, localUriHandle
             modifier = Modifier.padding(8.dp)
         ) {
             Icon(
-                painter = painterResource(id = icon),
+                imageVector = icon,
                 contentDescription = description,
                 tint = MaterialTheme.colorScheme.onSurface
             )
@@ -193,7 +194,7 @@ fun UrlIconTile(icon: Int, description: String, shortUri: String, localUriHandle
 }
 
 @Composable
-fun ContributorCard(profilePicture: Int, title: String, description: Int, icon: Int, iconDescription: String, localUriHandler: UriHandler, shortUri: String) {
+fun ContributorCard(profilePicture: Int, title: String, description: Int, icon: ImageVector, iconDescription: String, localUriHandler: UriHandler, shortUri: String) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
@@ -237,7 +238,7 @@ fun ContributorCard(profilePicture: Int, title: String, description: Int, icon: 
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Icon(
-                        painter = painterResource(id = icon),
+                        imageVector = icon,
                         contentDescription = iconDescription,
                         modifier = Modifier.padding(8.dp)
                     )
