@@ -9,10 +9,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -21,17 +24,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import lnx.jetitable.R
 
@@ -43,37 +44,43 @@ fun AuthScreen(
     val context = LocalContext.current
     val openDialog = remember { mutableStateOf(false) }
 
-    LaunchedEffect(authViewModel.isAuthorized) {
+    LaunchedEffect(authViewModel.isAuthorized, authViewModel.errorMessage) {
         if (authViewModel.isAuthorized) {
             Toast.makeText(context, R.string.authorized, Toast.LENGTH_SHORT).show()
             onAuthComplete()
         }
-    }
-    LaunchedEffect(authViewModel.errorMessage) {
         if (authViewModel.errorMessage != 0) {
             Toast.makeText(context, authViewModel.errorMessage, Toast.LENGTH_SHORT).show()
             authViewModel.clearErrorMessage()
         }
     }
 
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-    ) {
+    Surface(modifier = Modifier.fillMaxSize()) {
+
         Column(
             verticalArrangement = Arrangement.Center,
             modifier = Modifier.padding(horizontal = 16.dp)
         ) {
-            Text(
-                stringResource(id = R.string.app_name),
-                style = TextStyle(
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 36.sp
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(2.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = lnx.jetitable.ui.icons.Snu,
+                    contentDescription = "SNU icon",
+                    modifier = Modifier.size(64.dp)
                 )
-            )
-            Text(
-                stringResource(id = R.string.app_name_description),
-                fontSize = 18.sp
-            )
+                Column {
+                    Text(
+                        text = stringResource(id = R.string.app_name),
+                        style = MaterialTheme.typography.displaySmall
+                    )
+                    Text(
+                        text = stringResource(id = R.string.app_name_description),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
+            }
 
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -82,24 +89,37 @@ fun AuthScreen(
                     modifier = Modifier.fillMaxWidth(),
                     value = authViewModel.email,
                     onValueChange = authViewModel::updateEmail,
-                    label = { Text(text = stringResource(id = R.string.corporate_email_label)) },
+                    label = {
+                        Text(
+                            text = stringResource(id = R.string.corporate_email_label),
+                            style = MaterialTheme.typography.labelLarge
+                        )
+                    },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Email,
                         imeAction = ImeAction.Next
                     ),
-                    placeholder = { Text(text = "example@snu.edu.ua")},
-                    singleLine = true
+                    placeholder = { Text(text = "example@snu.edu.ua") },
+                    singleLine = true,
+                    leadingIcon = {
+                        Icon(imageVector = lnx.jetitable.ui.icons.google.Mail, contentDescription = "Mail icon")
+                    }
                 )
                 Text(
                     text = stringResource(id = R.string.corporate_email_description),
-                    fontSize = 14.sp
+                    style = MaterialTheme.typography.labelMedium
                 )
 
                 OutlinedTextField(
                     modifier = Modifier.fillMaxWidth(),
                     value = authViewModel.password,
                     onValueChange = authViewModel::updatePassword,
-                    label = { Text(text = stringResource(id = R.string.password_label)) },
+                    label = {
+                        Text(
+                            text = stringResource(id = R.string.password_label),
+                            style = MaterialTheme.typography.labelLarge
+                        )
+                    },
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Password,
@@ -108,10 +128,15 @@ fun AuthScreen(
                     keyboardActions = KeyboardActions(
                         onDone = { authViewModel.checkCredentials() }
                     ),
-                    singleLine = true
+                    singleLine = true,
+                    leadingIcon = {
+                        Icon(imageVector = lnx.jetitable.ui.icons.google.Key, contentDescription = "Key icon")
+                    },
                 )
             }
+
             Spacer(modifier = Modifier.padding(12.dp))
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -138,13 +163,21 @@ fun AuthScreen(
                                 OutlinedTextField(
                                     value = authViewModel.email,
                                     onValueChange = authViewModel::updateEmail,
-                                    label = { Text(text = stringResource(id = R.string.corporate_email_label)) },
+                                    label = {
+                                        Text(
+                                            text = stringResource(id = R.string.corporate_email_label),
+                                            style = MaterialTheme.typography.labelLarge
+                                        )
+                                    },
                                     keyboardOptions = KeyboardOptions(
                                         keyboardType = KeyboardType.Email,
-                                        imeAction = ImeAction.Done
+                                        imeAction = ImeAction.Done,
                                     ),
                                     placeholder = { Text(text = "example@snu.edu.ua")},
-                                    singleLine = true
+                                    singleLine = true,
+                                    leadingIcon = {
+                                        Icon(imageVector = lnx.jetitable.ui.icons.google.Mail, contentDescription = "Email icon")
+                                    }
                                 )
                             }
                         },
@@ -152,11 +185,13 @@ fun AuthScreen(
                             TextButton(onClick = { openDialog.value = false }) {
                                 Text(text = stringResource(id = R.string.dismiss))
                             }
+                        },
+                        icon = {
+                            Icon(imageVector = lnx.jetitable.ui.icons.google.Key, contentDescription = "Key icon")
                         }
                     )
                 }
             }
-
         }
     }
 }
