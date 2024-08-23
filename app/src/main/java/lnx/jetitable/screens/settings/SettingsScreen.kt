@@ -23,8 +23,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -73,7 +73,7 @@ fun SettingsScreen(navController: NavHostController) {
             TTAccountCard(
                 title = stringResource(id = R.string.timetable_account, stringResource(id = R.string.timetable)),
                 description = "$fullName ($group). \n${stringResource(id = semester)}. ${stringResource(id = isFullTime)}.",
-                icon = R.drawable.ic_snu,
+                icon = lnx.jetitable.ui.icons.Snu,
                 context = context,
                 toastText = "UID: $userId, GID: $groupId, FNID: $fullNameId."
             )
@@ -82,7 +82,7 @@ fun SettingsScreen(navController: NavHostController) {
 }
 
 @Composable
-fun TTAccountCard(title: String, description: String, icon: Int, context: Context, toastText: String) {
+fun TTAccountCard(title: String, description: String, icon: ImageVector, context: Context, toastText: String) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
@@ -100,7 +100,7 @@ fun TTAccountCard(title: String, description: String, icon: Int, context: Contex
         ) {
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 Icon(
-                    painter = painterResource(id = icon),
+                    imageVector = icon,
                     contentDescription = "$title $description",
                     tint = MaterialTheme.colorScheme.onSecondaryContainer,
                 )
