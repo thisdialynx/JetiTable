@@ -17,6 +17,10 @@
     <string name="forgot_password_dialog_description">You will receive an email with your password if provided data is correct.</string>
     <string name="send">Send</string>
     <string name="dismiss">Dismiss</string>
+    <string name="contunue">Continue</string>
+    <string name="quit">Quit</string>
+    <string name="unofficial_app">Unofficial app!</string>
+    <string name="unofficial_app_description"> This application is not an official product of the Volodymyr Dahl East Ukrainian National University, it is not endorsed or operated by the university. The user assumes all responsibility for the use of this application, including any possible risks associated with the accuracy and reliability of the information provided in the application. The University is not responsible for any damage or inconvenience that may result from the use of this app. Use this app with caution and refer to official sources of information when necessary.</string>
 
     // Home screen
     <string name="welcome_title">Welcome, %1$s!</string>

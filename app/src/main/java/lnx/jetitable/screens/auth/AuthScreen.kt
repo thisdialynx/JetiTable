@@ -1,5 +1,6 @@
 package lnx.jetitable.screens.auth
 
+import android.app.Activity
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,6 +15,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -43,6 +45,7 @@ fun AuthScreen(
     val authViewModel: AuthViewModel = viewModel()
     val context = LocalContext.current
     val openDialog = remember { mutableStateOf(false) }
+    val openNoticeDialog = remember { mutableStateOf(true) }
 
     LaunchedEffect(authViewModel.isAuthorized, authViewModel.errorMessage) {
         if (authViewModel.isAuthorized) {
@@ -56,7 +59,6 @@ fun AuthScreen(
     }
 
     Surface(modifier = Modifier.fillMaxSize()) {
-
         Column(
             verticalArrangement = Arrangement.Center,
             modifier = Modifier.padding(horizontal = 16.dp)
@@ -192,6 +194,34 @@ fun AuthScreen(
                     )
                 }
             }
+        }
+
+        if (openNoticeDialog.value) {
+            val activityContext = LocalContext.current as? Activity
+
+            AlertDialog(
+                onDismissRequest = { activityContext?.finishAffinity() },
+                confirmButton = { 
+                    Button(
+                        onClick = { openNoticeDialog.value = false },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.error
+                        )
+                    ) { Text(text = stringResource(id = R.string.contunue)) }
+                },
+                dismissButton = {
+                    TextButton(onClick = { activityContext?.finishAffinity() }) {
+                        Text(
+                            text = stringResource(id = R.string.quit),
+                            color = MaterialTheme.colorScheme.onErrorContainer
+                        )
+                    }
+                },
+                icon = { Icon(imageVector = lnx.jetitable.ui.icons.google.Warning, contentDescription = "Warning")},
+                text = { Text(text = stringResource(id = R.string.unofficial_app_description)) },
+                title = { Text(text = stringResource(id = R.string.unofficial_app)) },
+                containerColor = MaterialTheme.colorScheme.errorContainer
+            )
         }
     }
 }
