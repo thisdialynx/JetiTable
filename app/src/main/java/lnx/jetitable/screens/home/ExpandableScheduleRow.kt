@@ -30,12 +30,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import lnx.jetitable.R
 import lnx.jetitable.timetable.api.query.data.Lesson
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ExpandableScheduleRow(lesson: Lesson, index: Int) {
+fun ExpandableScheduleRow(lesson: Lesson, index: Int, homeViewModel: HomeViewModel) {
     var expanded by remember { mutableStateOf(false) }
     val localUriHandler = LocalUriHandler.current
 
@@ -66,14 +68,17 @@ fun ExpandableScheduleRow(lesson: Lesson, index: Int) {
             )
             CompositionLocalProvider(value = LocalMinimumInteractiveComponentEnforcement provides false) {
                 Card(
-                    onClick = { localUriHandler.openUri(lesson.loadZoom) },
+                    onClick = {
+                        localUriHandler.openUri(lesson.loadZoom)
+                        homeViewModel.verifyPresence(lesson)
+                    },
                     colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)
                     ),
                     modifier = Modifier.size(40.dp)
                 ) {
                     Icon(
-                        imageVector = when {
+                        imageVector = when (lesson.loadZoom.isNotEmpty()) {
                             lesson.loadZoom.contains("zoom.us") -> lnx.jetitable.ui.icons.ZoomMeeting
                             lesson.loadZoom.contains("meet.google.com") -> lnx.jetitable.ui.icons.GoogleMeet
                             lesson.loadZoom.contains("team.microsoft.com") -> lnx.jetitable.ui.icons.MsTeams
@@ -85,26 +90,7 @@ fun ExpandableScheduleRow(lesson: Lesson, index: Int) {
                     )
                 }
             }
-        }
-    }
-
-    AnimatedVisibility(
-        visible = expanded,
-        enter = expandVertically(animationSpec = tween(durationMillis = 300)),
-        exit = shrinkVertically(animationSpec = tween(durationMillis = 300))
-    ) {
-        Row(
-            modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "${lesson.fio}, ${lesson.group}",
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.weight(1f)
-            )
-
-
-            if (lesson.loadMoodleStudent.contains("moodle2.snu.edu.ua")) {
+            if (lesson.loadMoodleStudent.isNotEmpty()) {
                 CompositionLocalProvider(value = LocalMinimumInteractiveComponentEnforcement provides false) {
                     Card(
                         onClick = { localUriHandler.openUri(lesson.loadMoodleStudent) },
@@ -122,6 +108,27 @@ fun ExpandableScheduleRow(lesson: Lesson, index: Int) {
                     }
                 }
             }
+        }
+    }
+
+    AnimatedVisibility(
+        visible = expanded,
+        enter = expandVertically(animationSpec = tween(durationMillis = 300)),
+        exit = shrinkVertically(animationSpec = tween(durationMillis = 300))
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "${stringResource(id = R.string.lesson_number, lesson.numLesson)}\n" +
+                        "${stringResource(id = R.string.lesson_group, lesson.group)}\n" +
+                        stringResource(id = R.string.lesson_teacher, lesson.fio),
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.weight(1f)
+            )
+
+
         }
     }
 }
