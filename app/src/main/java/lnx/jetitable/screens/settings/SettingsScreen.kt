@@ -64,7 +64,8 @@ fun SettingsScreen(navController: NavHostController) {
                 description = "$fullName ($group). \n${stringResource(id = semester)}. ${stringResource(id = isFullTime)}.",
                 icon = lnx.jetitable.ui.icons.Snu,
                 context = context,
-                toastText = "UID: $userId, GID: $groupId, FNID: $fullNameId."
+                toastText = "UID: $userId, GID: $groupId, FNID: $fullNameId.",
+                settingsViewModel = settingsViewModel
             )
         }
     }
