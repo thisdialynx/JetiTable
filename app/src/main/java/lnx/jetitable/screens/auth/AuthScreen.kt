@@ -207,7 +207,7 @@ fun AuthScreen(
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.error
                         )
-                    ) { Text(text = stringResource(id = R.string.contunue)) }
+                    ) { Text(text = stringResource(id = R.string.continue_action)) }
                 },
                 dismissButton = {
                     TextButton(onClick = { activityContext?.finishAffinity() }) {

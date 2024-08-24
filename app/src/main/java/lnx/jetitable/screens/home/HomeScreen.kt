@@ -32,7 +32,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import kotlinx.coroutines.delay
 import lnx.jetitable.R
+import lnx.jetitable.misc.getCurrentDate
 import lnx.jetitable.navigation.About
 import lnx.jetitable.navigation.Settings
 
@@ -42,8 +44,10 @@ fun HomeScreen(navController: NavHostController) {
     val homeViewModel: HomeViewModel = viewModel()
     val fullName = homeViewModel.fullName
     val lessonsList = homeViewModel.dailyLessonList
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
+        delay(1000)
         homeViewModel.getDailyLessonList()
     }
 
@@ -99,10 +103,10 @@ fun HomeScreen(navController: NavHostController) {
                     ) {
                         Icon(imageVector = lnx.jetitable.ui.icons.google.CalendarMonth, contentDescription = "")
                         Text(
-                            text = stringResource(id = R.string.schedule_for_day),
+                            text = stringResource(id = R.string.schedule_for_day, getCurrentDate()),
                             style = MaterialTheme.typography.titleMedium
                         )
-                        DatePickerExtended()
+                        DatePickerExtended(context = context)
                     }
 
                 }
@@ -137,7 +141,7 @@ fun HomeScreen(navController: NavHostController) {
                             }
                             else -> {
                                 lessonsList.lessons.forEachIndexed { index, lesson ->
-                                    ExpandableScheduleRow(lesson = lesson, index = index)
+                                    ExpandableScheduleRow(lesson = lesson, index = index, homeViewModel = homeViewModel)
                                 }
                             }
                         }
