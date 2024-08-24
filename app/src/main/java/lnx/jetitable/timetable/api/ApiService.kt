@@ -7,6 +7,7 @@ import lnx.jetitable.timetable.api.login.data.LoginResponse
 import lnx.jetitable.timetable.api.login.data.MailRequest
 import lnx.jetitable.timetable.api.login.data.MailResponse
 import lnx.jetitable.timetable.api.query.data.DailyLessonListRequest
+import lnx.jetitable.timetable.api.query.data.VerifyPresenceRequest
 import retrofit2.http.Body
 import retrofit2.http.Header
 import retrofit2.http.POST
@@ -34,6 +35,11 @@ interface ApiService {
         @Body request: DailyLessonListRequest
     ): String
 
+    @POST(QUERY_PHP)
+    suspend fun get_checkZoom(
+        @Body request: VerifyPresenceRequest
+    ): String
+
     companion object {
         const val BASE_URL = "https://timetable.lond.lg.ua"
 
@@ -46,7 +52,9 @@ interface ApiService {
         const val SEND_MAIL = "sendMail"
         const val CHECK_ACCESS = "checkAccess"
 
-        // getQuery.php methods
+        // getQuery.php methods and parameters
         const val DAILY_LESSON_LIST = "get_listLessonTodayStudent"
+        const val STATE = "s"
+        const val CHECK_ZOOM = "get_checkZoom"
     }
 }
