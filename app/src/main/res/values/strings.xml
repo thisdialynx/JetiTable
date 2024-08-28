@@ -23,7 +23,7 @@
     <string name="unofficial_app_description">This application is not an official product of Volodymyr Dal East Ukrainian National University. The University is not responsible for its content and use. The user assumes all risks associated with the use of this app and should consult official sources for accurate information if necessary.</string>
 
     // Home screen
-    <string name="welcome_title">Welcome, %1$s!</string>
+    <string name="welcome_title">Welcome!</string>
     <string name="schedule_for_day">Schedule for</string>
     <string name="today">today</string>
     <string name="failed_to_fetch_data">failed to fetch data</string>
