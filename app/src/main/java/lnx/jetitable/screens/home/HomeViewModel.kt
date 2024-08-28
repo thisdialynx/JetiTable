@@ -33,8 +33,6 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private val service = RetrofitHolder.getInstance(context)
     private val dateFormat = "%02d.%02d.%d"
 
-    var fullName by mutableStateOf<String?>(null)
-        private set
     var group by mutableStateOf("")
         private set
     var groupId by mutableStateOf("")
@@ -46,7 +44,6 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     init {
         viewModelScope.launch {
             val user: User = userDataStore.getApiUserData()
-            fullName = user.fio
             group = user.group
             groupId = user.id_group
 

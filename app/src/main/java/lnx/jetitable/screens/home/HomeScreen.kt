@@ -39,7 +39,6 @@ import lnx.jetitable.navigation.Settings
 @Composable
 fun HomeScreen(navController: NavHostController) {
     val homeViewModel: HomeViewModel = viewModel()
-    val fullName = homeViewModel.fullName
     val lessonsList = homeViewModel.dailyLessonList
     val context = LocalContext.current
 
@@ -48,7 +47,7 @@ fun HomeScreen(navController: NavHostController) {
             LargeTopAppBar(
                 title = {
                     Text(
-                        text = stringResource(id = R.string.welcome_title, fullName ?: R.string.failed_to_fetch_data)
+                        text = stringResource(id = R.string.welcome_title)
                     )
                 },
                 actions = {
