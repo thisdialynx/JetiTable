@@ -10,14 +10,18 @@ fun getCurrentDate(): String {
     return dateFormat.format(calendar.time)
 }
 
-fun getAcademicYear(currentYear: Int, currentMonth: Int): String {
-    return if (currentMonth in 1..7) {
-        "${currentYear - 1}/$currentYear"
+fun getAcademicYear(year: Int, month: Int): String {
+    return if (month >= 8) {
+        "${year}/${year + 1}"
     } else {
-        "$currentYear/${currentYear + 1}"
+        "${year - 1}/${year}"
     }
 }
 
-fun getSemester(currentMonth: Int): String {
-    return if (currentMonth in 1..7) "2" else "1"
+fun getSemester(month: Int): String {
+    return if (month in 8..12 || month in 1..2) {
+        "1"
+    } else {
+        "2"
+    }
 }
