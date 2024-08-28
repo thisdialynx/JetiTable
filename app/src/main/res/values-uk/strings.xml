@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_description">Інформаційна система розкладу</string>
+    <string name="corporate_email_label">Пошта</string>
+    <string name="wrong_credentials">Неправильна адреса електронної пошти або пароль</string>
+    <string name="corporate_email_description">Використовуйте корпоративну електронну пошту, надану університетом</string>
+    <string name="password_label">Пароль</string>
+    <string name="forgot_password_label">Забули пароль?</string>
+    <string name="sign_in">Увійти</string>
+    <string name="corporate_email_error">Адреса електронної пошти повинна закінчуватися на @snu.edu.ua</string>
+    <string name="password_sent">Електронний лист надіслано</string>
+    <string name="invalid_email">Неправильна адреса електронної пошти</string>
+    <string name="authorized">Авторизація успішна!</string>
+    <string name="forgot_password_dialog_title">Відновлення пароля</string>
+    <string name="forgot_password_dialog_description">Якщо введені дані правильні, ви отримаєте лист із паролем на електронну пошту.</string>
+    <string name="send">Відправити</string>
+    <string name="dismiss">Відхилити</string>
+    <string name="continue_action">Продовжити</string>
+    <string name="quit">Вийти</string>
+    <string name="unofficial_app">Неофіційний застосунок!</string>
+    <string name="unofficial_app_description">Цей застосунок не є офіційним продуктом Східноукраїнського національного університету імені Володимира Даля. Університет не несе відповідальності за його зміст та використання. Користувач бере на себе всі ризики, пов\'язані з використанням цього застосунку. За необхідності, звертайтеся до офіційних джерел для отримання точної інформації.</string>
+    <string name="welcome_title">Ласкаво просимо, %1$s!</string>
+    <string name="schedule_for_day">Розклад на</string>
+    <string name="today">ьогодні</string>
+    <string name="failed_to_fetch_data">не вдалося отримати дані</string>
+    <string name="no_lessons">Заняття на вказану дату відсутні</string>
+    <string name="lesson_teacher">Викладач: %1$s</string>
+    <string name="lesson_number">Номер заняття: %1$s</string>
+    <string name="lesson_group">Група: %1$s</string>
+    <string name="about_screen_title">Про застосунок</string>
+    <string name="university">Університет</string>
+    <string name="developer">Розробник</string>
+    <string name="timetable_developer">Розробник TimeTable</string>
+    <string name="part_time">Дистанційна форма навчання</string>
+    <string name="full_time">Денна форма навчання</string>
+    <string name="timetable_account">Акаунт %1$s</string>
+    <string name="spring_semester">Весняний семестр</string>
+    <string name="autumn_semester">Осінній семестр</string>
+    <string name="in_development">У розробці. Наразі не працює.</string>
+</resources>
