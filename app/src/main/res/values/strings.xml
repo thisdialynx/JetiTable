@@ -13,7 +13,7 @@
     <string name="password_sent">An email has been sent</string>
     <string name="invalid_email">Invalid email</string>
     <string name="authorized">Authorization successful!</string>
-    <string name="forgot_password_dialog_title">Password sending</string>
+    <string name="forgot_password_dialog_title">Password recover</string>
     <string name="forgot_password_dialog_description">You will receive an email with your password if provided data is correct.</string>
     <string name="send">Send</string>
     <string name="dismiss">Dismiss</string>
@@ -24,18 +24,13 @@
 
     // Home screen
     <string name="welcome_title">Welcome, %1$s!</string>
-    <string name="next_learning_activity">%1$s %2$s starts in %3$s</string>
     <string name="schedule_for_day">Schedule for</string>
+    <string name="today">today</string>
     <string name="failed_to_fetch_data">failed to fetch data</string>
     <string name="no_lessons">No lessons for this day!</string>
     <string name="lesson_teacher">Teacher: %1$s</string>
     <string name="lesson_number">Lesson number: %1$s</string>
     <string name="lesson_group">Group: %1$s</string>
-
-    // Subjects
-    <string name="programming">Programming</string>
-    <string name="software_protection">Software protection</string>
-    <string name="mobile_programming">Programming for mobile platforms</string>
 
     // About screen
     <string name="about_screen_title">About</string>
