@@ -22,7 +22,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
@@ -32,9 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import kotlinx.coroutines.delay
 import lnx.jetitable.R
-import lnx.jetitable.misc.getCurrentDate
 import lnx.jetitable.navigation.About
 import lnx.jetitable.navigation.Settings
 
@@ -45,11 +42,6 @@ fun HomeScreen(navController: NavHostController) {
     val fullName = homeViewModel.fullName
     val lessonsList = homeViewModel.dailyLessonList
     val context = LocalContext.current
-
-    LaunchedEffect(Unit) {
-        delay(1000)
-        homeViewModel.getDailyLessonList()
-    }
 
     Scaffold(
         topBar = {
@@ -103,10 +95,12 @@ fun HomeScreen(navController: NavHostController) {
                     ) {
                         Icon(imageVector = lnx.jetitable.ui.icons.google.CalendarMonth, contentDescription = "")
                         Text(
-                            text = stringResource(id = R.string.schedule_for_day, getCurrentDate()),
+                            text = stringResource(id = R.string.schedule_for_day),
                             style = MaterialTheme.typography.titleMedium
                         )
-                        DatePickerExtended(context = context)
+                        DatePickerExtended(context = context) { year, month, day ->
+                            homeViewModel.onDateSelected(year, month, day)
+                        }
                     }
 
                 }
