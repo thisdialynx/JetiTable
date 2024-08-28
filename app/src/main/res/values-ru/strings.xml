@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_description">Информационная система расписания</string>
+    <string name="corporate_email_label">Почта</string>
+    <string name="wrong_credentials">Неправильный адрес электронной почты или пароль</string>
+    <string name="corporate_email_description">Используйте корпоративную электронную почту, предоставленную университетом</string>
+    <string name="password_label">Пароль</string>
+    <string name="forgot_password_label">Забыли пароль?</string>
+    <string name="sign_in">Войти</string>
+    <string name="corporate_email_error">Адрес электронной почты должен заканчиваться на @snu.edu.ua</string>
+    <string name="password_sent">Электронное письмо отправлено</string>
+    <string name="invalid_email">Неправильный адрес электронной почты</string>
+    <string name="authorized">Авторизация успешна!</string>
+    <string name="forgot_password_dialog_title">Восстановление пароля</string>
+    <string name="forgot_password_dialog_description">Если введенные данные правильные, вы получите письмо с паролем на электронную почту.</string>
+    <string name="send">Отправить</string>
+    <string name="dismiss">Отклонить</string>
+    <string name="continue_action">Продолжить</string>
+    <string name="quit">Выйти</string>
+    <string name="unofficial_app">Неофициальное приложение!</string>
+    <string name="unofficial_app_description">Это приложение не является официальным продуктом Восточноукраинского национального университета имени Владимира Даля. Университет не несет ответственности за его содержание и использование. Пользователь берет на себя все риски, связанные с использованием этого приложения. При необходимости, обращайтесь к официальным источникам для получения точной информации.</string>
+    <string name="welcome_title">Добро пожаловать, %1$s!</string>
+    <string name="schedule_for_day">Расписание на</string>
+    <string name="today">сегодня</string>
+    <string name="failed_to_fetch_data">не удалось получить данные</string>
+    <string name="no_lessons">Занятия на указанную дату отсувствуют</string>
+    <string name="lesson_teacher">Преподаватель: %1$s</string>
+    <string name="lesson_number">Номер занятия: %1$s</string>
+    <string name="lesson_group">Группа: %1$s</string>
+    <string name="about_screen_title">О приложении</string>
+    <string name="university">Университет</string>
+    <string name="developer">Разработчик</string>
+    <string name="timetable_developer">Разработчик TimeTable</string>
+    <string name="part_time">Дистанционная форма обучения</string>
+    <string name="full_time">Дневная форма обучения</string>
+    <string name="timetable_account">Аккаунт %1$s</string>
+    <string name="spring_semester">Весенний семестр</string>
+    <string name="autumn_semester">Осенний семестр</string>
+    <string name="in_development">В разработке. В настоящее время не работает</string>
+</resources>
