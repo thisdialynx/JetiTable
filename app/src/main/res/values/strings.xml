@@ -1,6 +1,4 @@
 <resources>
-
-    // Authentication screen
     <string name="app_name" translatable="false">JetiTable</string>
     <string name="app_name_description">Schedule information system</string>
     <string name="corporate_email_label">Email</string>
@@ -21,8 +19,6 @@
     <string name="quit">Quit</string>
     <string name="unofficial_app">Unofficial app!</string>
     <string name="unofficial_app_description">This application is not an official product of Volodymyr Dal East Ukrainian National University. The University is not responsible for its content and use. The user assumes all risks associated with the use of this app and should consult official sources for accurate information if necessary.</string>
-
-    // Home screen
     <string name="welcome_title">Welcome!</string>
     <string name="schedule_for_day">Schedule for</string>
     <string name="today">today</string>
@@ -31,21 +27,14 @@
     <string name="lesson_teacher">Teacher: %1$s</string>
     <string name="lesson_number">Lesson number: %1$s</string>
     <string name="lesson_group">Group: %1$s</string>
-
-    // About screen
     <string name="about_screen_title">About</string>
     <string name="university">University</string>
     <string name="developer">Developer</string>
     <string name="timetable_developer">TimeTable developer</string>
-
-    // Settings screen
     <string name="part_time">Part-time study</string>
     <string name="full_time">Full-time study</string>
     <string name="timetable" translatable="false">TimeTable</string>
     <string name="timetable_account">%1$s account</string>
     <string name="spring_semester">Spring semester</string>
     <string name="autumn_semester">Autumn semester</string>
-
-    <string name="in_development">In development. Doesn\'t work at the moment.</string>
-
 </resources>
