@@ -31,11 +31,15 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         get() = getApplication<Application>().applicationContext
     private val userDataStore = UserDataManager(context)
     private val service = RetrofitHolder.getInstance(context)
-    private val dateFormat = "%02d.%02d.%d"
+
+    private val locale = Locale.getDefault()
+    private val calendar = Calendar.getInstance()
 
     var group by mutableStateOf("")
         private set
     var groupId by mutableStateOf("")
+        private set
+    var selectedDate: Calendar by mutableStateOf(calendar)
         private set
     var dailyLessonList by mutableStateOf<DailyLessonListResponse?>(null)
         private set
@@ -46,43 +50,44 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             val user: User = userDataStore.getApiUserData()
             group = user.group
             groupId = user.id_group
-
-            val calendar = Calendar.getInstance()
-            val currentDate = String.format(
-                Locale.getDefault(),
-                dateFormat,
-                calendar.get(Calendar.DAY_OF_MONTH),
-                calendar.get(Calendar.MONTH) + 1,
-                calendar.get(Calendar.YEAR)
-            )
-
-            getDailyLessonList(currentDate)
+            getDailyLessonList(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH))
         }
     }
 
     fun onDateSelected(year: Int, month: Int, day: Int) {
-        val locale = Locale.getDefault()
-        val selectedDate = String.format(locale, dateFormat, day, month + 1, year)
-        getDailyLessonList(selectedDate)
+        selectedDate.set(year, month, day)
+        getDailyLessonList(year, month, day)
     }
 
-    private fun getDailyLessonList(date: String) {
+    fun shiftDate(value: Int) {
+        selectedDate.add(Calendar.DAY_OF_MONTH, value)
+        onDateSelected(
+            selectedDate.get(Calendar.YEAR),
+            selectedDate.get(Calendar.MONTH),
+            selectedDate.get(Calendar.DAY_OF_MONTH)
+        )
+    }
+
+
+    private fun getDailyLessonList(year: Int, month: Int, day: Int) {
         viewModelScope.launch {
             try {
-                val calendar = Calendar.getInstance()
+                dailyLessonList = null
                 val currentYear = getAcademicYear(
                     calendar.get(Calendar.YEAR),
                     calendar.get(Calendar.MONTH) + 1
                 )
+                val dateFormat = "%02d.%02d.%d"
                 val currentSemester = getSemester(calendar.get(Calendar.MONTH) + 1)
                 val firstGroupId = groupId.split(",")[0].trim()
+                val selectedDateString = String.format(locale, dateFormat, day, month + 1, year)
 
                 val response = service.get_listLessonTodayStudent(
                     DailyLessonListRequest(
                         DAILY_LESSON_LIST,
                         group,
                         firstGroupId,
-                        date,
+                        selectedDateString,
                         currentYear,
                         currentSemester
                     )
