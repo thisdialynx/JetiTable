@@ -100,7 +100,6 @@ fun HomeScreen(navController: NavHostController) {
                         style = MaterialTheme.typography.titleMedium
                     )
                     DatePickerExtended(
-                        context = context,
                         selectedDate = selectedDate,
                         modifier = Modifier.weight(1f)
                     ) { year, month, day ->
