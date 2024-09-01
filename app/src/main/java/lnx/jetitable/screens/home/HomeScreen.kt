@@ -126,11 +126,18 @@ fun HomeScreen(navController: NavHostController) {
                                 )
                             }
                             lessonsList.lessons.isEmpty() -> {
-                                Text(
-                                    text = stringResource(id = R.string.no_lessons),
-                                    style = MaterialTheme.typography.bodyMedium,
+                                Row(
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
                                     modifier = Modifier.padding(16.dp)
-                                )
+                                ) {
+                                    Icon(imageVector = lnx.jetitable.ui.icons.google.Mood, contentDescription = "")
+                                    Text(
+                                        text = stringResource(id = R.string.no_lessons),
+                                        style = MaterialTheme.typography.bodyMedium
+                                    )
+                                }
+
                             }
                             else -> {
                                 lessonsList.lessons.forEachIndexed { index, lesson ->
