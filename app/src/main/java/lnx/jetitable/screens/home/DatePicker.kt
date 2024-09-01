@@ -1,6 +1,5 @@
 package lnx.jetitable.screens.home
 
-import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -29,7 +28,7 @@ import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DatePickerExtended(context: Context, selectedDate: android.icu.util.Calendar, modifier: Modifier = Modifier, onDateSelected: (Int, Int, Int) -> Unit) {
+fun DatePickerExtended(selectedDate: android.icu.util.Calendar, modifier: Modifier = Modifier, onDateSelected: (Int, Int, Int) -> Unit) {
     var showDialog by remember { mutableStateOf(false) }
 
     val calendar = Calendar.getInstance()
