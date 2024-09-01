@@ -73,7 +73,7 @@ fun ExpandableScheduleRow(lesson: Lesson, index: Int, homeViewModel: HomeViewMod
                         homeViewModel.verifyPresence(lesson)
                     },
                     colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer
                     ),
                     modifier = Modifier.size(40.dp)
                 ) {
@@ -86,7 +86,7 @@ fun ExpandableScheduleRow(lesson: Lesson, index: Int, homeViewModel: HomeViewMod
                         },
                         contentDescription = "",
                         modifier = Modifier.padding(8.dp),
-                        tint = MaterialTheme.colorScheme.onSurface
+                        tint = MaterialTheme.colorScheme.onSecondaryContainer
                     )
                 }
             }
@@ -95,7 +95,7 @@ fun ExpandableScheduleRow(lesson: Lesson, index: Int, homeViewModel: HomeViewMod
                     Card(
                         onClick = { localUriHandler.openUri(lesson.loadMoodleStudent) },
                         colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)
+                            containerColor = MaterialTheme.colorScheme.tertiaryContainer
                         ),
                         modifier = Modifier.size(40.dp)
                     ) {
@@ -103,7 +103,7 @@ fun ExpandableScheduleRow(lesson: Lesson, index: Int, homeViewModel: HomeViewMod
                             imageVector = lnx.jetitable.ui.icons.Moodle,
                             contentDescription = "",
                             modifier = Modifier.padding(8.dp),
-                            tint = MaterialTheme.colorScheme.onSurface
+                            tint = MaterialTheme.colorScheme.onTertiaryContainer
                         )
                     }
                 }
@@ -127,8 +127,6 @@ fun ExpandableScheduleRow(lesson: Lesson, index: Int, homeViewModel: HomeViewMod
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.weight(1f)
             )
-
-
         }
     }
 }
