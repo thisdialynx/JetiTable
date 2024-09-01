@@ -28,55 +28,50 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun ContributorCard(profilePicture: Int, title: String, description: Int, icon: ImageVector, iconDescription: String, localUriHandler: UriHandler, shortUri: String) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)
-        )
+    Row(
+        modifier = Modifier.padding(16.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp), Alignment.CenterVertically
     ) {
-        Row(
-            modifier = Modifier.padding(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp), Alignment.CenterVertically
+        Image(
+            painter = painterResource(id = profilePicture),
+            contentDescription = "$title $description",
+            modifier = Modifier
+                .fillMaxWidth(0.15f)
+                .aspectRatio(1f)
+                .clip(CircleShape)
+        )
+        Column(
+            verticalArrangement = Arrangement.spacedBy(2.dp),
+            modifier = Modifier.weight(1f)
         ) {
-            Image(
-                painter = painterResource(id = profilePicture),
-                contentDescription = "$title $description",
-                modifier = Modifier
-                    .fillMaxWidth(0.15f)
-                    .aspectRatio(1f)
-                    .clip(CircleShape)
+            Text(
+                text = title,
+                color = MaterialTheme.colorScheme.onSurface,
+                style = MaterialTheme.typography.titleMedium,
+                fontSize = 18.sp
             )
-            Column(
-                verticalArrangement = Arrangement.spacedBy(2.dp),
-                modifier = Modifier.weight(1f)
-            ) {
-                Text(
-                    text = title,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontSize = 18.sp
+            Text(
+                text = stringResource(id = description),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+        Card(
+            modifier = Modifier.wrapContentWidth(),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(10.dp)
+            ),
+            onClick = { localUriHandler.openUri("https://$shortUri") }
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = iconDescription,
+                    modifier = Modifier.padding(8.dp)
                 )
-                Text(
-                    text = stringResource(id = description),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
-            Card(
-                modifier = Modifier.wrapContentWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(10.dp)
-                ),
-                onClick = { localUriHandler.openUri("https://$shortUri") }
-            ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Icon(
-                        imageVector = icon,
-                        contentDescription = iconDescription,
-                        modifier = Modifier.padding(8.dp)
-                    )
-                }
             }
         }
     }
+
+
 }
