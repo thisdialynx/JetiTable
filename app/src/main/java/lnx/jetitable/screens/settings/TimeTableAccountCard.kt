@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.Logout
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -69,7 +67,7 @@ fun TTAccountCard(title: String, description: String, icon: ImageVector, context
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Icon(
-                    imageVector = Icons.AutoMirrored.Rounded.Logout,
+                    imageVector = lnx.jetitable.ui.icons.google.Logout,
                     contentDescription = "",
                     tint = MaterialTheme.colorScheme.secondary
                 )
