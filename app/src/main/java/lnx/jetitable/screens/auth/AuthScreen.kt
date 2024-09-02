@@ -132,7 +132,7 @@ fun AuthScreen(
                     ),
                     singleLine = true,
                     leadingIcon = {
-                        Icon(imageVector = lnx.jetitable.ui.icons.google.Key, contentDescription = "Key icon")
+                        Icon(imageVector = lnx.jetitable.ui.icons.google.Password, contentDescription = "Key icon")
                     },
                 )
             }
@@ -188,9 +188,7 @@ fun AuthScreen(
                                 Text(text = stringResource(id = R.string.dismiss))
                             }
                         },
-                        icon = {
-                            Icon(imageVector = lnx.jetitable.ui.icons.google.Key, contentDescription = "Key icon")
-                        }
+                        icon = { Icon(imageVector = lnx.jetitable.ui.icons.google.Password, contentDescription = "Key icon") }
                     )
                 }
             }
