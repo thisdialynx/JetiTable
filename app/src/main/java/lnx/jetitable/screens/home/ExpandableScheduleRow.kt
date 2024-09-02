@@ -10,8 +10,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Link
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -82,7 +80,7 @@ fun ExpandableScheduleRow(lesson: Lesson, index: Int, homeViewModel: HomeViewMod
                             lesson.loadZoom.contains("zoom.us") -> lnx.jetitable.ui.icons.ZoomMeeting
                             lesson.loadZoom.contains("meet.google.com") -> lnx.jetitable.ui.icons.GoogleMeet
                             lesson.loadZoom.contains("team.microsoft.com") -> lnx.jetitable.ui.icons.MsTeams
-                            else -> Icons.Rounded.Link
+                            else -> lnx.jetitable.ui.icons.google.Link
                         },
                         contentDescription = "",
                         modifier = Modifier.padding(8.dp),
