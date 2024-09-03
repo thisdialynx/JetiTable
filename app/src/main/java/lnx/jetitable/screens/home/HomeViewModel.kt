@@ -111,7 +111,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                     STATE,
                     user.group,
                     user.fio,
-                    user.id_fio,
+                    user.id_user,
                     lesson.numLesson,
                     lesson.lesson,
                     lesson.idLesson,
