@@ -69,11 +69,11 @@ fun TTAccountCard(title: String, description: String, icon: ImageVector, context
                 Icon(
                     imageVector = lnx.jetitable.ui.icons.google.Logout,
                     contentDescription = "",
-                    tint = MaterialTheme.colorScheme.secondary
+                    tint = MaterialTheme.colorScheme.onSecondaryContainer
                 )
                 Text(
                     text = "Log out", modifier = Modifier.padding(start = 4.dp),
-                    color = MaterialTheme.colorScheme.secondary,
+                    color = MaterialTheme.colorScheme.onSecondaryContainer,
                     style = MaterialTheme.typography.titleSmall
                 )
             }
