@@ -50,7 +50,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             val user: User = userDataStore.getApiUserData()
             group = user.group
             groupId = user.id_group
-            getDailyLessonList(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH))
+            getDailyLessonList(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
         }
     }
 
