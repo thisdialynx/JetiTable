@@ -104,9 +104,9 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         if (response.status == "ok") {
             val user = parseUserJson(response.user)
             userDataStore.saveApiUserData(user)
-        } else {
-            Toast.makeText(context, "Nuh uh, check log", Toast.LENGTH_SHORT).show()
-            Log.d("HomeViewModel", "Status: ${response.status}")
+        }
+        if (BuildConfig.DEBUG) {
+            Log.d("HomeViewModel", "Response status: ${response.status}")
         }
     }
 }
