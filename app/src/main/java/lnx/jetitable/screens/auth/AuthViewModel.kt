@@ -73,6 +73,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                 Log.e("AuthViewModel", "Login process error.\nisAuthorized: $isAuthorized", e)
             }
         }
+
     }
 
     fun sendMail() {
