@@ -8,8 +8,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
@@ -20,7 +20,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
-import androidx.compose.material3.LocalMinimumInteractiveComponentEnforcement
+import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -32,9 +32,11 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -46,12 +48,13 @@ import lnx.jetitable.navigation.Settings
 @Composable
 fun HomeScreen(navController: NavHostController) {
     val homeViewModel: HomeViewModel = viewModel()
-    val context = LocalContext.current
-    val lessonsList = homeViewModel.dailyLessonList
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+    val appBarState = rememberTopAppBarState()
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(appBarState)
     val selectedDate = homeViewModel.selectedDate
+    val lessonsList = homeViewModel.dailyLessonList
 
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             LargeTopAppBar(
                 title = { Text(text = stringResource(id = R.string.welcome_title)) },
@@ -59,26 +62,25 @@ fun HomeScreen(navController: NavHostController) {
                     IconButton(onClick = { navController.navigate(Settings.route) }) {
                         Icon(
                             imageVector = lnx.jetitable.ui.icons.google.Settings,
-                            contentDescription = "Settings"
+                            contentDescription = null
                         )
                     }
                     IconButton(onClick = { navController.navigate(About.route) }) {
                         Icon(
                             imageVector = lnx.jetitable.ui.icons.google.Info,
-                            contentDescription = "About"
+                            contentDescription = null
                         )
                     }
                 },
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                    scrolledContainerColor = MaterialTheme.colorScheme.background
+                )
             )
         }
     ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp)
-        ) {
+        Column(modifier = Modifier.padding(innerPadding).padding(horizontal = 16.dp)) {
             Card(
                 colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)
@@ -92,7 +94,7 @@ fun HomeScreen(navController: NavHostController) {
                 ) {
                     Icon(
                         imageVector = lnx.jetitable.ui.icons.google.CalendarMonth,
-                        contentDescription = "",
+                        contentDescription = null,
                         modifier = Modifier.padding(end = 4.dp)
                     )
                     Text(
@@ -102,23 +104,21 @@ fun HomeScreen(navController: NavHostController) {
                     DatePickerExtended(
                         selectedDate = selectedDate,
                         modifier = Modifier.weight(1f)
-                    ) { year, month, day ->
-                        homeViewModel.onDateSelected(year, month, day)
-                    }
-                    CompositionLocalProvider(value = LocalMinimumInteractiveComponentEnforcement provides false) {
+                    ) { year, month, day -> homeViewModel.onDateSelected(year, month, day) }
+                    CompositionLocalProvider(value = LocalMinimumInteractiveComponentSize provides Dp.Unspecified) {
                         IconButton(
                             onClick = { homeViewModel.shiftDate(-1) },
                             modifier = Modifier.padding(end = 4.dp)
                         ) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowLeft,
-                                contentDescription = "Next date"
+                                contentDescription = null
                             )
                         }
                         IconButton(onClick = { homeViewModel.shiftDate(1) }) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowRight,
-                                contentDescription = "Previous date",
+                                contentDescription = null
                             )
                         }
                     }
@@ -161,8 +161,10 @@ fun HomeScreen(navController: NavHostController) {
 
                             }
                             else -> {
-                                lessonsList.lessons.forEachIndexed { index, lesson ->
-                                    ExpandableScheduleRow(lesson = lesson, index = index, homeViewModel = homeViewModel)
+                                LazyColumn {
+                                    itemsIndexed(lessonsList.lessons) { index, lesson ->
+                                        ExpandableScheduleRow(lesson = lesson, index = index, homeViewModel = homeViewModel)
+                                    }
                                 }
                             }
                         }
