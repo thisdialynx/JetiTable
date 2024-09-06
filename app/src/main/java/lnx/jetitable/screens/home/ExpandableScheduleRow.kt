@@ -64,30 +64,33 @@ fun ExpandableScheduleRow(lesson: Lesson, index: Int, homeViewModel: HomeViewMod
                 text = lesson.type,
                 style = MaterialTheme.typography.bodyMedium
             )
-            CompositionLocalProvider(value = LocalMinimumInteractiveComponentEnforcement provides false) {
-                Card(
-                    onClick = {
-                        localUriHandler.openUri(lesson.loadZoom)
-                        homeViewModel.verifyPresence(lesson)
-                    },
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.secondaryContainer
-                    ),
-                    modifier = Modifier.size(40.dp)
-                ) {
-                    Icon(
-                        imageVector = when (lesson.loadZoom.isNotEmpty()) {
-                            lesson.loadZoom.contains("zoom.us") -> lnx.jetitable.ui.icons.ZoomMeeting
-                            lesson.loadZoom.contains("meet.google.com") -> lnx.jetitable.ui.icons.GoogleMeet
-                            lesson.loadZoom.contains("team.microsoft.com") -> lnx.jetitable.ui.icons.MsTeams
-                            else -> lnx.jetitable.ui.icons.google.Link
+            if (lesson.loadZoom.isNotEmpty()) {
+                CompositionLocalProvider(value = LocalMinimumInteractiveComponentEnforcement provides false) {
+                    Card(
+                        onClick = {
+                            localUriHandler.openUri(lesson.loadZoom)
+                            homeViewModel.verifyPresence(lesson)
                         },
-                        contentDescription = "",
-                        modifier = Modifier.padding(8.dp),
-                        tint = MaterialTheme.colorScheme.onSecondaryContainer
-                    )
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.secondaryContainer
+                        ),
+                        modifier = Modifier.size(40.dp)
+                    ) {
+                        Icon(
+                            imageVector = when {
+                                lesson.loadZoom.contains("zoom.us") -> lnx.jetitable.ui.icons.ZoomMeeting
+                                lesson.loadZoom.contains("meet.google.com") -> lnx.jetitable.ui.icons.GoogleMeet
+                                lesson.loadZoom.contains("team.microsoft.com") -> lnx.jetitable.ui.icons.MsTeams
+                                else -> lnx.jetitable.ui.icons.google.Link
+                            },
+                            contentDescription = "",
+                            modifier = Modifier.padding(8.dp),
+                            tint = MaterialTheme.colorScheme.onSecondaryContainer
+                        )
+                    }
                 }
             }
+
             if (lesson.loadMoodleStudent.isNotEmpty()) {
                 CompositionLocalProvider(value = LocalMinimumInteractiveComponentEnforcement provides false) {
                     Card(
