@@ -39,9 +39,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import lnx.jetitable.R
 
 @Composable
-fun AuthScreen(
-    onAuthComplete: () -> Unit = {},
-) {
+fun AuthScreen(onAuthComplete: () -> Unit = {}) {
     val authViewModel: AuthViewModel = viewModel()
     val context = LocalContext.current
     val openDialog = remember { mutableStateOf(false) }
@@ -103,9 +101,7 @@ fun AuthScreen(
                     ),
                     placeholder = { Text(text = "example@snu.edu.ua") },
                     singleLine = true,
-                    leadingIcon = {
-                        Icon(imageVector = lnx.jetitable.ui.icons.google.Mail, contentDescription = "Mail icon")
-                    }
+                    leadingIcon = { Icon(imageVector = lnx.jetitable.ui.icons.google.Mail, contentDescription = "Mail icon") }
                 )
                 Text(
                     text = stringResource(id = R.string.corporate_email_description),
@@ -127,13 +123,14 @@ fun AuthScreen(
                         keyboardType = KeyboardType.Password,
                         imeAction = ImeAction.Done
                     ),
-                    keyboardActions = KeyboardActions(
-                        onDone = { authViewModel.checkCredentials() }
-                    ),
+                    keyboardActions = KeyboardActions(onDone = { authViewModel.checkCredentials() }),
                     singleLine = true,
                     leadingIcon = {
-                        Icon(imageVector = lnx.jetitable.ui.icons.google.Password, contentDescription = "Key icon")
-                    },
+                        Icon(
+                            imageVector = lnx.jetitable.ui.icons.google.Password,
+                            contentDescription = "Key icon"
+                        )
+                    }
                 )
             }
 
@@ -184,9 +181,7 @@ fun AuthScreen(
                             }
                         },
                         dismissButton = {
-                            TextButton(onClick = { openDialog.value = false }) {
-                                Text(text = stringResource(id = R.string.dismiss))
-                            }
+                            TextButton(onClick = { openDialog.value = false }) { Text(text = stringResource(id = R.string.dismiss)) }
                         },
                         icon = { Icon(imageVector = lnx.jetitable.ui.icons.google.Password, contentDescription = "Key icon") }
                     )
