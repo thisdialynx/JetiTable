@@ -11,6 +11,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import lnx.jetitable.BuildConfig
 import lnx.jetitable.R
 import lnx.jetitable.datastore.UserDataManager
 import lnx.jetitable.misc.getAcademicYear
@@ -40,15 +41,9 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     var errorMessage by mutableIntStateOf(0)
         private set
 
-    fun updatePassword(value: String) {
-        password = value
-    }
-    fun updateEmail(value: String) {
-        email = value
-    }
-    fun clearErrorMessage() {
-        errorMessage = 0
-    }
+    fun updatePassword(value: String) { password = value }
+    fun updateEmail(value: String) { email = value }
+    fun clearErrorMessage() { errorMessage = 0 }
     private fun checkEmail(login: String): Boolean {
         return if (!login.endsWith("@snu.edu.ua")) {
             errorMessage = R.string.corporate_email_error
@@ -60,26 +55,26 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             try {
                 val basicAuth = Credentials.basic(email, password)
+
                 if (checkEmail(email)) {
                     errorMessage = R.string.corporate_email_error
                 } else {
-                    val response = service.checkPassword(basicAuth,
+                    val response = service.checkPassword(
+                        basicAuth,
                         LoginRequest(CHECK_PASSWORD, email, password)
                     )
+
                     if (response.status == "ok") {
                         getUserData()
                         isAuthorized = true
-                    } else {
-                        errorMessage = R.string.wrong_credentials
-                    }
+                    } else { errorMessage = R.string.wrong_credentials }
                 }
             } catch (e: Exception) {
-                Log.e("AuthViewModel", "Error during login process.\nisAuthorized: $isAuthorized", e)
+                Log.e("AuthViewModel", "Login process error.\nisAuthorized: $isAuthorized", e)
             }
         }
 
     }
-
 
     fun sendMail() {
         checkEmail(email)
@@ -92,7 +87,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                     Toast.makeText(context, R.string.invalid_email, Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
-                Log.e("AuthViewModel", "Invalid email", e)
+                Log.e("AuthViewModel", "Email sending error", e)
             }
         }
     }
@@ -104,9 +99,8 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
             calendar.get(Calendar.YEAR),
             calendar.get(Calendar.MONTH) + 1
         )
-        val response = service.checkAccess(
-            AccessRequest(CHECK_ACCESS, semester, currentYear)
-        )
+        val response = service.checkAccess(AccessRequest(CHECK_ACCESS, semester, currentYear))
+
         if (response.status == "ok") {
             val user = parseUserJson(response.user)
             userDataStore.saveApiUserData(user)
@@ -114,8 +108,5 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
             Toast.makeText(context, "Nuh uh, check log", Toast.LENGTH_SHORT).show()
             Log.d("HomeViewModel", "Status: ${response.status}")
         }
-
     }
-
-
 }
