@@ -6,16 +6,15 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalMinimumInteractiveComponentEnforcement
+import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.surfaceColorAtElevation
@@ -29,11 +28,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import lnx.jetitable.R
 import lnx.jetitable.timetable.api.query.data.Lesson
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExpandableScheduleRow(lesson: Lesson, index: Int, homeViewModel: HomeViewModel) {
     var expanded by remember { mutableStateOf(false) }
@@ -45,7 +44,7 @@ fun ExpandableScheduleRow(lesson: Lesson, index: Int, homeViewModel: HomeViewMod
             thickness = 2.dp
         )
     }
-    Column(modifier = Modifier.clickable { expanded = !expanded }) {
+    Box(modifier = Modifier.clickable { expanded = !expanded }) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -65,7 +64,7 @@ fun ExpandableScheduleRow(lesson: Lesson, index: Int, homeViewModel: HomeViewMod
                 style = MaterialTheme.typography.bodyMedium
             )
             if (lesson.loadZoom.isNotEmpty()) {
-                CompositionLocalProvider(value = LocalMinimumInteractiveComponentEnforcement provides false) {
+                CompositionLocalProvider(value = LocalMinimumInteractiveComponentSize provides Dp.Unspecified) {
                     Card(
                         onClick = {
                             localUriHandler.openUri(lesson.loadZoom)
@@ -83,7 +82,7 @@ fun ExpandableScheduleRow(lesson: Lesson, index: Int, homeViewModel: HomeViewMod
                                 lesson.loadZoom.contains("team.microsoft.com") -> lnx.jetitable.ui.icons.MsTeams
                                 else -> lnx.jetitable.ui.icons.google.Link
                             },
-                            contentDescription = "",
+                            contentDescription = null,
                             modifier = Modifier.padding(8.dp),
                             tint = MaterialTheme.colorScheme.onSecondaryContainer
                         )
@@ -92,7 +91,7 @@ fun ExpandableScheduleRow(lesson: Lesson, index: Int, homeViewModel: HomeViewMod
             }
 
             if (lesson.loadMoodleStudent.isNotEmpty()) {
-                CompositionLocalProvider(value = LocalMinimumInteractiveComponentEnforcement provides false) {
+                CompositionLocalProvider(value = LocalMinimumInteractiveComponentSize provides Dp.Unspecified) {
                     Card(
                         onClick = { localUriHandler.openUri(lesson.loadMoodleStudent) },
                         colors = CardDefaults.cardColors(
@@ -102,7 +101,7 @@ fun ExpandableScheduleRow(lesson: Lesson, index: Int, homeViewModel: HomeViewMod
                     ) {
                         Icon(
                             imageVector = lnx.jetitable.ui.icons.Moodle,
-                            contentDescription = "",
+                            contentDescription = null,
                             modifier = Modifier.padding(8.dp),
                             tint = MaterialTheme.colorScheme.onTertiaryContainer
                         )
