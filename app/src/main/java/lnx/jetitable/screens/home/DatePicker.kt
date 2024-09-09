@@ -6,7 +6,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.LocalMinimumInteractiveComponentEnforcement
+import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -20,6 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import lnx.jetitable.R
 import lnx.jetitable.misc.getAcademicYear
@@ -71,11 +72,11 @@ fun DatePickerExtended(selectedDate: android.icu.util.Calendar, modifier: Modifi
         Locale.getDefault(),
         dateFormat,
         selectedDate.get(Calendar.DAY_OF_MONTH),
-        selectedDate.get(Calendar.MONTH),
+        selectedDate.get(Calendar.MONTH) + 1,
         selectedDate.get(Calendar.YEAR)
     )
 
-    CompositionLocalProvider(value = LocalMinimumInteractiveComponentEnforcement provides false) {
+    CompositionLocalProvider(value = LocalMinimumInteractiveComponentSize provides Dp.Unspecified) {
         Text(
             text = selectedDateString,
             modifier = modifier.clickable { showDialog = true },
