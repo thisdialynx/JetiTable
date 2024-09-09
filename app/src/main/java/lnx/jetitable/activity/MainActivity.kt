@@ -4,6 +4,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -29,9 +34,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             JetiTableTheme {
-                Surface {
-                    AppNavigation()
-                }
+                Surface { AppNavigation() }
             }
         }
     }
@@ -45,28 +48,40 @@ fun AppNavigation() {
         navController = navController,
         startDestination = Loading.route
     ) {
-        composable(Auth.route) {
+        composable(
+            Auth.route,
+            exitTransition = { slideOutHorizontally(targetOffsetX = { -200 }) + fadeOut(animationSpec = tween(150)) }
+        ) {
             AuthScreen(
                 onAuthComplete = {
                     navController.navigate(Home.route) {
-                        popUpTo(Auth.route) {
-                            inclusive = true
-                        }
+                        popUpTo(Auth.route) { inclusive = true }
                     }
                 }
             )
         }
-        composable(Home.route) {
-            HomeScreen(navController)
-        }
-        composable(About.route) {
-            AboutScreen(navController)
-        }
-        composable(Settings.route) {
-            SettingsScreen(navController)
-        }
-        composable(Loading.route) {
-            LoadingScreen(navController)
-        }
+        composable(
+            Home.route,
+            enterTransition = { slideInHorizontally(initialOffsetX = { -200 }) + fadeIn(animationSpec = tween(200)) },
+            exitTransition = { slideOutHorizontally(targetOffsetX = { -200 }) + fadeOut(animationSpec = tween(200)) }
+        ) { HomeScreen(navController) }
+
+        composable(
+            About.route,
+            enterTransition = { slideInHorizontally(initialOffsetX = { 200 }) + fadeIn(animationSpec = tween(200)) },
+            exitTransition = { slideOutHorizontally(targetOffsetX = { 200 }) + fadeOut(animationSpec = tween(200)) }
+        ) { AboutScreen(navController) }
+
+        composable(
+            Settings.route,
+            enterTransition = { slideInHorizontally(initialOffsetX = { 200 }) + fadeIn(animationSpec = tween(200)) },
+            exitTransition = { slideOutHorizontally(targetOffsetX = { 200 }) + fadeOut(animationSpec = tween(200)) }
+        ) { SettingsScreen(navController) }
+
+        composable(
+            Loading.route,
+            enterTransition = { slideInHorizontally(initialOffsetX = { 200 }) + fadeIn(animationSpec = tween(200)) },
+            exitTransition = { slideOutHorizontally(targetOffsetX = { 200 }) + fadeOut(animationSpec = tween(200)) }
+        ) { LoadingScreen(navController) }
     }
 }
