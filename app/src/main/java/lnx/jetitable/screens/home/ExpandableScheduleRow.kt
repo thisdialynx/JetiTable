@@ -71,7 +71,7 @@ fun ExpandableScheduleRow(lesson: Lesson, index: Int, homeViewModel: HomeViewMod
                             homeViewModel.verifyPresence(lesson)
                         },
                         colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.secondaryContainer
+                            containerColor = MaterialTheme.colorScheme.secondary
                         ),
                         modifier = Modifier.size(40.dp)
                     ) {
@@ -84,7 +84,7 @@ fun ExpandableScheduleRow(lesson: Lesson, index: Int, homeViewModel: HomeViewMod
                             },
                             contentDescription = null,
                             modifier = Modifier.padding(8.dp),
-                            tint = MaterialTheme.colorScheme.onSecondaryContainer
+                            tint = MaterialTheme.colorScheme.onSecondary
                         )
                     }
                 }
@@ -95,7 +95,7 @@ fun ExpandableScheduleRow(lesson: Lesson, index: Int, homeViewModel: HomeViewMod
                     Card(
                         onClick = { localUriHandler.openUri(lesson.loadMoodleStudent) },
                         colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.tertiaryContainer
+                            containerColor = MaterialTheme.colorScheme.tertiary
                         ),
                         modifier = Modifier.size(40.dp)
                     ) {
@@ -103,7 +103,7 @@ fun ExpandableScheduleRow(lesson: Lesson, index: Int, homeViewModel: HomeViewMod
                             imageVector = lnx.jetitable.ui.icons.Moodle,
                             contentDescription = null,
                             modifier = Modifier.padding(8.dp),
-                            tint = MaterialTheme.colorScheme.onTertiaryContainer
+                            tint = MaterialTheme.colorScheme.onTertiary
                         )
                     }
                 }
