@@ -6,7 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -69,13 +68,5 @@ fun AppNavigation() {
         composable(Loading.route) {
             LoadingScreen(navController)
         }
-    }
-}
-
-@Composable
-@Preview(showBackground = true)
-fun DefaultPreview() {
-    JetiTableTheme {
-        AppNavigation()
     }
 }
