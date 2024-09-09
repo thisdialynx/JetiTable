@@ -128,7 +128,7 @@ fun HomeScreen(navController: NavHostController) {
                         .padding(bottom = 16.dp)
                         .padding(horizontal = 16.dp),
                     colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(10.dp)
+                        containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(6.dp)
                     )
                 ) {
                     Column(

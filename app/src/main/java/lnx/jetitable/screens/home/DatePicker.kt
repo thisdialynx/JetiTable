@@ -80,7 +80,7 @@ fun DatePickerExtended(selectedDate: android.icu.util.Calendar, modifier: Modifi
         Text(
             text = selectedDateString,
             modifier = modifier.clickable { showDialog = true },
-            color = MaterialTheme.colorScheme.onPrimaryContainer,
+            color = MaterialTheme.colorScheme.primary,
             style = MaterialTheme.typography.titleMedium,
             textDecoration = TextDecoration.Underline
         )
