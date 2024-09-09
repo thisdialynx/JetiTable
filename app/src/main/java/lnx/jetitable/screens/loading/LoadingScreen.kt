@@ -9,8 +9,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import lnx.jetitable.navigation.Auth
@@ -42,11 +40,4 @@ fun LoadingScreen(navController: NavHostController) {
             CircularProgressIndicator(strokeCap = StrokeCap.Round)
         }
     }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-private fun LoadingScreenPreview() {
-    LoadingScreen(navController = NavHostController(LocalContext.current))
 }

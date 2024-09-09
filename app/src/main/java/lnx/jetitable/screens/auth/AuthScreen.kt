@@ -33,7 +33,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import lnx.jetitable.R
@@ -217,11 +216,5 @@ fun AuthScreen(onAuthComplete: () -> Unit = {}) {
             )
         }
     }
-}
-
-@Preview
-@Composable
-private fun AuthScreenPreview() {
-    AuthScreen()
 }
 
