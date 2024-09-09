@@ -38,6 +38,13 @@ fun ExpandableScheduleRow(lesson: Lesson, index: Int, homeViewModel: HomeViewMod
     var expanded by remember { mutableStateOf(false) }
     val localUriHandler = LocalUriHandler.current
 
+    val meetingIcon = when {
+        lesson.loadZoom.contains("zoom.us") -> lnx.jetitable.ui.icons.ZoomMeeting
+        lesson.loadZoom.contains("meet.google.com") -> lnx.jetitable.ui.icons.GoogleMeet
+        lesson.loadZoom.contains("teams.microsoft.com") -> lnx.jetitable.ui.icons.MsTeams
+        else -> lnx.jetitable.ui.icons.google.Link
+    }
+
     if (index > 0) {
         HorizontalDivider(
             color = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp),
@@ -76,12 +83,7 @@ fun ExpandableScheduleRow(lesson: Lesson, index: Int, homeViewModel: HomeViewMod
                         modifier = Modifier.size(40.dp)
                     ) {
                         Icon(
-                            imageVector = when {
-                                lesson.loadZoom.contains("zoom.us") -> lnx.jetitable.ui.icons.ZoomMeeting
-                                lesson.loadZoom.contains("meet.google.com") -> lnx.jetitable.ui.icons.GoogleMeet
-                                lesson.loadZoom.contains("team.microsoft.com") -> lnx.jetitable.ui.icons.MsTeams
-                                else -> lnx.jetitable.ui.icons.google.Link
-                            },
+                            imageVector = meetingIcon,
                             contentDescription = null,
                             modifier = Modifier.padding(8.dp),
                             tint = MaterialTheme.colorScheme.onSecondary
