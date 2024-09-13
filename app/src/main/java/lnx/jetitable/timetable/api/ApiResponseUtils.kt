@@ -15,7 +15,7 @@ fun parseUserJson(userJson: String): User {
     return Gson().fromJson(userJson, User::class.java)
 }
 
-fun dailyLessonListDataExtractor(response: String): DailyLessonListResponse {
+fun parseLessonHtml(response: String): DailyLessonListResponse {
 
     // Since the response does not contain html, body and table tags, we add them manually
     val correctResponse = "<html><body><table>$response</table></body></html>"

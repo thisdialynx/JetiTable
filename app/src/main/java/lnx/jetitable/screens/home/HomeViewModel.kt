@@ -93,7 +93,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                     )
                 )
 
-                dailyLessonList = dailyLessonListDataExtractor(response)
+                dailyLessonList = parseLessonHtml(response)
             } catch (e: NotFoundException) {
                 Log.d("HomeViewModel", "Page not found", e)
             } catch (e: Exception) {
