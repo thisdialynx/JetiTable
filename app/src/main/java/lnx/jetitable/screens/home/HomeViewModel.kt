@@ -102,30 +102,32 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     fun verifyPresence(lesson: Lesson) {
         viewModelScope.launch {
-            val user: User = userDataStore.getApiUserData()
-            val response = service.get_checkZoom(
-                VerifyPresenceRequest(
-                    CHECK_ZOOM,
-                    STATE,
-                    user.group,
-                    user.fio,
-                    user.id_user,
-                    lesson.numLesson,
-                    lesson.lesson,
-                    lesson.idLesson,
-                    lesson.type,
-                    lesson.fio,
-                    lesson.idFio,
-                    lesson.dateLes,
-                    "${lesson.timeBeg}:00",
-                    "${lesson.timeEnd}:00",
+            try {
+                val user: User = userDataStore.getApiUserData()
+                val response = service.get_checkZoom(
+                    VerifyPresenceRequest(
+                        CHECK_ZOOM,
+                        STATE,
+                        user.group,
+                        user.fio,
+                        user.id_user,
+                        lesson.numLesson,
+                        lesson.lesson,
+                        lesson.idLesson,
+                        lesson.type,
+                        lesson.fio,
+                        lesson.idFio,
+                        lesson.dateLes,
+                        "${lesson.timeBeg}:00",
+                        "${lesson.timeEnd}:00",
+                    )
                 )
-            )
 
-            if (response == "ok" && BuildConfig.DEBUG) {
-                Log.d("HomeViewModel", "Presence verified")
-            } else {
-                Log.d("HomeViewModel", "Error occurred")
+                if (response == "ok" && BuildConfig.DEBUG) {
+                    Log.d("HomeViewModel", "Request successful")
+                }
+            } catch (e: Exception) {
+                Log.d("HomeViewModel", "Request send error", e)
             }
         }
     }
