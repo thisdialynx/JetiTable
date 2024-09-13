@@ -51,7 +51,7 @@ fun SettingsScreen(navController: NavHostController) {
         val group = settingsViewModel.group
         val groupId = settingsViewModel.groupId
         val isFullTime = if (settingsViewModel.isFullTime == true) R.string.full_time else R.string.part_time
-        val semester = if (getSemester(calendar.get(Calendar.MONTH) + 1) == "1") R.string.autumn_semester else R.string.spring_semester
+        val semester = if (getSemester(calendar.get(Calendar.MONTH) + 1) == 1) R.string.autumn_semester else R.string.spring_semester
 
         Column(
             modifier = Modifier
