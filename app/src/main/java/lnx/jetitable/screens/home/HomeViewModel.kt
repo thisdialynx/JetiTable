@@ -13,18 +13,18 @@ import kotlinx.coroutines.launch
 import lnx.jetitable.BuildConfig
 import lnx.jetitable.datastore.UserDataManager
 import lnx.jetitable.misc.getAcademicYear
+import lnx.jetitable.misc.getFormattedDate
 import lnx.jetitable.misc.getSemester
 import lnx.jetitable.timetable.api.ApiService.Companion.CHECK_ZOOM
 import lnx.jetitable.timetable.api.ApiService.Companion.DAILY_LESSON_LIST
 import lnx.jetitable.timetable.api.ApiService.Companion.STATE
 import lnx.jetitable.timetable.api.RetrofitHolder
-import lnx.jetitable.timetable.api.dailyLessonListDataExtractor
+import lnx.jetitable.timetable.api.parseLessonHtml
 import lnx.jetitable.timetable.api.login.data.User
 import lnx.jetitable.timetable.api.query.data.DailyLessonListRequest
 import lnx.jetitable.timetable.api.query.data.DailyLessonListResponse
 import lnx.jetitable.timetable.api.query.data.Lesson
 import lnx.jetitable.timetable.api.query.data.VerifyPresenceRequest
-import java.util.Locale
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private val context
@@ -32,7 +32,6 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private val userDataStore = UserDataManager(context)
     private val service = RetrofitHolder.getInstance(context)
 
-    private val locale = Locale.getDefault()
     private val calendar = Calendar.getInstance()
 
     var group by mutableStateOf("")
@@ -77,10 +76,9 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                     calendar.get(Calendar.YEAR),
                     calendar.get(Calendar.MONTH) + 1
                 )
-                val dateFormat = "%02d.%02d.%d"
-                val currentSemester = getSemester(calendar.get(Calendar.MONTH) + 1)
+                val currentSemester = getSemester(calendar.get(Calendar.MONTH)).toString()
                 val firstGroupId = groupId.split(",")[0].trim()
-                val selectedDateString = String.format(locale, dateFormat, day, month + 1, year)
+                val selectedDateString = getFormattedDate(day, month + 1, year)
 
                 val response = service.get_listLessonTodayStudent(
                     DailyLessonListRequest(
