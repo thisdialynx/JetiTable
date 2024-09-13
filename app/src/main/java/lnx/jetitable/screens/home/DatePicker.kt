@@ -24,8 +24,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import lnx.jetitable.R
 import lnx.jetitable.misc.getAcademicYear
+import lnx.jetitable.misc.getFormattedDate
 import java.util.Calendar
-import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,7 +37,6 @@ fun DatePickerExtended(selectedDate: android.icu.util.Calendar, modifier: Modifi
     val currentMonth = calendar.get(Calendar.MONTH) + 1
     val academicYear = getAcademicYear(currentYear, currentMonth)
     val yearRange = academicYear.split("/").map { it.toInt() }
-    val dateFormat = "%02d.%02d.%d"
     val datePickerState = rememberDatePickerState(
         initialSelectedDateMillis = calendar.timeInMillis,
         yearRange = IntRange(yearRange[0], yearRange[1])
@@ -68,9 +67,7 @@ fun DatePickerExtended(selectedDate: android.icu.util.Calendar, modifier: Modifi
             }
         ) { DatePicker(state = datePickerState) }
     }
-    val selectedDateString = String.format(
-        Locale.getDefault(),
-        dateFormat,
+    val selectedDateString = getFormattedDate(
         selectedDate.get(Calendar.DAY_OF_MONTH),
         selectedDate.get(Calendar.MONTH) + 1,
         selectedDate.get(Calendar.YEAR)

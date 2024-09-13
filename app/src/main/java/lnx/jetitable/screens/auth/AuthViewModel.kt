@@ -94,7 +94,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
     private suspend fun getUserData() {
         val calendar = Calendar.getInstance()
-        val semester = getSemester(calendar.get(Calendar.MONTH) + 1)
+        val semester = getSemester(calendar.get(Calendar.MONTH) + 1).toString()
         val currentYear = getAcademicYear(
             calendar.get(Calendar.YEAR),
             calendar.get(Calendar.MONTH) + 1
