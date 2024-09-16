@@ -1,5 +1,5 @@
 ## Introduction
-TimeTable is an open source application for the TimeTable scheduling information system, supporting Android 7.0 and higher. **This is NOT an officially supported product by the university.**
+JetiTable is an open source application for the TimeTable scheduling information system, supporting Android 7.0 and higher. **This is NOT an officially supported product by the university.**
 
 Some highlight features:
 - Sign in/Sign out
@@ -7,7 +7,7 @@ Some highlight features:
 - Schedule for the day
 
 ## Downloads
-[GitHub](https://github.com/thisdialynx/JetiTable/releases/latest) is the only source at the moment
+[GitHub](https://github.com/thisdialynx/JetiTable/releases/latest) and [SourceForge](https://sourceforge.net/projects/diaproduction/files/JetiTable/) is the only source at the moment
 
 ## Translation contributions
 Default string resources are located here:
