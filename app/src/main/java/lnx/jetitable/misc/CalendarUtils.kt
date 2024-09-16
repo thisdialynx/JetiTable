@@ -18,3 +18,19 @@ fun getSemester(month: Int): Int {
 fun getFormattedDate(day: Int, month: Int, year: Int): String {
     return String.format(Locale.getDefault(), dateFormat, day, month, year)
 }
+
+fun isLessonNow(lesson: Lesson): Boolean {
+    val calendar = Calendar.getInstance()
+    val hour = calendar.get(Calendar.HOUR_OF_DAY)
+    val minute = calendar.get(Calendar.MINUTE)
+
+    val formattedTime = String.format(Locale.getDefault(), timeFormat, hour, minute)
+    val formattedDate = getFormattedDate(
+        calendar.get(Calendar.DAY_OF_MONTH),
+        calendar.get(Calendar.MONTH) + 1,
+        calendar.get(Calendar.YEAR)
+    )
+    val result = formattedDate == lesson.dateLes && lesson.timeBeg > formattedTime && formattedTime > lesson.timeEnd
+
+    return result
+}

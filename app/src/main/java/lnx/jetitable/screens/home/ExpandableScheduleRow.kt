@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,6 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import lnx.jetitable.R
+import lnx.jetitable.misc.isLessonNow
 import lnx.jetitable.timetable.api.query.data.Lesson
 
 @Composable
@@ -44,6 +46,7 @@ fun ExpandableScheduleRow(lesson: Lesson, index: Int, homeViewModel: HomeViewMod
         lesson.loadZoom.contains("teams.microsoft.com") -> lnx.jetitable.ui.icons.MsTeams
         else -> lnx.jetitable.ui.icons.google.Link
     }
+    val bgColor = if (isLessonNow(lesson)) MaterialTheme.colorScheme.surfaceColorAtElevation(10.dp) else MaterialTheme.colorScheme.surfaceColorAtElevation(6.dp)
 
     if (index > 0) {
         HorizontalDivider(
@@ -51,7 +54,11 @@ fun ExpandableScheduleRow(lesson: Lesson, index: Int, homeViewModel: HomeViewMod
             thickness = 2.dp
         )
     }
-    Box(modifier = Modifier.clickable { expanded = !expanded }) {
+    Box(
+        modifier = Modifier
+            .background(bgColor)
+            .clickable { expanded = !expanded }
+    ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp),
