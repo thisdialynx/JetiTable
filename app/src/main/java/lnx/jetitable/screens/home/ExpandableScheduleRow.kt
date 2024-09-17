@@ -46,7 +46,7 @@ fun ExpandableScheduleRow(lesson: Lesson, index: Int, homeViewModel: HomeViewMod
         lesson.loadZoom.contains("teams.microsoft.com") -> lnx.jetitable.ui.icons.MsTeams
         else -> lnx.jetitable.ui.icons.google.Link
     }
-    val bgColor = if (isLessonNow(lesson)) MaterialTheme.colorScheme.surfaceColorAtElevation(10.dp) else MaterialTheme.colorScheme.surfaceColorAtElevation(6.dp)
+    val bgColor = if (isLessonNow(lesson)) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceColorAtElevation(6.dp)
 
     if (index > 0) {
         HorizontalDivider(
@@ -123,7 +123,8 @@ fun ExpandableScheduleRow(lesson: Lesson, index: Int, homeViewModel: HomeViewMod
     AnimatedVisibility(
         visible = expanded,
         enter = expandVertically(animationSpec = tween(durationMillis = 300)),
-        exit = shrinkVertically(animationSpec = tween(durationMillis = 300))
+        exit = shrinkVertically(animationSpec = tween(durationMillis = 300)),
+        modifier = Modifier.background(bgColor)
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp),

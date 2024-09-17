@@ -30,7 +30,6 @@ fun isLessonNow(lesson: Lesson): Boolean {
         calendar.get(Calendar.MONTH) + 1,
         calendar.get(Calendar.YEAR)
     )
-    val result = formattedDate == lesson.dateLes && lesson.timeBeg > formattedTime && formattedTime > lesson.timeEnd
 
-    return result
+    return formattedDate == lesson.dateLes && formattedTime >= lesson.timeBeg && formattedTime <= lesson.timeEnd
 }
