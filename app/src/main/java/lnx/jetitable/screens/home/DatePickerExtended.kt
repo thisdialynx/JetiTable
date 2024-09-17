@@ -1,5 +1,6 @@
 package lnx.jetitable.screens.home
 
+import android.icu.util.Calendar
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -25,16 +26,15 @@ import androidx.compose.ui.unit.dp
 import lnx.jetitable.R
 import lnx.jetitable.misc.getAcademicYear
 import lnx.jetitable.misc.getFormattedDate
-import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DatePickerExtended(selectedDate: android.icu.util.Calendar, modifier: Modifier = Modifier, onDateSelected: (Int, Int, Int) -> Unit) {
+fun DatePickerExtended(selectedDate: Calendar, modifier: Modifier = Modifier, onDateSelected: (Int, Int, Int) -> Unit) {
     var showDialog by remember { mutableStateOf(false) }
 
-    val calendar = Calendar.getInstance()
-    val currentYear = calendar.get(Calendar.YEAR)
-    val currentMonth = calendar.get(Calendar.MONTH) + 1
+    val calendar = java.util.Calendar.getInstance()
+    val currentYear = calendar.get(java.util.Calendar.YEAR)
+    val currentMonth = calendar.get(java.util.Calendar.MONTH) + 1
     val academicYear = getAcademicYear(currentYear, currentMonth)
     val yearRange = academicYear.split("/").map { it.toInt() }
     val datePickerState = rememberDatePickerState(
@@ -51,16 +51,16 @@ fun DatePickerExtended(selectedDate: android.icu.util.Calendar, modifier: Modifi
                         showDialog = false
                         datePickerState.selectedDateMillis?.let { millis ->
                             calendar.timeInMillis = millis
-                            val year = calendar.get(Calendar.YEAR)
-                            val month = calendar.get(Calendar.MONTH)
-                            val day = calendar.get(Calendar.DAY_OF_MONTH)
+                            val year = calendar.get(java.util.Calendar.YEAR)
+                            val month = calendar.get(java.util.Calendar.MONTH)
+                            val day = calendar.get(java.util.Calendar.DAY_OF_MONTH)
                             onDateSelected(year, month, day)
                         }
                     },
                     modifier = Modifier.padding(end = 6.dp)
                 ) { Text(text = "OK") }
             },
-            dismissButton = { 
+            dismissButton = {
                 TextButton(onClick = { showDialog = false }) {
                     Text(text = stringResource(id = R.string.dismiss))
                 }
@@ -68,9 +68,9 @@ fun DatePickerExtended(selectedDate: android.icu.util.Calendar, modifier: Modifi
         ) { DatePicker(state = datePickerState) }
     }
     val selectedDateString = getFormattedDate(
-        selectedDate.get(Calendar.DAY_OF_MONTH),
-        selectedDate.get(Calendar.MONTH) + 1,
-        selectedDate.get(Calendar.YEAR)
+        selectedDate.get(java.util.Calendar.DAY_OF_MONTH),
+        selectedDate.get(java.util.Calendar.MONTH) + 1,
+        selectedDate.get(java.util.Calendar.YEAR)
     )
 
     CompositionLocalProvider(value = LocalMinimumInteractiveComponentSize provides Dp.Unspecified) {
