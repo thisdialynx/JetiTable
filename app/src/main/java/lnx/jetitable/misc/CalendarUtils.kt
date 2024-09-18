@@ -19,8 +19,10 @@ fun getFormattedDate(day: Int, month: Int, year: Int): String {
     return String.format(Locale.getDefault(), dateFormat, day, month, year)
 }
 
-fun isLessonNow(lesson: Lesson): Boolean {
+fun isLessonNow(lesson: Lesson, currentTime: Long): Boolean {
     val calendar = Calendar.getInstance()
+    calendar.timeInMillis = currentTime
+
     val hour = calendar.get(Calendar.HOUR_OF_DAY)
     val minute = calendar.get(Calendar.MINUTE)
 

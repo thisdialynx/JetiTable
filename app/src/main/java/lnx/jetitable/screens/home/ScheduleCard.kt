@@ -55,12 +55,13 @@ fun ScheduleCard(lessonList: DailyLessonListResponse?, selectedDate: Calendar, h
 
 @Composable
 fun ScheduleInnerCard(lessonList: DailyLessonListResponse?, homeViewModel: HomeViewModel) {
-    var currentTime by remember { mutableLongStateOf(Calendar.getInstance().timeInMillis) }
+    val time = Calendar.getInstance().timeInMillis
+    var currentTime by remember { mutableLongStateOf(time) }
 
     LaunchedEffect(Unit) {
         while (true) {
-            delay(60000)
             currentTime = Calendar.getInstance().timeInMillis
+            delay(60000)
         }
     }
 
@@ -103,7 +104,7 @@ fun ScheduleInnerCard(lessonList: DailyLessonListResponse?, homeViewModel: HomeV
                 else -> {
                     LazyColumn {
                         itemsIndexed(lessonList.lessons) { index, lesson ->
-                            ExpandableScheduleRow(lesson = lesson, index = index, homeViewModel = homeViewModel)
+                            ExpandableScheduleRow(lesson = lesson, index = index, currentTime = currentTime, homeViewModel = homeViewModel)
                         }
                     }
                 }
