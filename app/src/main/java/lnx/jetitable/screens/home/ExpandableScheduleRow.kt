@@ -36,17 +36,16 @@ import lnx.jetitable.misc.isLessonNow
 import lnx.jetitable.timetable.api.query.data.Lesson
 
 @Composable
-fun ExpandableScheduleRow(lesson: Lesson, index: Int, homeViewModel: HomeViewModel) {
+fun ExpandableScheduleRow(lesson: Lesson, index: Int, currentTime: Long, homeViewModel: HomeViewModel) {
     var expanded by remember { mutableStateOf(false) }
     val localUriHandler = LocalUriHandler.current
-
     val meetingIcon = when {
         lesson.loadZoom.contains("zoom.us") -> lnx.jetitable.ui.icons.ZoomMeeting
         lesson.loadZoom.contains("meet.google.com") -> lnx.jetitable.ui.icons.GoogleMeet
         lesson.loadZoom.contains("teams.microsoft.com") -> lnx.jetitable.ui.icons.MsTeams
         else -> lnx.jetitable.ui.icons.google.Link
     }
-    val bgColor = if (isLessonNow(lesson)) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceColorAtElevation(6.dp)
+    val bgColor = if (isLessonNow(lesson, currentTime)) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceColorAtElevation(6.dp)
 
     if (index > 0) {
         HorizontalDivider(
