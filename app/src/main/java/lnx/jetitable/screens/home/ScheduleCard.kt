@@ -42,19 +42,6 @@ import lnx.jetitable.timetable.api.query.data.DailyLessonListResponse
 
 @Composable
 fun ScheduleCard(lessonList: DailyLessonListResponse?, selectedDate: Calendar, homeViewModel: HomeViewModel) {
-    Card(
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)
-        ),
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        ScheduleCardTitle(selectedDate = selectedDate, homeViewModel = homeViewModel)
-        ScheduleInnerCard(lessonList = lessonList, homeViewModel = homeViewModel)
-    }
-}
-
-@Composable
-fun ScheduleInnerCard(lessonList: DailyLessonListResponse?, homeViewModel: HomeViewModel) {
     val time = Calendar.getInstance().timeInMillis
     var currentTime by remember { mutableLongStateOf(time) }
 
@@ -65,6 +52,19 @@ fun ScheduleInnerCard(lessonList: DailyLessonListResponse?, homeViewModel: HomeV
         }
     }
 
+    Card(
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)
+        ),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        ScheduleCardTitle(selectedDate = selectedDate, homeViewModel = homeViewModel)
+        ScheduleInnerCard(lessonList = lessonList, currentTime = currentTime, homeViewModel = homeViewModel)
+    }
+}
+
+@Composable
+fun ScheduleInnerCard(lessonList: DailyLessonListResponse?, currentTime: Long, homeViewModel: HomeViewModel) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -93,7 +93,7 @@ fun ScheduleInnerCard(lessonList: DailyLessonListResponse?, homeViewModel: HomeV
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.padding(16.dp)
                     ) {
-                        Icon(imageVector = lnx.jetitable.ui.icons.google.Mood, contentDescription = "")
+                        Icon(imageVector = lnx.jetitable.ui.icons.google.Mood, contentDescription = null)
                         Text(
                             text = stringResource(id = R.string.no_lessons),
                             style = MaterialTheme.typography.bodyMedium
