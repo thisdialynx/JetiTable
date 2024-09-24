@@ -77,14 +77,13 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                     calendar.get(Calendar.MONTH) + 1
                 )
                 val currentSemester = getSemester(calendar.get(Calendar.MONTH)).toString()
-                val firstGroupId = groupId.split(",")[0].trim()
                 val selectedDateString = getFormattedDate(day, month + 1, year)
 
                 val response = service.get_listLessonTodayStudent(
                     DailyLessonListRequest(
                         DAILY_LESSON_LIST,
                         group,
-                        firstGroupId,
+                        groupId,
                         selectedDateString,
                         currentYear,
                         currentSemester
