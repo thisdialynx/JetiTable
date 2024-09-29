@@ -13,7 +13,7 @@ import lnx.jetitable.timetable.api.login.data.User
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "user_data_store")
 
-class UserDataManager (private val context: Context) {
+class UserDataStore (private val context: Context) {
 
     suspend fun saveApiUserData(user: User) {
         context.dataStore.edit {

@@ -1,4 +1,4 @@
-package lnx.jetitable.screens.loading
+package lnx.jetitable.viewmodel
 
 import android.app.Application
 import android.util.Log
@@ -8,7 +8,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import lnx.jetitable.datastore.CookieManager
+import lnx.jetitable.datastore.CookieDataStore
 import lnx.jetitable.timetable.api.ApiService.Companion.AUTHORISATION_PHP
 import lnx.jetitable.timetable.api.ApiService.Companion.BASE_URL
 import okhttp3.HttpUrl.Companion.toHttpUrl
@@ -16,7 +16,7 @@ import okhttp3.HttpUrl.Companion.toHttpUrl
 class LoadingViewModel(application: Application) : AndroidViewModel(application) {
     private val context
         get() = getApplication<Application>().applicationContext
-    private val dataStore = CookieManager(context)
+    private val dataStore = CookieDataStore(context)
     var isAuthorized by mutableStateOf<Boolean?>(null)
         private set
 

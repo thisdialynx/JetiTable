@@ -36,6 +36,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import lnx.jetitable.R
+import lnx.jetitable.viewmodel.AuthViewModel
 
 @Composable
 fun AuthScreen(onAuthComplete: () -> Unit = {}) {

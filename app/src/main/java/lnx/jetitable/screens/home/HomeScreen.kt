@@ -21,6 +21,7 @@ import androidx.navigation.NavHostController
 import lnx.jetitable.R
 import lnx.jetitable.navigation.About
 import lnx.jetitable.navigation.Settings
+import lnx.jetitable.viewmodel.HomeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

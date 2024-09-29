@@ -1,4 +1,4 @@
-package lnx.jetitable.screens.settings
+package lnx.jetitable.viewmodel
 
 import android.app.Application
 import androidx.compose.runtime.getValue
@@ -7,14 +7,14 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import lnx.jetitable.datastore.CookieManager
-import lnx.jetitable.datastore.UserDataManager
+import lnx.jetitable.datastore.CookieDataStore
+import lnx.jetitable.datastore.UserDataStore
 
 class SettingsViewModel(application: Application): AndroidViewModel(application) {
     private val context
         get() = getApplication<Application>().applicationContext
-    private val userDataStore = UserDataManager(context)
-    private val cookieManager = CookieManager(context)
+    private val userDataStore = UserDataStore(context)
+    private val cookieDataStore = CookieDataStore(context)
 
     var userId by mutableStateOf<String?>(null)
         private set
@@ -45,7 +45,7 @@ class SettingsViewModel(application: Application): AndroidViewModel(application)
     fun signOut() {
         viewModelScope.launch {
             userDataStore.clearDataStore()
-            cookieManager.clearCookies()
+            cookieDataStore.clearCookies()
         }
     }
 }
