@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import lnx.jetitable.R
 import lnx.jetitable.timetable.api.query.data.DailyLessonListResponse
+import lnx.jetitable.viewmodel.HomeViewModel
 
 @Composable
 fun ScheduleCard(lessonList: DailyLessonListResponse?, selectedDate: Calendar, homeViewModel: HomeViewModel) {

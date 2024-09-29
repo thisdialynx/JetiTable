@@ -1,4 +1,4 @@
-package lnx.jetitable.screens.auth
+package lnx.jetitable.viewmodel
 
 import android.app.Application
 import android.icu.util.Calendar
@@ -13,7 +13,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import lnx.jetitable.BuildConfig
 import lnx.jetitable.R
-import lnx.jetitable.datastore.UserDataManager
+import lnx.jetitable.datastore.UserDataStore
 import lnx.jetitable.misc.getAcademicYear
 import lnx.jetitable.misc.getSemester
 import lnx.jetitable.timetable.api.ApiService.Companion.CHECK_ACCESS
@@ -29,7 +29,7 @@ import okhttp3.Credentials
 class AuthViewModel(application: Application) : AndroidViewModel(application) {
     private val context
         get() = getApplication<Application>().applicationContext
-    private val userDataStore = UserDataManager(context)
+    private val userDataStore = UserDataStore(context)
     private val service = RetrofitHolder.getInstance(context)
 
     var isAuthorized by mutableStateOf(false)
@@ -93,20 +93,24 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private suspend fun getUserData() {
-        val calendar = Calendar.getInstance()
-        val semester = getSemester(calendar.get(Calendar.MONTH) + 1).toString()
-        val currentYear = getAcademicYear(
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH) + 1
-        )
-        val response = service.checkAccess(AccessRequest(CHECK_ACCESS, semester, currentYear))
+        try {
+            val calendar = Calendar.getInstance()
+            val semester = getSemester(calendar.get(Calendar.MONTH) + 1).toString()
+            val currentYear = getAcademicYear(
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH) + 1
+            )
+            val response = service.checkAccess(AccessRequest(CHECK_ACCESS, semester, currentYear))
 
-        if (response.status == "ok") {
-            val user = parseUserJson(response.user)
-            userDataStore.saveApiUserData(user)
-        }
-        if (BuildConfig.DEBUG) {
-            Log.d("HomeViewModel", "Response status: ${response.status}")
+            if (response.status == "ok") {
+                val user = parseUserJson(response.user)
+                userDataStore.saveApiUserData(user)
+            }
+            if (BuildConfig.DEBUG) {
+                Log.d("HomeViewModel", "Response status: ${response.status}")
+            }
+        } catch (e: Exception) {
+            Log.d("AuthViewModel", "Failed to get user data", e)
         }
     }
 }

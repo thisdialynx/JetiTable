@@ -14,6 +14,7 @@ import androidx.navigation.NavHostController
 import lnx.jetitable.navigation.Auth
 import lnx.jetitable.navigation.Home
 import lnx.jetitable.navigation.Loading
+import lnx.jetitable.viewmodel.LoadingViewModel
 
 @Composable
 fun LoadingScreen(navController: NavHostController) {

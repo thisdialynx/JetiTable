@@ -14,7 +14,7 @@ import okhttp3.HttpUrl
 
 private val Context.dataStore by preferencesDataStore(name = "cookies")
 
-class CookieManager(context: Context) : CookieJar {
+class CookieDataStore(context: Context) : CookieJar {
     private val dataStore = context.dataStore
 
     override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
