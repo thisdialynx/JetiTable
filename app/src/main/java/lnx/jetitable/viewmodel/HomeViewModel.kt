@@ -52,14 +52,15 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun onDateSelected(year: Int, month: Int, day: Int) {
+    fun onDateSelected(
+        year: Int = selectedDate.get(Calendar.YEAR),
+        month: Int = selectedDate.get(Calendar.MONTH),
+        day: Int = selectedDate.get(Calendar.DAY_OF_MONTH),
+        shift: Int = 0
+    ) {
         selectedDate.set(year, month, day)
-        getDailyLessonList(year, month, day)
-    }
-
-    fun shiftDate(value: Int) {
-        selectedDate.add(Calendar.DAY_OF_MONTH, value)
-        onDateSelected(
+        selectedDate.add(Calendar.DAY_OF_MONTH, shift)
+        getDailyLessonList(
             selectedDate.get(Calendar.YEAR),
             selectedDate.get(Calendar.MONTH),
             selectedDate.get(Calendar.DAY_OF_MONTH)

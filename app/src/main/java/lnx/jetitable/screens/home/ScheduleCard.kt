@@ -137,7 +137,7 @@ fun ScheduleCardTitle(selectedDate: Calendar, homeViewModel: HomeViewModel) {
 
         CompositionLocalProvider(value = LocalMinimumInteractiveComponentSize provides Dp.Unspecified) {
             IconButton(
-                onClick = { homeViewModel.shiftDate(-1) },
+                onClick = { homeViewModel.onDateSelected(shift = -1) },
                 modifier = Modifier.padding(end = 4.dp)
             ) {
                 Icon(
@@ -145,7 +145,7 @@ fun ScheduleCardTitle(selectedDate: Calendar, homeViewModel: HomeViewModel) {
                     contentDescription = null
                 )
             }
-            IconButton(onClick = { homeViewModel.shiftDate(1) }) {
+            IconButton(onClick = { homeViewModel.onDateSelected(shift = 1) }) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowRight,
                     contentDescription = null
