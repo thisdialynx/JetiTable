@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import lnx.jetitable.R
 import lnx.jetitable.misc.isLessonNow
 import lnx.jetitable.timetable.api.query.data.Lesson
+import lnx.jetitable.viewmodel.HomeViewModel
 
 @Composable
 fun ExpandableScheduleRow(lesson: Lesson, index: Int, currentTime: Long, homeViewModel: HomeViewModel) {

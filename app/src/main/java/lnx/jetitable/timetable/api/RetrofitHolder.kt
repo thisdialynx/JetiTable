@@ -2,7 +2,7 @@ package lnx.jetitable.timetable.api
 
 import android.content.Context
 import lnx.jetitable.BuildConfig
-import lnx.jetitable.datastore.CookieManager
+import lnx.jetitable.datastore.CookieDataStore
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -10,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
 class RetrofitHolder(context: Context) {
-    private val cookieDataStore = CookieManager(context)
+    private val cookieDataStore = CookieDataStore(context)
     private val okHttpClient = OkHttpClient.Builder()
         .cookieJar(cookieDataStore)
         .addInterceptor(

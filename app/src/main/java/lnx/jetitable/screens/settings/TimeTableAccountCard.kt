@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import lnx.jetitable.BuildConfig
+import lnx.jetitable.viewmodel.SettingsViewModel
 
 @Composable
 fun TTAccountCard(title: String, description: String, icon: ImageVector, context: Context, toastText: String, settingsViewModel: SettingsViewModel) {
