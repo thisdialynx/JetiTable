@@ -39,7 +39,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         private set
     var selectedDate: Calendar by mutableStateOf(calendar)
         private set
-    var dailyLessonList by mutableStateOf<DailyLessonListResponse?>(null)
+    var lessonList by mutableStateOf<DailyLessonListResponse?>(null)
         private set
     
 
@@ -48,7 +48,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             val user: User = userDataStore.getApiUserData()
             group = user.group
             groupId = user.id_group
-            getDailyLessonList(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
+            getLessons(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
         }
     }
 
@@ -60,17 +60,17 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     ) {
         selectedDate.set(year, month, day)
         selectedDate.add(Calendar.DAY_OF_MONTH, shift)
-        getDailyLessonList(
+        getLessons(
             selectedDate.get(Calendar.YEAR),
             selectedDate.get(Calendar.MONTH),
             selectedDate.get(Calendar.DAY_OF_MONTH)
         )
     }
 
-    private fun getDailyLessonList(year: Int, month: Int, day: Int) {
+    private fun getLessons(year: Int, month: Int, day: Int) {
         viewModelScope.launch {
             try {
-                dailyLessonList = null
+                lessonList = null
 
                 val currentYear = getAcademicYear(year, month)
                 val currentSemester = getSemester(month).toString()
@@ -87,7 +87,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                     )
                 )
 
-                dailyLessonList = parseLessonHtml(response)
+                lessonList = parseLessonHtml(response)
             } catch (e: NotFoundException) {
                 Log.d("HomeViewModel", "Page not found", e)
             } catch (e: Exception) {
