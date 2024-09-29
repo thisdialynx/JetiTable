@@ -29,7 +29,7 @@ fun HomeScreen(navController: NavHostController) {
     val homeViewModel: HomeViewModel = viewModel()
     val appBarState = rememberTopAppBarState()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(appBarState)
-    val lessonList = homeViewModel.dailyLessonList
+    val lessonList = homeViewModel.lessonList
     val selectedDate = homeViewModel.selectedDate
 
     Scaffold(
