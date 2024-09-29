@@ -31,7 +31,6 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         get() = getApplication<Application>().applicationContext
     private val userDataStore = UserDataStore(context)
     private val service = RetrofitHolder.getInstance(context)
-
     private val calendar = Calendar.getInstance()
 
     var group by mutableStateOf("")
@@ -67,16 +66,13 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         )
     }
 
-
     private fun getDailyLessonList(year: Int, month: Int, day: Int) {
         viewModelScope.launch {
             try {
                 dailyLessonList = null
-                val currentYear = getAcademicYear(
-                    calendar.get(Calendar.YEAR),
-                    calendar.get(Calendar.MONTH) + 1
-                )
-                val currentSemester = getSemester(calendar.get(Calendar.MONTH)).toString()
+
+                val currentYear = getAcademicYear(year, month)
+                val currentSemester = getSemester(month).toString()
                 val selectedDateString = getFormattedDate(day, month + 1, year)
 
                 val response = service.get_listLessonTodayStudent(
