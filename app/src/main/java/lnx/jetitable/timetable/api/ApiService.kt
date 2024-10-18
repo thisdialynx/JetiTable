@@ -1,7 +1,6 @@
 package lnx.jetitable.timetable.api
 
 import lnx.jetitable.timetable.api.login.data.AccessRequest
-import lnx.jetitable.timetable.api.login.data.AccessResponse
 import lnx.jetitable.timetable.api.login.data.LoginRequest
 import lnx.jetitable.timetable.api.login.data.LoginResponse
 import lnx.jetitable.timetable.api.login.data.MailRequest
@@ -28,7 +27,7 @@ interface ApiService {
     @POST(AUTHORISATION_PHP)
     suspend fun checkAccess(
         @Body request: AccessRequest
-    ): AccessResponse
+    ): String
 
     @POST(QUERY_PHP)
     suspend fun get_listLessonTodayStudent(

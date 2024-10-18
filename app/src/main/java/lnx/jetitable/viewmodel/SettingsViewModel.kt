@@ -19,11 +19,11 @@ class SettingsViewModel(application: Application): AndroidViewModel(application)
     private val cookieDataStore = CookieDataStore(context)
     private val calendar = Calendar.getInstance()
 
-    var userId by mutableStateOf<String?>(null)
+    var userId by mutableStateOf<Int?>(null)
         private set
     var fullName by mutableStateOf<String?>(null)
         private set
-    var fullNameId by mutableStateOf<String?>(null)
+    var fullNameId by mutableStateOf<Int?>(null)
         private set
     var group by mutableStateOf<String?>(null)
         private set
