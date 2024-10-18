@@ -37,4 +37,6 @@
     <string name="timetable_account">%1$s account</string>
     <string name="spring_semester">Spring semester</string>
     <string name="autumn_semester">Autumn semester</string>
+    <string name="support">Support</string>
+    <string name="github" translatable="false">GitHub</string>
 </resources>
