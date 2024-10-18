@@ -1,7 +1,6 @@
 package lnx.jetitable.viewmodel
 
 import android.app.Application
-import android.content.res.Resources.NotFoundException
 import android.icu.util.Calendar
 import android.util.Log
 import androidx.compose.runtime.getValue
@@ -88,10 +87,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                 )
 
                 lessonList = parseLessonHtml(response)
-            } catch (e: NotFoundException) {
-                Log.d("HomeViewModel", "Page not found", e)
             } catch (e: Exception) {
-                Log.d("HomeViewModel", "Error occurred", e)
+                Log.e("HomeViewModel", "Error occurred", e)
             }
         }
     }
@@ -106,7 +103,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                         STATE,
                         user.group,
                         user.fio,
-                        user.id_user,
+                        user.id_user.toString(),
                         lesson.numLesson,
                         lesson.lesson,
                         lesson.idLesson,
@@ -123,7 +120,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                     Log.d("HomeViewModel", "Request successful")
                 }
             } catch (e: Exception) {
-                Log.d("HomeViewModel", "Request send error", e)
+                Log.e("HomeViewModel", "Request send error", e)
             }
         }
     }
