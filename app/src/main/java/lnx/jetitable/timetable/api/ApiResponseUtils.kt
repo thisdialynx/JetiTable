@@ -1,18 +1,47 @@
 package lnx.jetitable.timetable.api
 
 import android.util.Log
-import com.google.gson.Gson
 import lnx.jetitable.BuildConfig
+import lnx.jetitable.timetable.api.login.data.AccessResponse
 import lnx.jetitable.timetable.api.login.data.User
 import lnx.jetitable.timetable.api.query.data.DailyLessonListResponse
 import lnx.jetitable.timetable.api.query.data.Lesson
+import org.json.JSONObject
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import java.util.regex.Pattern
 
-fun parseUserJson(userJson: String): User {
-    return Gson().fromJson(userJson, User::class.java)
+fun parseAccessResponse(jsonString: String): AccessResponse {
+    val jsonObject = JSONObject(jsonString)
+
+    val access = jsonObject.getJSONArray("access").let { array ->
+        List(array.length()) { array.getInt(it)}
+    }
+    val accessToken = jsonObject.getString("accessToken")
+    val status = jsonObject.getString("status")
+
+    val userJsonString = jsonObject.getString("user")
+    val userJsonObject = JSONObject(userJsonString)
+
+    val user = User(
+        fio = userJsonObject.getString("fio"),
+        id_user = userJsonObject.getInt("id_user"),
+        status = userJsonObject.getString("status"),
+        id_fio = userJsonObject.getInt("id_fio"),
+        key = userJsonObject.getString("key"),
+        group = userJsonObject.getString("group"),
+        id_group = userJsonObject.getString("id_group"),
+        denne = userJsonObject.getInt("denne"),
+        kod_faculty = userJsonObject.getInt("kod_faculty")
+    )
+
+    return AccessResponse(
+        access = access,
+        accessToken = accessToken,
+        status = status,
+        user = user
+    )
 }
 
 fun parseLessonHtml(response: String): DailyLessonListResponse {
@@ -60,7 +89,7 @@ fun parseLessonHtml(response: String): DailyLessonListResponse {
             )
 
             if (BuildConfig.DEBUG) {
-                Log.d("API response utils", "Extracted data: $lesson")
+                Log.d("API response utils", "Extracted lesson data: $lesson")
             }
 
             extractedData.add(lesson)

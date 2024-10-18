@@ -90,6 +90,12 @@ fun AboutScreen(navController: NavHostController) {
                             shortUri = "timetable.lond.lg.ua",
                             localUriHandler = localUriHandler
                         )
+                        UrlIconTile(
+                            icon = lnx.jetitable.ui.icons.Telegram,
+                            description = "Support",
+                            shortUri = "t.me/JetiTable",
+                            localUriHandler = localUriHandler
+                        )
                     }
                 }
             }

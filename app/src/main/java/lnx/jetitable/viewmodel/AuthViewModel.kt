@@ -11,7 +11,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import lnx.jetitable.BuildConfig
 import lnx.jetitable.R
 import lnx.jetitable.datastore.UserDataStore
 import lnx.jetitable.misc.getAcademicYear
@@ -23,7 +22,7 @@ import lnx.jetitable.timetable.api.RetrofitHolder
 import lnx.jetitable.timetable.api.login.data.AccessRequest
 import lnx.jetitable.timetable.api.login.data.LoginRequest
 import lnx.jetitable.timetable.api.login.data.MailRequest
-import lnx.jetitable.timetable.api.parseUserJson
+import lnx.jetitable.timetable.api.parseAccessResponse
 import okhttp3.Credentials
 
 class AuthViewModel(application: Application) : AndroidViewModel(application) {
@@ -101,16 +100,10 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                 calendar.get(Calendar.MONTH) + 1
             )
             val response = service.checkAccess(AccessRequest(CHECK_ACCESS, semester, currentYear))
-
-            if (response.status == "ok") {
-                val user = parseUserJson(response.user)
-                userDataStore.saveApiUserData(user)
-            }
-            if (BuildConfig.DEBUG) {
-                Log.d("HomeViewModel", "Response status: ${response.status}")
-            }
+            val parsedResponse = parseAccessResponse(response)
+            userDataStore.saveApiUserData(parsedResponse)
         } catch (e: Exception) {
-            Log.d("AuthViewModel", "Failed to get user data", e)
+            Log.e("AuthViewModel", "Failed to get user data", e)
         }
     }
 }
