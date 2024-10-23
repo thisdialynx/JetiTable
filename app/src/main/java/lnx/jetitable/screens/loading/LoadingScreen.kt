@@ -2,8 +2,9 @@ package lnx.jetitable.screens.loading
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Surface
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -36,9 +37,13 @@ fun LoadingScreen(navController: NavHostController) {
             null -> loadingViewModel.checkToken()
         }
     }
-    Surface(modifier = Modifier.fillMaxSize()) {
-        Box(contentAlignment = Alignment.Center) {
-            CircularProgressIndicator(strokeCap = StrokeCap.Round)
-        }
+
+    Scaffold { innerPadding ->
+        Box(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) { CircularProgressIndicator(strokeCap = StrokeCap.Round) }
     }
 }

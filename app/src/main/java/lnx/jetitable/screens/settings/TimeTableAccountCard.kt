@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -46,6 +47,7 @@ fun TTAccountCard(title: String, description: String, icon: ImageVector, context
                     imageVector = icon,
                     contentDescription = "$title $description",
                     tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                    modifier = Modifier.size(24.dp)
                 )
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Text(
