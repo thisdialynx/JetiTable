@@ -33,6 +33,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -66,6 +68,9 @@ fun ScheduleCard(lessonList: DailyLessonListResponse?, selectedDate: Calendar, h
 
 @Composable
 fun ScheduleInnerCard(lessonList: DailyLessonListResponse?, currentTime: Long, homeViewModel: HomeViewModel) {
+    val localUriHandler = LocalUriHandler.current
+    val clipboardManager = LocalClipboardManager.current
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -105,7 +110,13 @@ fun ScheduleInnerCard(lessonList: DailyLessonListResponse?, currentTime: Long, h
                 else -> {
                     LazyColumn {
                         itemsIndexed(lessonList.lessons) { index, lesson ->
-                            ExpandableScheduleRow(lesson = lesson, index = index, currentTime = currentTime, homeViewModel = homeViewModel)
+                            ExpandableScheduleRow(
+                                lesson = lesson,
+                                index = index,
+                                currentTime = currentTime,
+                                localUriHandler = localUriHandler,
+                                clipboardManager = clipboardManager,
+                                homeViewModel = homeViewModel)
                         }
                     }
                 }
