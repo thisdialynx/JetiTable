@@ -11,14 +11,20 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import lnx.jetitable.BuildConfig
 import lnx.jetitable.datastore.UserDataStore
+import lnx.jetitable.misc.currentDay
+import lnx.jetitable.misc.currentMonth
+import lnx.jetitable.misc.currentYear
 import lnx.jetitable.misc.getAcademicYear
 import lnx.jetitable.misc.getFormattedDate
 import lnx.jetitable.misc.getSemester
+import lnx.jetitable.timetable.api.ApiService.Companion.CHECK_ACCESS
 import lnx.jetitable.timetable.api.ApiService.Companion.CHECK_ZOOM
 import lnx.jetitable.timetable.api.ApiService.Companion.DAILY_LESSON_LIST
 import lnx.jetitable.timetable.api.ApiService.Companion.STATE
 import lnx.jetitable.timetable.api.RetrofitHolder
+import lnx.jetitable.timetable.api.login.data.AccessRequest
 import lnx.jetitable.timetable.api.login.data.User
+import lnx.jetitable.timetable.api.parseAccessResponse
 import lnx.jetitable.timetable.api.parseLessonHtml
 import lnx.jetitable.timetable.api.query.data.DailyLessonListRequest
 import lnx.jetitable.timetable.api.query.data.DailyLessonListResponse
@@ -30,24 +36,22 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         get() = getApplication<Application>().applicationContext
     private val userDataStore = UserDataStore(context)
     private val service = RetrofitHolder.getInstance(context)
-    private val calendar = Calendar.getInstance()
 
     var group by mutableStateOf("")
         private set
     var groupId by mutableStateOf("")
         private set
-    var selectedDate: Calendar by mutableStateOf(calendar)
+    var selectedDate: Calendar by mutableStateOf(Calendar.getInstance())
         private set
     var lessonList by mutableStateOf<DailyLessonListResponse?>(null)
         private set
-    
 
     init {
         viewModelScope.launch {
             val user: User = userDataStore.getApiUserData()
             group = user.group
             groupId = user.id_group
-            getLessons(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
+            getLessons(currentYear, currentMonth, currentDay)
         }
     }
 
@@ -71,18 +75,14 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             try {
                 lessonList = null
 
-                val currentYear = getAcademicYear(year, month)
-                val currentSemester = getSemester(month).toString()
-                val selectedDateString = getFormattedDate(day, month + 1, year)
-
                 val response = service.get_listLessonTodayStudent(
                     DailyLessonListRequest(
                         DAILY_LESSON_LIST,
                         group,
                         groupId,
-                        selectedDateString,
-                        currentYear,
-                        currentSemester
+                        getFormattedDate(day, month + 1, year),
+                        getAcademicYear(year, month),
+                        getSemester(month).toString()
                     )
                 )
 
