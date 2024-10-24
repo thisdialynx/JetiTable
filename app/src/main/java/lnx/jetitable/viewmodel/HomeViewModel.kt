@@ -8,28 +8,29 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import kotlinx.coroutines.launch
 import lnx.jetitable.BuildConfig
 import lnx.jetitable.datastore.UserDataStore
+import lnx.jetitable.datastore.user.UserDataWorker
 import lnx.jetitable.misc.currentDay
 import lnx.jetitable.misc.currentMonth
 import lnx.jetitable.misc.currentYear
 import lnx.jetitable.misc.getAcademicYear
 import lnx.jetitable.misc.getFormattedDate
 import lnx.jetitable.misc.getSemester
-import lnx.jetitable.timetable.api.ApiService.Companion.CHECK_ACCESS
 import lnx.jetitable.timetable.api.ApiService.Companion.CHECK_ZOOM
 import lnx.jetitable.timetable.api.ApiService.Companion.DAILY_LESSON_LIST
 import lnx.jetitable.timetable.api.ApiService.Companion.STATE
 import lnx.jetitable.timetable.api.RetrofitHolder
-import lnx.jetitable.timetable.api.login.data.AccessRequest
 import lnx.jetitable.timetable.api.login.data.User
-import lnx.jetitable.timetable.api.parseAccessResponse
 import lnx.jetitable.timetable.api.parseLessonHtml
 import lnx.jetitable.timetable.api.query.data.DailyLessonListRequest
 import lnx.jetitable.timetable.api.query.data.DailyLessonListResponse
 import lnx.jetitable.timetable.api.query.data.Lesson
 import lnx.jetitable.timetable.api.query.data.VerifyPresenceRequest
+import java.util.concurrent.TimeUnit
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private val context
@@ -37,22 +38,38 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private val userDataStore = UserDataStore(context)
     private val service = RetrofitHolder.getInstance(context)
 
-    var group by mutableStateOf("")
-        private set
-    var groupId by mutableStateOf("")
-        private set
     var selectedDate: Calendar by mutableStateOf(Calendar.getInstance())
         private set
-    var lessonList by mutableStateOf<DailyLessonListResponse?>(null)
+    var lessonList by mutableStateOf<LessonListResponse?>(null)
+        private set
+    var selectedDate: Calendar by mutableStateOf(Calendar.getInstance())
+    var group by mutableStateOf<String?>(null)
+        private set
+    var groupId by mutableStateOf<String?>(null)
+        private set
+    var userId by mutableStateOf<String?>(null)
+        private set
+    var fullName by mutableStateOf<String?>(null)
         private set
 
     init {
         viewModelScope.launch {
-            val user: User = userDataStore.getApiUserData()
-            group = user.group
-            groupId = user.id_group
-            getLessons(currentYear, currentMonth, currentDay)
+            scheduleUserDataWorker()
+            userDataFlow.map {
+                group = it.group
+                groupId = it.id_group
+                userId = it.id_user.toString()
+                fullName = it.fio
+            }.collect {
+                getSession()
+                getLessons()
+            }
         }
+    }
+
+    private fun scheduleUserDataWorker() {
+        val workRequest = PeriodicWorkRequestBuilder<UserDataWorker>(6, TimeUnit.HOURS).build()
+        WorkManager.getInstance(context).enqueue(workRequest)
     }
 
     fun onDateSelected(
@@ -70,7 +87,11 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         )
     }
 
-    private fun getLessons(year: Int, month: Int, day: Int) {
+    private fun getLessons(
+        year: Int = selectedDate.get(Calendar.YEAR),
+        month: Int = selectedDate.get(Calendar.MONTH),
+        day: Int = selectedDate.get(Calendar.DAY_OF_MONTH)
+    ) {
         viewModelScope.launch {
             try {
                 lessonList = null
@@ -89,6 +110,22 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                 lessonList = parseLessonHtml(response)
             } catch (e: Exception) {
                 Log.e("HomeViewModel", "Error occurred", e)
+    private fun getSession() {
+        viewModelScope.launch {
+            try {
+                sessionList = null
+
+                val response = service.get_sessionStudent(
+                    SessionListRequest(
+                        SESSION_LIST,
+                        group!!,
+                        groupId!!,
+                        getAcademicYear(),
+                        getSemester().toString()
+                    )
+                )
+
+                sessionList = parseSessionHtml(response)
             }
         }
     }
@@ -96,23 +133,22 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     fun verifyPresence(lesson: Lesson) {
         viewModelScope.launch {
             try {
-                val user: User = userDataStore.getApiUserData()
                 val response = service.get_checkZoom(
                     VerifyPresenceRequest(
                         CHECK_ZOOM,
                         STATE,
-                        user.group,
-                        user.fio,
-                        user.id_user.toString(),
-                        lesson.numLesson,
-                        lesson.lesson,
-                        lesson.idLesson,
+                        group!!,
+                        fullName!!,
+                        userId!!,
+                        lesson.number,
+                        lesson.name,
+                        lesson.id,
                         lesson.type,
-                        lesson.fio,
-                        lesson.idFio,
-                        lesson.dateLes,
-                        "${lesson.timeBeg}:00",
-                        "${lesson.timeEnd}:00",
+                        lesson.teacherFullName,
+                        lesson.teacherId,
+                        lesson.date,
+                        "${lesson.start}:00",
+                        "${lesson.end}:00",
                     )
                 )
 
