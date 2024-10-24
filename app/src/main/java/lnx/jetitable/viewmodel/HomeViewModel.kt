@@ -8,28 +8,29 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import kotlinx.coroutines.launch
 import lnx.jetitable.BuildConfig
 import lnx.jetitable.datastore.UserDataStore
+import lnx.jetitable.datastore.user.UserDataWorker
 import lnx.jetitable.misc.currentDay
 import lnx.jetitable.misc.currentMonth
 import lnx.jetitable.misc.currentYear
 import lnx.jetitable.misc.getAcademicYear
 import lnx.jetitable.misc.getFormattedDate
 import lnx.jetitable.misc.getSemester
-import lnx.jetitable.timetable.api.ApiService.Companion.CHECK_ACCESS
 import lnx.jetitable.timetable.api.ApiService.Companion.CHECK_ZOOM
 import lnx.jetitable.timetable.api.ApiService.Companion.DAILY_LESSON_LIST
 import lnx.jetitable.timetable.api.ApiService.Companion.STATE
 import lnx.jetitable.timetable.api.RetrofitHolder
-import lnx.jetitable.timetable.api.login.data.AccessRequest
 import lnx.jetitable.timetable.api.login.data.User
-import lnx.jetitable.timetable.api.parseAccessResponse
 import lnx.jetitable.timetable.api.parseLessonHtml
 import lnx.jetitable.timetable.api.query.data.DailyLessonListRequest
 import lnx.jetitable.timetable.api.query.data.DailyLessonListResponse
 import lnx.jetitable.timetable.api.query.data.Lesson
 import lnx.jetitable.timetable.api.query.data.VerifyPresenceRequest
+import java.util.concurrent.TimeUnit
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private val context
@@ -48,11 +49,17 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     init {
         viewModelScope.launch {
+            scheduleUserDataWorker()
             val user: User = userDataStore.getApiUserData()
             group = user.group
             groupId = user.id_group
             getLessons(currentYear, currentMonth, currentDay)
         }
+    }
+
+    private fun scheduleUserDataWorker() {
+        val workRequest = PeriodicWorkRequestBuilder<UserDataWorker>(6, TimeUnit.HOURS).build()
+        WorkManager.getInstance(context).enqueue(workRequest)
     }
 
     fun onDateSelected(
