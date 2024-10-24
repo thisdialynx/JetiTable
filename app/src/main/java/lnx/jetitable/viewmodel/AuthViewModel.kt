@@ -56,7 +56,6 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                     )
 
                     if (response.status == "ok") {
-                        getUserData()
                         isAuthorized = true
                     } else { errorMessage = R.string.wrong_credentials }
                 }
@@ -80,22 +79,6 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
             } catch (e: Exception) {
                 Log.e("AuthViewModel", "Email sending error", e)
             }
-        }
-    }
-
-    private suspend fun getUserData() {
-        try {
-            val calendar = Calendar.getInstance()
-            val semester = getSemester(calendar.get(Calendar.MONTH) + 1).toString()
-            val currentYear = getAcademicYear(
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH) + 1
-            )
-            val response = service.checkAccess(AccessRequest(CHECK_ACCESS, semester, currentYear))
-            val parsedResponse = parseAccessResponse(response)
-            userDataStore.saveApiUserData(parsedResponse)
-        } catch (e: Exception) {
-            Log.e("AuthViewModel", "Failed to get user data", e)
         }
     }
 }
