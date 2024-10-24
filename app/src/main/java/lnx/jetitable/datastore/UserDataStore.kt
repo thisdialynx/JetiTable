@@ -7,7 +7,8 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import lnx.jetitable.timetable.api.login.data.AccessResponse
 import lnx.jetitable.timetable.api.login.data.User
 
@@ -16,33 +17,34 @@ private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(na
 
 class UserDataStore (private val context: Context) {
 
-    suspend fun saveApiUserData(accessResponse: AccessResponse) {
+    suspend fun saveUserData(response: AccessResponse) {
         context.dataStore.edit {
-            it[FULL_NAME] = accessResponse.user.fio
-            it[FULL_NAME_ID] = accessResponse.user.id_fio
-            it[GROUP] = accessResponse.user.group
-            it[GROUP_ID] = accessResponse.user.id_group
-            it[IS_FULL_TIME] = accessResponse.user.denne
-            it[STATUS] = accessResponse.user.status
-            it[USER_ID] = accessResponse.user.id_user
-            it[KEY] = accessResponse.user.key
-            it[FACULTY_CODE] = accessResponse.user.kod_faculty
+            it[FULL_NAME] = response.user.fio
+            it[FULL_NAME_ID] = response.user.id_fio
+            it[GROUP] = response.user.group
+            it[GROUP_ID] = response.user.id_group
+            it[IS_FULL_TIME] = response.user.denne
+            it[STATUS] = response.user.status
+            it[USER_ID] = response.user.id_user
+            it[KEY] = response.user.key
+            it[FACULTY_CODE] = response.user.kod_faculty
         }
     }
 
-    suspend fun getApiUserData(): User {
-        val preferences = context.dataStore.data.first()
-        return User(
-            fio = preferences[FULL_NAME] ?: "",
-            id_fio = preferences[FULL_NAME_ID] ?: 0,
-            group = preferences[GROUP] ?: "",
-            id_group = preferences[GROUP_ID] ?: "",
-            denne = preferences[IS_FULL_TIME] ?: 0,
-            status = preferences[STATUS] ?: "",
-            id_user = preferences[USER_ID] ?: 0,
-            key = preferences[KEY] ?: "",
-            kod_faculty = preferences[FACULTY_CODE] ?: 0
-        )
+    fun getUserData(): Flow<User> {
+        return context.dataStore.data.map {
+            User(
+                fio = it[FULL_NAME] ?: "",
+                id_fio = it[FULL_NAME_ID] ?: 0,
+                group = it[GROUP] ?: "",
+                id_group = it[GROUP_ID] ?: "",
+                denne = it[IS_FULL_TIME] ?: 0,
+                status = it[STATUS] ?: "",
+                id_user = it[USER_ID] ?: 0,
+                key = it[KEY] ?: "",
+                kod_faculty = it[FACULTY_CODE] ?: 0
+            )
+        }
     }
 
     suspend fun clearDataStore() = context.dataStore.edit { it.clear() }
