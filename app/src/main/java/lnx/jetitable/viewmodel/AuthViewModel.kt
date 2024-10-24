@@ -1,7 +1,6 @@
 package lnx.jetitable.viewmodel
 
 import android.app.Application
-import android.icu.util.Calendar
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.getValue
@@ -12,23 +11,16 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import lnx.jetitable.R
-import lnx.jetitable.datastore.UserDataStore
-import lnx.jetitable.misc.getAcademicYear
-import lnx.jetitable.misc.getSemester
-import lnx.jetitable.timetable.api.ApiService.Companion.CHECK_ACCESS
 import lnx.jetitable.timetable.api.ApiService.Companion.CHECK_PASSWORD
 import lnx.jetitable.timetable.api.ApiService.Companion.SEND_MAIL
 import lnx.jetitable.timetable.api.RetrofitHolder
-import lnx.jetitable.timetable.api.login.data.AccessRequest
 import lnx.jetitable.timetable.api.login.data.LoginRequest
 import lnx.jetitable.timetable.api.login.data.MailRequest
-import lnx.jetitable.timetable.api.parseAccessResponse
 import okhttp3.Credentials
 
 class AuthViewModel(application: Application) : AndroidViewModel(application) {
     private val context
         get() = getApplication<Application>().applicationContext
-    private val userDataStore = UserDataStore(context)
     private val service = RetrofitHolder.getInstance(context)
 
     var isAuthorized by mutableStateOf(false)
