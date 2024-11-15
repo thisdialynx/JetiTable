@@ -109,7 +109,11 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
                 lessonList = parseLessonHtml(response)
             } catch (e: Exception) {
-                Log.e("HomeViewModel", "Error occurred", e)
+                Log.e("Lesson list request", "Error in lesson list retrieval", e)
+            }
+        }
+    }
+
     private fun getSession() {
         viewModelScope.launch {
             try {
@@ -126,6 +130,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                 )
 
                 sessionList = parseSessionHtml(response)
+            } catch (e: Exception) {
+                Log.e("Session list request", "Error in session list retrieval", e)
             }
         }
     }
@@ -153,10 +159,10 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                 )
 
                 if (response == "ok" && BuildConfig.DEBUG) {
-                    Log.d("HomeViewModel", "Request successful")
+                    Log.d("Presence verifier", "Verification successful")
                 }
             } catch (e: Exception) {
-                Log.e("HomeViewModel", "Request send error", e)
+                Log.e("Presence verifier", "Verification unsuccessful", e)
             }
         }
     }
