@@ -6,6 +6,7 @@ import lnx.jetitable.timetable.api.login.data.LoginResponse
 import lnx.jetitable.timetable.api.login.data.MailRequest
 import lnx.jetitable.timetable.api.login.data.MailResponse
 import lnx.jetitable.timetable.api.query.data.LessonListRequest
+import lnx.jetitable.timetable.api.query.data.SessionListRequest
 import lnx.jetitable.timetable.api.query.data.VerifyPresenceRequest
 import retrofit2.http.Body
 import retrofit2.http.Header
@@ -39,6 +40,11 @@ interface ApiService {
         @Body request: VerifyPresenceRequest
     ): String
 
+    @POST(QUERY_PHP)
+    suspend fun get_sessionStudent(
+        @Body request: SessionListRequest
+    ): String
+
     companion object {
         const val BASE_URL = "https://placeholder.com"
 
@@ -55,5 +61,6 @@ interface ApiService {
         const val DAILY_LESSON_LIST = "placeholder"
         const val STATE = "placeholder"
         const val CHECK_ZOOM = "placeholder"
+        const val SESSION_LIST = "placeholder"
     }
 }
