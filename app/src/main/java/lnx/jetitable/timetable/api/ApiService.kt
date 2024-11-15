@@ -5,7 +5,7 @@ import lnx.jetitable.timetable.api.login.data.LoginRequest
 import lnx.jetitable.timetable.api.login.data.LoginResponse
 import lnx.jetitable.timetable.api.login.data.MailRequest
 import lnx.jetitable.timetable.api.login.data.MailResponse
-import lnx.jetitable.timetable.api.query.data.DailyLessonListRequest
+import lnx.jetitable.timetable.api.query.data.LessonListRequest
 import lnx.jetitable.timetable.api.query.data.VerifyPresenceRequest
 import retrofit2.http.Body
 import retrofit2.http.Header
@@ -31,7 +31,7 @@ interface ApiService {
 
     @POST(QUERY_PHP)
     suspend fun get_listLessonTodayStudent(
-        @Body request: DailyLessonListRequest
+        @Body request: LessonListRequest
     ): String
 
     @POST(QUERY_PHP)
