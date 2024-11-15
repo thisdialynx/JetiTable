@@ -148,9 +148,25 @@ fun AuthScreen(onAuthComplete: () -> Unit = {}) {
                         )
                     }
                 },
-                icon = { Icon(imageVector = lnx.jetitable.ui.icons.google.Warning, contentDescription = null)},
-                text = { Text(text = stringResource(id = R.string.unofficial_app_description)) },
-                title = { Text(text = stringResource(id = R.string.unofficial_app)) },
+                icon = {
+                    Icon(
+                        imageVector = lnx.jetitable.ui.icons.google.Warning,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onErrorContainer
+                    )
+                },
+                text = {
+                    Text(
+                        text = stringResource(id = R.string.unofficial_app_description),
+                        color = MaterialTheme.colorScheme.onErrorContainer
+                    )
+                },
+                title = {
+                    Text(
+                        text = stringResource(id = R.string.unofficial_app),
+                        color = MaterialTheme.colorScheme.onErrorContainer
+                    )
+                },
                 containerColor = MaterialTheme.colorScheme.errorContainer
             )
         }
