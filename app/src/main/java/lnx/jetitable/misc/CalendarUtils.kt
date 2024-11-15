@@ -38,5 +38,5 @@ fun isLessonNow(lesson: Lesson, currentTime: Long): Boolean {
         calendar.get(Calendar.YEAR)
     )
 
-    return formattedDate == lesson.dateLes && formattedTime >= lesson.timeBeg && formattedTime <= lesson.timeEnd
+    return formattedDate == lesson.date && formattedTime >= lesson.start && formattedTime <= lesson.end
 }
