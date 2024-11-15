@@ -24,7 +24,7 @@
     <string name="today">сегодня</string>
     <string name="failed_to_fetch_data">не удалось получить данные</string>
     <string name="no_lessons">Занятия на указанную дату отсувствуют</string>
-    <string name="lesson_teacher">Преподаватель: %1$s</string>
+    <string name="teacher">Преподаватель: %1$s</string>
     <string name="lesson_number">Номер занятия: %1$s</string>
     <string name="lesson_group">Группа: %1$s</string>
     <string name="about_screen_title">О приложении</string>
@@ -37,4 +37,6 @@
     <string name="spring_semester">Весенний семестр</string>
     <string name="autumn_semester">Осенний семестр</string>
     <string name="support">Поддержка</string>
+    <string name="session_schedule">Расписание сессии</string>
+    <string name="no_session">Расписание сессии недоступно или ещё не выставлено</string>
 </resources>

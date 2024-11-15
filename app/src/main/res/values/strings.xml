@@ -18,13 +18,13 @@
     <string name="continue_action">Continue</string>
     <string name="quit">Quit</string>
     <string name="unofficial_app">Unofficial app!</string>
-    <string name="unofficial_app_description">This application is not an official product of Volodymyr Dal East Ukrainian National University. The University is not responsible for its content and use. The user assumes all risks associated with the use of this app and should consult official sources for accurate information if necessary.</string>
+    <string name="unofficial_app_description">This application is not an official product of Volodymyr Dahl East Ukrainian National University. The University is not responsible for its content and use. The user assumes all risks associated with the use of this app and should consult official sources for accurate information if necessary.</string>
     <string name="welcome_title">Welcome!</string>
     <string name="schedule_for_day">Schedule for</string>
     <string name="today">today</string>
     <string name="failed_to_fetch_data">failed to fetch data</string>
     <string name="no_lessons">No lessons for this day!</string>
-    <string name="lesson_teacher">Teacher: %1$s</string>
+    <string name="teacher">Teacher: %1$s</string>
     <string name="lesson_number">Lesson number: %1$s</string>
     <string name="lesson_group">Group: %1$s</string>
     <string name="about_screen_title">About</string>
@@ -39,4 +39,6 @@
     <string name="autumn_semester">Autumn semester</string>
     <string name="support">Support</string>
     <string name="github" translatable="false">GitHub</string>
+    <string name="session_schedule">Session schedule</string>
+    <string name="no_session">The session schedule is not posted or not yet available</string>
 </resources>

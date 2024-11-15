@@ -10,25 +10,29 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import lnx.jetitable.BuildConfig
 import lnx.jetitable.datastore.UserDataStore
 import lnx.jetitable.datastore.user.UserDataWorker
-import lnx.jetitable.misc.currentDay
-import lnx.jetitable.misc.currentMonth
-import lnx.jetitable.misc.currentYear
 import lnx.jetitable.misc.getAcademicYear
 import lnx.jetitable.misc.getFormattedDate
 import lnx.jetitable.misc.getSemester
 import lnx.jetitable.timetable.api.ApiService.Companion.CHECK_ZOOM
 import lnx.jetitable.timetable.api.ApiService.Companion.DAILY_LESSON_LIST
+import lnx.jetitable.timetable.api.ApiService.Companion.SESSION_LIST
 import lnx.jetitable.timetable.api.ApiService.Companion.STATE
 import lnx.jetitable.timetable.api.RetrofitHolder
 import lnx.jetitable.timetable.api.query.data.LessonListRequest
 import lnx.jetitable.timetable.api.query.data.LessonListResponse
 import lnx.jetitable.timetable.api.query.data.Lesson
+import lnx.jetitable.timetable.api.query.data.SessionListRequest
+import lnx.jetitable.timetable.api.query.data.SessionListResponse
 import lnx.jetitable.timetable.api.query.data.VerifyPresenceRequest
 import lnx.jetitable.timetable.api.query.data.parseLessonHtml
+import lnx.jetitable.timetable.api.query.data.parseSessionHtml
 import java.util.concurrent.TimeUnit
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
@@ -51,6 +55,13 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         private set
     var fullName by mutableStateOf<String?>(null)
         private set
+    val currentTimeFlow = flow {
+        while (true) {
+            emit(Calendar.getInstance().timeInMillis)
+            delay(1000)
+        }
+    }
+    private val userDataFlow = userDataStore.getUserData()
 
     init {
         viewModelScope.launch {

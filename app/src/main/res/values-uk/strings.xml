@@ -24,7 +24,7 @@
     <string name="today">ьогодні</string>
     <string name="failed_to_fetch_data">не вдалося отримати дані</string>
     <string name="no_lessons">Заняття на вказану дату відсутні</string>
-    <string name="lesson_teacher">Викладач: %1$s</string>
+    <string name="teacher">Викладач: %1$s</string>
     <string name="lesson_number">Номер заняття: %1$s</string>
     <string name="lesson_group">Група: %1$s</string>
     <string name="about_screen_title">Про застосунок</string>
@@ -37,4 +37,6 @@
     <string name="spring_semester">Весняний семестр</string>
     <string name="autumn_semester">Осінній семестр</string>
     <string name="support">Підтримка</string>
+    <string name="session_schedule">Розклад сесії</string>
+    <string name="no_session">Розкладу сесії недоступний або ще не виставлено</string>
 </resources>
