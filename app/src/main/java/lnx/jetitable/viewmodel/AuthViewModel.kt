@@ -60,7 +60,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                     } else { errorMessage = R.string.wrong_credentials }
                 }
             } catch (e: Exception) {
-                Log.e("AuthViewModel", "Login process error.\nisAuthorized: $isAuthorized", e)
+                Log.e("TimeTable authentication", "Login process error.\nisAuthorized: $isAuthorized", e)
             }
         }
 
@@ -77,7 +77,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                     Toast.makeText(context, R.string.invalid_email, Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
-                Log.e("AuthViewModel", "Email sending error", e)
+                Log.e("Password recovery", "Email sending error", e)
             }
         }
     }

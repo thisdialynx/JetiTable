@@ -24,7 +24,7 @@ class LoadingViewModel(application: Application) : AndroidViewModel(application)
         viewModelScope.launch {
             val cookies = dataStore.loadForRequest( "$BASE_URL/$AUTHORISATION_PHP".toHttpUrl())
             isAuthorized = cookies.any { it.name == "tt_tokin" && it.value.isNotEmpty() }
-            Log.d("LoadingViewModel", "isAuthorized: $isAuthorized")
+            Log.d("Authorization check", "isAuthorized: $isAuthorized")
         }
     }
 }
