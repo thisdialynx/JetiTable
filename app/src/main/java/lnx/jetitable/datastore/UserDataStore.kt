@@ -19,30 +19,30 @@ class UserDataStore (private val context: Context) {
 
     suspend fun saveUserData(response: AccessResponse) {
         context.dataStore.edit {
-            it[FULL_NAME] = response.user.fio
-            it[FULL_NAME_ID] = response.user.id_fio
+            it[FULL_NAME] = response.user.fullName
+            it[FULL_NAME_ID] = response.user.fullNameId
             it[GROUP] = response.user.group
-            it[GROUP_ID] = response.user.id_group
-            it[IS_FULL_TIME] = response.user.denne
+            it[GROUP_ID] = response.user.groupId
+            it[IS_FULL_TIME] = response.user.isFullTime
             it[STATUS] = response.user.status
-            it[USER_ID] = response.user.id_user
+            it[USER_ID] = response.user.userId
             it[KEY] = response.user.key
-            it[FACULTY_CODE] = response.user.kod_faculty
+            it[FACULTY_CODE] = response.user.facultyCode
         }
     }
 
     fun getUserData(): Flow<User> {
         return context.dataStore.data.map {
             User(
-                fio = it[FULL_NAME] ?: "",
-                id_fio = it[FULL_NAME_ID] ?: 0,
+                fullName = it[FULL_NAME] ?: "",
+                fullNameId = it[FULL_NAME_ID] ?: 0,
                 group = it[GROUP] ?: "",
-                id_group = it[GROUP_ID] ?: "",
-                denne = it[IS_FULL_TIME] ?: 0,
+                groupId = it[GROUP_ID] ?: "",
+                isFullTime = it[IS_FULL_TIME] ?: 0,
                 status = it[STATUS] ?: "",
-                id_user = it[USER_ID] ?: 0,
+                userId = it[USER_ID] ?: 0,
                 key = it[KEY] ?: "",
-                kod_faculty = it[FACULTY_CODE] ?: 0
+                facultyCode = it[FACULTY_CODE] ?: 0
             )
         }
     }

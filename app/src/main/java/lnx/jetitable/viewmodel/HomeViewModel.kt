@@ -24,12 +24,11 @@ import lnx.jetitable.timetable.api.ApiService.Companion.CHECK_ZOOM
 import lnx.jetitable.timetable.api.ApiService.Companion.DAILY_LESSON_LIST
 import lnx.jetitable.timetable.api.ApiService.Companion.STATE
 import lnx.jetitable.timetable.api.RetrofitHolder
-import lnx.jetitable.timetable.api.login.data.User
-import lnx.jetitable.timetable.api.parseLessonHtml
-import lnx.jetitable.timetable.api.query.data.DailyLessonListRequest
-import lnx.jetitable.timetable.api.query.data.DailyLessonListResponse
+import lnx.jetitable.timetable.api.query.data.LessonListRequest
+import lnx.jetitable.timetable.api.query.data.LessonListResponse
 import lnx.jetitable.timetable.api.query.data.Lesson
 import lnx.jetitable.timetable.api.query.data.VerifyPresenceRequest
+import lnx.jetitable.timetable.api.query.data.parseLessonHtml
 import java.util.concurrent.TimeUnit
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
@@ -42,7 +41,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         private set
     var lessonList by mutableStateOf<LessonListResponse?>(null)
         private set
-    var selectedDate: Calendar by mutableStateOf(Calendar.getInstance())
+    var sessionList by mutableStateOf<SessionListResponse?>(null)
+        private set
     var group by mutableStateOf<String?>(null)
         private set
     var groupId by mutableStateOf<String?>(null)
@@ -57,9 +57,9 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             scheduleUserDataWorker()
             userDataFlow.map {
                 group = it.group
-                groupId = it.id_group
-                userId = it.id_user.toString()
-                fullName = it.fio
+                groupId = it.groupId
+                userId = it.userId.toString()
+                fullName = it.fullName
             }.collect {
                 getSession()
                 getLessons()
@@ -97,10 +97,10 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                 lessonList = null
 
                 val response = service.get_listLessonTodayStudent(
-                    DailyLessonListRequest(
+                    LessonListRequest(
                         DAILY_LESSON_LIST,
-                        group,
-                        groupId,
+                        group!!,
+                        groupId!!,
                         getFormattedDate(day, month + 1, year),
                         getAcademicYear(year, month),
                         getSemester(month).toString()
