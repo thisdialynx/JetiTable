@@ -39,4 +39,6 @@
     <string name="support">Підтримка</string>
     <string name="session_schedule">Розклад сесії</string>
     <string name="no_session">Розкладу сесії недоступний або ще не виставлено</string>
+    <string name="date">Дата: %1$s</string>
+    <string name="home_screen">Головний екран</string>
 </resources>

@@ -74,6 +74,7 @@ fun DatePickerExtended(selectedDate: Calendar, modifier: Modifier = Modifier, on
         selectedDate.get(Calendar.YEAR)
     )
 
+    Text(text = stringResource(id = R.string.schedule_for_day))
     CompositionLocalProvider(value = LocalMinimumInteractiveComponentSize provides Dp.Unspecified) {
         Text(
             text = selectedDateString,
