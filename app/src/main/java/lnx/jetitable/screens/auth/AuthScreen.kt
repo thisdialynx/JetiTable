@@ -3,6 +3,7 @@ package lnx.jetitable.screens.auth
 import android.app.Activity
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -162,10 +163,12 @@ fun AuthScreen(onAuthComplete: () -> Unit = {}) {
                     )
                 },
                 title = {
-                    Text(
-                        text = stringResource(id = R.string.unofficial_app),
-                        color = MaterialTheme.colorScheme.onErrorContainer
-                    )
+                    Box(contentAlignment = Alignment.TopCenter) {
+                        Text(
+                            text = stringResource(id = R.string.unofficial_app),
+                            color = MaterialTheme.colorScheme.onErrorContainer
+                        )
+                    }
                 },
                 containerColor = MaterialTheme.colorScheme.errorContainer
             )
