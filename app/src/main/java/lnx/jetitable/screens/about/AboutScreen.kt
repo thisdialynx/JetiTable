@@ -99,7 +99,7 @@ fun AboutScreen(navController: NavHostController) {
             }
             Spacer(modifier = Modifier.height(32.dp))
             Text(
-                text = "Product",
+                text = stringResource(id = R.string.product),
                 modifier = Modifier.padding(horizontal = 16.dp),
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.primary

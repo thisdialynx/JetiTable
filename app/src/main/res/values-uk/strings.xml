@@ -41,4 +41,7 @@
     <string name="no_session">Розкладу сесії недоступний або ще не виставлено</string>
     <string name="date">Дата: %1$s</string>
     <string name="home_screen">Головний екран</string>
+    <string name="settings">Налаштування</string>
+    <string name="product">Продукт</string>
+    <string name="sign_out">Вийти</string>
 </resources>
