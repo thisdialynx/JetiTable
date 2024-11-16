@@ -4,7 +4,7 @@ JetiTable is an open source application for the TimeTable scheduling information
 Some highlight features:
 - Sign in/Sign out
 - Password recover
-- Schedule for the day
+- Lession (including presence verification) and session schedule
 
 ## Downloads
 [GitHub](https://github.com/thisdialynx/JetiTable/releases/latest) and [SourceForge](https://sourceforge.net/projects/diaproduction/files/JetiTable/) is the only source at the moment
@@ -23,5 +23,5 @@ Translate each and place them in the respective locations (`app/src/main/res/val
 - [TimeTable schedule system](https://timetable.lond.lg.ua/)
 
 ## Credits
-- [icons8](icons8.com) for icons
+- [icons8](https://icons8.com/icons) for icons
 - [Valkyrie](https://github.com/ComposeGears/Valkyrie) for Compose ImageVector generation from SVG/XML
