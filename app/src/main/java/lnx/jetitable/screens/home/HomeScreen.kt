@@ -1,5 +1,6 @@
 package lnx.jetitable.screens.home
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -7,6 +8,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -21,7 +24,13 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
@@ -32,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import kotlinx.coroutines.delay
 import lnx.jetitable.R
 import lnx.jetitable.misc.isLessonNow
 import lnx.jetitable.navigation.About
@@ -47,11 +57,21 @@ fun HomeScreen(navController: NavHostController) {
     val selectedDate = homeViewModel.selectedDate
     val currentTime by homeViewModel.currentTimeFlow.collectAsStateWithLifecycle(0L)
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+    var title by rememberSaveable { mutableIntStateOf(R.string.welcome_title) }
+
+    LaunchedEffect(Unit) {
+        delay(3000)
+        title = R.string.home_screen
+    }
 
     Scaffold(
         topBar = {
             LargeTopAppBar(
-                title = { Text(text = stringResource(id = R.string.welcome_title)) },
+                title = {
+                    Crossfade(targetState = title, label = "") { currentTitle ->
+                        Text(text = stringResource(id = currentTitle))
+                    }
+                },
                 actions = {
                     IconButton(onClick = { navController.navigate(Settings.route) }) {
                         Icon(
@@ -86,12 +106,12 @@ fun HomeScreen(navController: NavHostController) {
                     title = {
                         StudentScheduleTitle(
                             icon = lnx.jetitable.ui.icons.google.CalendarMonth,
-                            title = stringResource(id = R.string.schedule_for_day)
+                            title = {
+                                DatePickerExtended(
+                                    selectedDate = selectedDate
+                                ) { year, month, day -> homeViewModel.onDateSelected(year, month, day) }
+                            }
                         ) {
-                            DatePickerExtended(
-                                selectedDate = selectedDate
-                            ) { year, month, day -> homeViewModel.onDateSelected(year, month, day) }
-
                             CompositionLocalProvider(value = LocalMinimumInteractiveComponentSize provides Dp.Unspecified) {
                                 IconButton(
                                     onClick = { homeViewModel.onDateSelected(shift = -1) },
@@ -164,13 +184,26 @@ fun HomeScreen(navController: NavHostController) {
                 }
             }
             item {
+                var expanded by remember { mutableStateOf(false) }
                 ScheduleCard(
+                    expanded = expanded,
                     title = {
                         StudentScheduleTitle(
                             icon = lnx.jetitable.ui.icons.google.ContractEdit,
-                            title = stringResource(id = R.string.session_schedule),
-                            content = {}
-                        )
+                            title = {
+                                Text(text = stringResource(id = R.string.session_schedule))
+                            },
+                        ) {
+                            CompositionLocalProvider(value = LocalMinimumInteractiveComponentSize provides Dp.Unspecified) {
+                                IconButton(onClick = {expanded = !expanded}) {
+                                    if (expanded) {
+                                        Icon(imageVector = Icons.Default.KeyboardArrowUp, contentDescription = null)
+                                    } else {
+                                        Icon(imageVector = Icons.Default.KeyboardArrowDown, contentDescription = null)
+                                    }
+                                }
+                            }
+                        }
                     }
                 ) {
                     StudentSchedule {
@@ -204,7 +237,9 @@ fun HomeScreen(navController: NavHostController) {
                                         meetingUrlIcon = getMeetingIcon(session.url),
                                         onClick = {},
                                         backgroundColor = MaterialTheme.colorScheme.surfaceColorAtElevation(6.dp),
-                                        expandedText = "${session.date}\n${stringResource(id = R.string.teacher, session.teacher)}",
+                                        expandedText = "${stringResource(id = R.string.lesson_number, session.lessonNumber)}\n" +
+                                                "${stringResource(id = R.string.date, session.date)}\n" +
+                                                stringResource(id = R.string.teacher, session.teacher),
                                         elementIndex = index
                                     )
                                 }

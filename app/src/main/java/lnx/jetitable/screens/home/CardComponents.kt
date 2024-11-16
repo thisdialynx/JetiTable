@@ -2,7 +2,8 @@ package lnx.jetitable.screens.home
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -42,8 +43,9 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun ScheduleCard(
+    expanded: Boolean = true,
     title: @Composable () -> Unit,
-    content: @Composable () -> Unit,
+    content: @Composable () -> Unit
 ) {
     Card(
         colors = CardDefaults.cardColors(
@@ -52,7 +54,11 @@ fun ScheduleCard(
         modifier = Modifier.fillMaxWidth()
     ) {
         title()
-        content()
+        AnimatedVisibility(
+            visible = expanded,
+            enter = expandVertically(),
+            exit = shrinkVertically(),
+        ) { content() }
     }
 }
 
@@ -167,11 +173,15 @@ fun ScheduleRow(
     if (expandedText != null) {
         AnimatedVisibility(
             visible = expanded,
-            enter = expandVertically(animationSpec = tween(durationMillis = 300)),
-            exit = shrinkVertically(animationSpec = tween(durationMillis = 300)),
+            enter = expandVertically(),
+            exit = shrinkVertically(),
             modifier = Modifier.background(backgroundColor)
         ) {
-            Row(modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp)) {
+            Row(
+                modifier = Modifier
+                    .padding(vertical = 12.dp, horizontal = 24.dp)
+                    .fillMaxWidth()
+            ) {
                 Text(
                     text = expandedText,
                     style = MaterialTheme.typography.bodyMedium
@@ -182,7 +192,7 @@ fun ScheduleRow(
 }
 
 @Composable
-fun StudentScheduleTitle(icon: ImageVector, title: String, content: @Composable () -> Unit) {
+fun StudentScheduleTitle(icon: ImageVector, title: @Composable () -> Unit, content: @Composable () -> Unit) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(4.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -195,10 +205,10 @@ fun StudentScheduleTitle(icon: ImageVector, title: String, content: @Composable 
             contentDescription = null,
             modifier = Modifier.padding(end = 4.dp)
         )
-        Text(
-            text = title,
-            style = MaterialTheme.typography.titleMedium
-        )
+        Row(
+            modifier = Modifier.weight(1f),
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) { title() }
 
         content()
     }
@@ -209,7 +219,7 @@ fun StudentSchedule(content: @Composable () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .animateContentSize()
+            .animateContentSize(animationSpec = spring(stiffness = Spring.StiffnessHigh))
             .padding(bottom = 16.dp)
             .padding(horizontal = 16.dp),
         colors = CardDefaults.cardColors(
@@ -217,7 +227,10 @@ fun StudentSchedule(content: @Composable () -> Unit) {
         )
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.surfaceColorAtElevation(6.dp))
+                .animateContentSize(animationSpec = spring(stiffness = Spring.StiffnessMediumLow)),
             horizontalAlignment = Alignment.CenterHorizontally
         ) { content() }
     }
