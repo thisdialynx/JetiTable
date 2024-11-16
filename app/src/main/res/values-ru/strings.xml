@@ -39,4 +39,6 @@
     <string name="support">Поддержка</string>
     <string name="session_schedule">Расписание сессии</string>
     <string name="no_session">Расписание сессии недоступно или ещё не выставлено</string>
+    <string name="date">Дата: %1$s</string>
+    <string name="home_screen">Главный экран</string>
 </resources>
