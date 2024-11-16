@@ -19,7 +19,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import lnx.jetitable.R
 import lnx.jetitable.BuildConfig
 import lnx.jetitable.viewmodel.SettingsViewModel
 
@@ -75,7 +77,7 @@ fun TTAccountCard(title: String, description: String, icon: ImageVector, context
                     tint = MaterialTheme.colorScheme.onSecondaryContainer
                 )
                 Text(
-                    text = "Log out", modifier = Modifier.padding(start = 4.dp),
+                    text = stringResource(id = R.string.sign_out), modifier = Modifier.padding(start = 4.dp),
                     color = MaterialTheme.colorScheme.onSecondaryContainer,
                     style = MaterialTheme.typography.titleSmall
                 )
