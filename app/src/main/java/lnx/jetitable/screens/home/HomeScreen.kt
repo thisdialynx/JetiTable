@@ -46,7 +46,6 @@ import androidx.navigation.NavHostController
 import kotlinx.coroutines.delay
 import lnx.jetitable.R
 import lnx.jetitable.misc.isLessonNow
-import lnx.jetitable.navigation.About
 import lnx.jetitable.navigation.Settings
 import lnx.jetitable.viewmodel.HomeViewModel
 
@@ -76,12 +75,6 @@ fun HomeScreen(navController: NavHostController) {
                     IconButton(onClick = { navController.navigate(Settings.route) }) {
                         Icon(
                             imageVector = lnx.jetitable.ui.icons.google.Settings,
-                            contentDescription = null
-                        )
-                    }
-                    IconButton(onClick = { navController.navigate(About.route) }) {
-                        Icon(
-                            imageVector = lnx.jetitable.ui.icons.google.Info,
                             contentDescription = null
                         )
                     }

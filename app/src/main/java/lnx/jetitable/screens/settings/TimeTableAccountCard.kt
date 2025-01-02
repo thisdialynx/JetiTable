@@ -30,7 +30,9 @@ fun TTAccountCard(title: String, description: String, icon: ImageVector, context
     val activityContext = LocalContext.current as? Activity
 
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.secondaryContainer
         ),
@@ -59,7 +61,7 @@ fun TTAccountCard(title: String, description: String, icon: ImageVector, context
                     )
                     Text(
                         text = description,
-                        style = MaterialTheme.typography.bodyMedium,
+                        style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSecondaryContainer
                     )
                 }

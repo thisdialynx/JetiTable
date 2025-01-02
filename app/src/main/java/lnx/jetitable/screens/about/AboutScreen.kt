@@ -33,7 +33,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import lnx.jetitable.R
-import lnx.jetitable.navigation.Home
 
 enum class UrlIconData(val icon: ImageVector, val description: Int, val shortUri: String) {
     GITHUB(lnx.jetitable.ui.icons.Github, R.string.github, "github.com/thisdialynx/JetiTable"),
@@ -62,7 +61,7 @@ fun AboutScreen(navController: NavHostController) {
             LargeTopAppBar(
                 title = { Text(text = stringResource(id = R.string.about_screen_title)) },
                 navigationIcon = {
-                    IconButton(onClick = { navController.navigate(Home.route) }) {
+                    IconButton(onClick = { navController.navigate(lnx.jetitable.navigation.Settings.route) }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
                             contentDescription = "Back"
@@ -76,7 +75,8 @@ fun AboutScreen(navController: NavHostController) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             val localUriHandler = LocalUriHandler.current
 
@@ -85,6 +85,7 @@ fun AboutScreen(navController: NavHostController) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 AppInfo()
+
                 Spacer(modifier = Modifier.height(16.dp))
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     UrlIconData.entries.forEach { data ->
@@ -104,7 +105,6 @@ fun AboutScreen(navController: NavHostController) {
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.primary
             )
-            Spacer(modifier = Modifier.height(12.dp))
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(
@@ -112,7 +112,9 @@ fun AboutScreen(navController: NavHostController) {
                 )
             ) {
                 Column(
-                    modifier = Modifier.fillMaxWidth().wrapContentHeight(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight(),
                 ) {
                     ContibutorsData.entries.forEachIndexed { index, data ->
                         if (index > 0) {
