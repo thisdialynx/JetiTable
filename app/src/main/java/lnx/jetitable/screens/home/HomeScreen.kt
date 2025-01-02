@@ -4,6 +4,7 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowLeft
@@ -34,6 +35,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
@@ -52,9 +54,7 @@ import lnx.jetitable.viewmodel.HomeViewModel
 @Composable
 fun HomeScreen(navController: NavHostController) {
     val homeViewModel: HomeViewModel = viewModel()
-    val lessonList = homeViewModel.lessonList
-    val sessionList = homeViewModel.sessionList
-    val selectedDate = homeViewModel.selectedDate
+    val userUiState by homeViewModel.userInfoFlow.collectAsStateWithLifecycle()
     val currentTime by homeViewModel.currentTimeFlow.collectAsStateWithLifecycle(0L)
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     var title by rememberSaveable { mutableIntStateOf(R.string.welcome_title) }
@@ -107,14 +107,14 @@ fun HomeScreen(navController: NavHostController) {
                         StudentScheduleTitle(
                             icon = lnx.jetitable.ui.icons.google.CalendarMonth,
                             title = {
-                                DatePickerExtended(
-                                    selectedDate = selectedDate
-                                ) { year, month, day -> homeViewModel.onDateSelected(year, month, day) }
+                                DatePickerView(
+                                    selectedDate = userUiState.selectedDate
+                                ) { date -> homeViewModel.onDateSelected(date) }
                             }
                         ) {
                             CompositionLocalProvider(value = LocalMinimumInteractiveComponentSize provides Dp.Unspecified) {
                                 IconButton(
-                                    onClick = { homeViewModel.onDateSelected(shift = -1) },
+                                    onClick = { homeViewModel.shiftDay(-1) },
                                     modifier = Modifier.padding(end = 4.dp)
                                 ) {
                                     Icon(
@@ -123,7 +123,7 @@ fun HomeScreen(navController: NavHostController) {
                                     )
                                 }
 
-                                IconButton(onClick = { homeViewModel.onDateSelected(shift = 1) }) {
+                                IconButton(onClick = { homeViewModel.shiftDay(1) }) {
                                     Icon(
                                         imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowRight,
                                         contentDescription = null
@@ -134,49 +134,41 @@ fun HomeScreen(navController: NavHostController) {
                     },
                 ) {
                     StudentSchedule {
-                        when {
-                            lessonList == null -> {
-                                CircularProgressIndicator(
-                                    strokeCap = StrokeCap.Round,
-                                    modifier = Modifier.padding(16.dp)
-                                )
-                            }
-                            lessonList.lessons.isEmpty() -> {
-                                Row(
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    modifier = Modifier.padding(16.dp)
-                                ) {
-                                    Icon(imageVector = lnx.jetitable.ui.icons.google.Mood, contentDescription = null)
-                                    Text(
-                                        text = stringResource(id = R.string.no_lessons),
-                                        style = MaterialTheme.typography.bodyMedium
-                                    )
+                        userUiState.let {
+                            val lessons = it.lessonList
+
+                            when {
+                                lessons == null -> {
+                                    ListStatusView(text = R.string.getting_lists)
                                 }
 
-                            }
-                            else -> {
-                                lessonList.lessons.forEachIndexed { index, lesson ->
-                                    val bgColor = if (isLessonNow(lesson, currentTime)) {
-                                        MaterialTheme.colorScheme.primaryContainer
-                                    } else {
-                                        MaterialTheme.colorScheme.surfaceColorAtElevation(6.dp)
-                                    }
+                                lessons.isEmpty() -> {
+                                    ListStatusView(icon = lnx.jetitable.ui.icons.google.Mood, text = R.string.no_lessons)
+                                }
 
-                                    ScheduleRow(
-                                        firstText = "${lesson.start}\n${lesson.end}",
-                                        secondText = lesson.name,
-                                        thirdText = lesson.type,
-                                        meetingUrl = lesson.meetingLink,
-                                        meetingUrlIcon = getMeetingIcon(lesson.meetingLink),
-                                        moodleUrl = lesson.moodleLink,
-                                        onClick = { homeViewModel.verifyPresence(lesson) },
-                                        backgroundColor = bgColor,
-                                        expandedText = "${stringResource(id = R.string.lesson_number, lesson.number)}\n" +
-                                                "${stringResource(id = R.string.lesson_group, lesson.group)}\n" +
-                                                stringResource(id = R.string.teacher, lesson.teacherFullName),
-                                        elementIndex = index
-                                    )
+                                else -> {
+                                    lessons.forEachIndexed { index, lesson ->
+                                        val bgColor = if (isLessonNow(lesson, currentTime)) {
+                                            MaterialTheme.colorScheme.primaryContainer
+                                        } else {
+                                            MaterialTheme.colorScheme.surfaceColorAtElevation(6.dp)
+                                        }
+
+                                        ScheduleRow(
+                                            firstText = "${lesson.start}\n${lesson.end}",
+                                            secondText = lesson.name,
+                                            thirdText = lesson.type,
+                                            meetingUrl = lesson.meetingLink,
+                                            meetingUrlIcon = getMeetingIcon(lesson.meetingLink),
+                                            moodleUrl = lesson.moodleLink,
+                                            onClick = { homeViewModel.verifyPresence(lesson) },
+                                            backgroundColor = bgColor,
+                                            expandedText = "${stringResource(id = R.string.lesson_number, lesson.number)}\n" +
+                                                    "${stringResource(id = R.string.lesson_group, lesson.group)}\n" +
+                                                    stringResource(id = R.string.teacher, lesson.teacherFullName),
+                                            elementIndex = index
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -207,41 +199,31 @@ fun HomeScreen(navController: NavHostController) {
                     }
                 ) {
                     StudentSchedule {
-                        when {
-                            sessionList == null -> {
-                                CircularProgressIndicator(
-                                    strokeCap = StrokeCap.Round,
-                                    modifier = Modifier.padding(16.dp)
-                                )
-                            }
-                            sessionList.sessions.isEmpty() -> {
-                                Row(
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    modifier = Modifier.padding(16.dp)
-                                ) {
-                                    Icon(imageVector = lnx.jetitable.ui.icons.google.QuestionMark, contentDescription = null)
-                                    Text(
-                                        text = stringResource(id = R.string.no_session),
-                                        style = MaterialTheme.typography.bodyMedium
-                                    )
-                                }
+                        userUiState.let {
+                            val sessions = it.sessionList
 
-                            }
-                            else -> {
-                                sessionList.sessions.forEachIndexed { index, session ->
-                                    ScheduleRow(
-                                        firstText = session.lessonTime,
-                                        secondText = session.lessonName,
-                                        meetingUrl = session.url,
-                                        meetingUrlIcon = getMeetingIcon(session.url),
-                                        onClick = {},
-                                        backgroundColor = MaterialTheme.colorScheme.surfaceColorAtElevation(6.dp),
-                                        expandedText = "${stringResource(id = R.string.lesson_number, session.lessonNumber)}\n" +
-                                                "${stringResource(id = R.string.date, session.date)}\n" +
-                                                stringResource(id = R.string.teacher, session.teacher),
-                                        elementIndex = index
-                                    )
+                            when {
+                                sessions == null -> {
+                                    ListStatusView(text = R.string.getting_lists)
+                                }
+                                sessions.isEmpty() -> {
+                                    ListStatusView(icon = lnx.jetitable.ui.icons.google.Mood, text = R.string.no_session)
+                                }
+                                else -> {
+                                    sessions.forEachIndexed { index, session ->
+                                        ScheduleRow(
+                                            firstText = session.lessonTime,
+                                            secondText = session.lessonName,
+                                            meetingUrl = session.url,
+                                            meetingUrlIcon = getMeetingIcon(session.url),
+                                            onClick = {},
+                                            backgroundColor = MaterialTheme.colorScheme.surfaceColorAtElevation(6.dp),
+                                            expandedText = "${stringResource(id = R.string.lesson_number, session.lessonNumber)}\n" +
+                                                    "${stringResource(id = R.string.date, session.date)}\n" +
+                                                    stringResource(id = R.string.teacher, session.teacher),
+                                            elementIndex = index
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -252,3 +234,24 @@ fun HomeScreen(navController: NavHostController) {
     }
 }
 
+@Composable
+fun ListStatusView(icon: ImageVector? = null, text: Int) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.padding(16.dp)
+    ) {
+        if (icon != null) {
+            Icon(imageVector = icon, contentDescription = null)
+        } else {
+            CircularProgressIndicator(
+                strokeCap = StrokeCap.Round,
+                modifier = Modifier.then(Modifier.size(16.dp))
+            )
+        }
+        Text(
+            text = stringResource(id = text),
+            style = MaterialTheme.typography.bodyMedium
+        )
+    }
+}

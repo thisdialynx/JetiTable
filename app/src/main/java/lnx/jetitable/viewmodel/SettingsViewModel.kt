@@ -45,7 +45,7 @@ class SettingsViewModel(application: Application): AndroidViewModel(application)
             group = user.group
             groupId = user.groupId
             isFullTime = user.isFullTime == 1
-            academicYear = getAcademicYear(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH + 1))
+            academicYear = getAcademicYear(calendar)
         }
     }
 
