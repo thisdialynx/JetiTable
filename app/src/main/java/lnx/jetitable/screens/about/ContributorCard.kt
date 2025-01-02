@@ -53,7 +53,7 @@ fun ContributorCard(profilePicture: Int, title: String, description: Int, icon: 
             Text(
                 text = stringResource(id = description),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodySmall
             )
         }
         Card(
@@ -72,6 +72,4 @@ fun ContributorCard(profilePicture: Int, title: String, description: Int, icon: 
             }
         }
     }
-
-
 }
