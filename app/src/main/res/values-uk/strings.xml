@@ -3,12 +3,12 @@
     <string name="app_name_description">Інформаційна система розкладу</string>
     <string name="corporate_email_label">Пошта</string>
     <string name="wrong_credentials">Неправильна адреса електронної пошти або пароль</string>
-    <string name="corporate_email_description">Використовуйте корпоративну електронну пошту, надану університетом</string>
+    <string name="corporate_email_description">Використовуйте електронну пошту, надану університетом</string>
     <string name="password_label">Пароль</string>
     <string name="forgot_password_label">Забули пароль?</string>
     <string name="sign_in">Увійти</string>
     <string name="corporate_email_error">Адреса електронної пошти повинна закінчуватися на @snu.edu.ua</string>
-    <string name="password_sent">Електронний лист надіслано</string>
+    <string name="password_sent">Лист надіслано</string>
     <string name="invalid_email">Неправильна адреса електронної пошти</string>
     <string name="authorized">Авторизація успішна!</string>
     <string name="forgot_password_dialog_title">Відновлення пароля</string>
@@ -21,7 +21,7 @@
     <string name="unofficial_app_description">Цей застосунок не є офіційним продуктом Східноукраїнського національного університету імені Володимира Даля. Університет не несе відповідальності за його зміст та використання. Користувач бере на себе всі ризики, пов\'язані з використанням цього застосунку. За необхідності, звертайтеся до офіційних джерел для отримання точної інформації.</string>
     <string name="welcome_title">Ласкаво просимо!</string>
     <string name="schedule_for_day">Розклад на</string>
-    <string name="today">ьогодні</string>
+    <string name="today">cьогодні</string>
     <string name="failed_to_fetch_data">не вдалося отримати дані</string>
     <string name="no_lessons">Заняття на вказану дату відсутні</string>
     <string name="teacher">Викладач: %1$s</string>
@@ -38,10 +38,11 @@
     <string name="autumn_semester">Осінній семестр</string>
     <string name="support">Підтримка</string>
     <string name="session_schedule">Розклад сесії</string>
-    <string name="no_session">Розкладу сесії недоступний або ще не виставлено</string>
+    <string name="no_session">Розкладу сесії немає на даний момент</string>
     <string name="date">Дата: %1$s</string>
     <string name="home_screen">Головний екран</string>
     <string name="settings">Налаштування</string>
     <string name="product">Продукт</string>
     <string name="sign_out">Вийти</string>
+    <string name="getting_lists">Завантаження розкладу…</string>
 </resources>

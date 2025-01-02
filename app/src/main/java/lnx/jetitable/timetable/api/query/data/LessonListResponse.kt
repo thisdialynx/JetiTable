@@ -7,10 +7,6 @@ import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import java.util.regex.Pattern
 
-data class LessonListResponse(
-    val lessons: List<Lesson>
-)
-
 data class Lesson(
     val id: String,
     val group: String,
@@ -27,11 +23,11 @@ data class Lesson(
     val type: String
 )
 
-fun parseLessonHtml(html: String): LessonListResponse {
+fun parseLessonHtml(html: String): List<Lesson> {
 
     val doc: Document = Jsoup.parse("<html><body><table>$html</table></body></html>")
     val elements = doc.select("tr.tr1")
-    val extractedData = mutableListOf<Lesson>()
+    val lessons = mutableListOf<Lesson>()
 
     val meetingPattern = Pattern.compile("Modul_TT\\.loadZoom\\('([^']+)'\\)")
     val moodlePattern = Pattern.compile("Modul_TT\\.loadMoodleStudent\\('([^']+)'\\)")
@@ -70,11 +66,11 @@ fun parseLessonHtml(html: String): LessonListResponse {
 
             if (BuildConfig.DEBUG) Log.d("Lession html parser", "Extracted data: $lesson")
 
-            extractedData.add(lesson)
+            lessons.add(lesson)
         }
     } catch (e: Exception) {
         Log.e("Lesson html parser", "Failed to parse html response", e)
     }
 
-    return LessonListResponse(lessons = extractedData)
+    return lessons
 }
