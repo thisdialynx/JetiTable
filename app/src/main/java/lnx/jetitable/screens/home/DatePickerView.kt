@@ -30,17 +30,16 @@ import lnx.jetitable.misc.getSemester
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DatePickerExtended(selectedDate: Calendar, modifier: Modifier = Modifier, onDateSelected: (Int, Int, Int) -> Unit) {
+fun DatePickerView(selectedDate: Calendar, modifier: Modifier = Modifier, onDateSelected: (Calendar) -> Unit) {
     var showDialog by remember { mutableStateOf(false) }
 
-    val currentMonth = selectedDate.get(Calendar.MONTH)
-    val academicYear = getAcademicYear(selectedDate.get(Calendar.YEAR), currentMonth)
-    val academicYearRange = academicYear.split("/").map { it.toInt() }
-    val yearRange = if (getSemester(currentMonth) == 1) academicYearRange[0] else academicYearRange[1]
+    val academicYearRange = getAcademicYear(selectedDate).split("/").map { it.toInt() }
+    val yearRange = if (getSemester(selectedDate) == 1) academicYearRange[0] else academicYearRange[1]
     val datePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = Calendar.getInstance().timeInMillis,
+        initialSelectedDateMillis = selectedDate.timeInMillis,
         yearRange = IntRange(yearRange, yearRange)
     )
+    val selectedDateString = getFormattedDate(selectedDate)
 
     if (showDialog) {
         DatePickerDialog(
@@ -50,12 +49,8 @@ fun DatePickerExtended(selectedDate: Calendar, modifier: Modifier = Modifier, on
                     onClick = {
                         showDialog = false
                         datePickerState.selectedDateMillis?.let { millis ->
-                            selectedDate.timeInMillis = millis
-                            onDateSelected(
-                                selectedDate.get(Calendar.YEAR),
-                                selectedDate.get(Calendar.MONTH),
-                                selectedDate.get(Calendar.DAY_OF_MONTH)
-                            )
+                            val newDate = Calendar.getInstance().apply { timeInMillis = millis }
+                            onDateSelected(newDate)
                         }
                     },
                     modifier = Modifier.padding(end = 6.dp)
@@ -68,11 +63,6 @@ fun DatePickerExtended(selectedDate: Calendar, modifier: Modifier = Modifier, on
             }
         ) { DatePicker(state = datePickerState) }
     }
-    val selectedDateString = getFormattedDate(
-        selectedDate.get(Calendar.DAY_OF_MONTH),
-        selectedDate.get(Calendar.MONTH) + 1,
-        selectedDate.get(Calendar.YEAR)
-    )
 
     Text(text = stringResource(id = R.string.schedule_for_day))
     CompositionLocalProvider(value = LocalMinimumInteractiveComponentSize provides Dp.Unspecified) {

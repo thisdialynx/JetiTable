@@ -6,10 +6,6 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 
-data class SessionListResponse(
-    val sessions: List<Session>
-)
-
 data class Session(
     val date: String,
     val lessonTime: String,
@@ -19,7 +15,7 @@ data class Session(
     val url: String
 )
 
-fun parseSessionHtml(html: String): SessionListResponse {
+fun parseSessionHtml(html: String): List<Session> {
     val document: Document = Jsoup.parse("<html><body><table>$html</table></body></html>")
     val sessions = mutableListOf<Session>()
 
@@ -50,5 +46,5 @@ fun parseSessionHtml(html: String): SessionListResponse {
     } catch (e: Exception) {
         Log.e("Session html parser", "Failed to parse html data", e)
     }
-    return SessionListResponse(sessions)
+    return sessions
 }

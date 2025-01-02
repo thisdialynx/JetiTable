@@ -3,12 +3,12 @@
     <string name="app_name_description">Информационная система расписания</string>
     <string name="corporate_email_label">Почта</string>
     <string name="wrong_credentials">Неправильный адрес электронной почты или пароль</string>
-    <string name="corporate_email_description">Используйте корпоративную электронную почту, предоставленную университетом</string>
+    <string name="corporate_email_description">Используйте электронную почту, предоставленную университетом</string>
     <string name="password_label">Пароль</string>
     <string name="forgot_password_label">Забыли пароль?</string>
     <string name="sign_in">Войти</string>
     <string name="corporate_email_error">Адрес электронной почты должен заканчиваться на @snu.edu.ua</string>
-    <string name="password_sent">Электронное письмо отправлено</string>
+    <string name="password_sent">Письмо отправлено</string>
     <string name="invalid_email">Неправильный адрес электронной почты</string>
     <string name="authorized">Авторизация успешна!</string>
     <string name="forgot_password_dialog_title">Восстановление пароля</string>
@@ -32,16 +32,17 @@
     <string name="developer">Разработчик</string>
     <string name="timetable_developer">Разработчик TimeTable</string>
     <string name="part_time">Дистанционная форма обучения</string>
-    <string name="full_time">Дневная форма обучения</string>
+    <string name="full_time">Очная форма обучения</string>
     <string name="timetable_account">Аккаунт %1$s</string>
     <string name="spring_semester">Весенний семестр</string>
     <string name="autumn_semester">Осенний семестр</string>
     <string name="support">Поддержка</string>
     <string name="session_schedule">Расписание сессии</string>
-    <string name="no_session">Расписание сессии недоступно или ещё не выставлено</string>
+    <string name="no_session">Расписание сессии недоступно на данный момент</string>
     <string name="date">Дата: %1$s</string>
     <string name="home_screen">Главный экран</string>
     <string name="settings">Настройки</string>
     <string name="product">Продукт</string>
     <string name="sign_out">Выйти</string>
+    <string name="getting_lists">Загрузка расписания…</string>
 </resources>
