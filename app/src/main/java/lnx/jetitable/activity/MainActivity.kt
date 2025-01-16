@@ -27,6 +27,8 @@ import lnx.jetitable.screens.loading.LoadingScreen
 import lnx.jetitable.screens.settings.SettingsScreen
 import lnx.jetitable.ui.theme.JetiTableTheme
 
+const val SCREEN_TRANSITION_MILLIS = 200
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
@@ -46,10 +48,38 @@ fun AppNavigation() {
 
     NavHost(
         navController = navController,
-        startDestination = Loading.route
+        startDestination = Loading.route,
+        enterTransition = {
+            slideInHorizontally(
+                initialOffsetX = { SCREEN_TRANSITION_MILLIS }
+            ) + fadeIn(
+                animationSpec = tween(SCREEN_TRANSITION_MILLIS)
+            )
+        },
+        popEnterTransition = {
+            slideInHorizontally(
+                initialOffsetX = { -SCREEN_TRANSITION_MILLIS }
+            ) + fadeIn(
+                animationSpec = tween(SCREEN_TRANSITION_MILLIS)
+            )
+        },
+        exitTransition = {
+            slideOutHorizontally(
+                targetOffsetX = { -SCREEN_TRANSITION_MILLIS }
+            ) + fadeOut(
+                animationSpec = tween(SCREEN_TRANSITION_MILLIS)
+            )
+        },
+        popExitTransition = {
+            slideOutHorizontally(
+                targetOffsetX = { SCREEN_TRANSITION_MILLIS }
+            ) + fadeOut(
+                animationSpec = tween(SCREEN_TRANSITION_MILLIS)
+            )
+        },
     ) {
         composable(
-            Auth.route,
+            route = Auth.route,
             exitTransition = { slideOutHorizontally(targetOffsetX = { -200 }) + fadeOut(animationSpec = tween(150)) }
         ) {
             AuthScreen(
@@ -60,36 +90,12 @@ fun AppNavigation() {
                 }
             )
         }
-        composable(
-            Home.route,
-            enterTransition = { slideInHorizontally(initialOffsetX = { -200 }) + fadeIn(animationSpec = tween(200)) },
-            exitTransition = { slideOutHorizontally(targetOffsetX = { -200 }) + fadeOut(animationSpec = tween(200)) },
-            popEnterTransition = { slideInHorizontally(initialOffsetX = { -200 }) + fadeIn(animationSpec = tween(200)) },
-            popExitTransition = { slideOutHorizontally(targetOffsetX = { 200 }) + fadeOut(animationSpec = tween(200)) }
-        ) { HomeScreen(navController) }
+        composable( route = Home.route ) { HomeScreen(navController) }
 
-        composable(
-            About.route,
-            enterTransition = { slideInHorizontally(initialOffsetX = { 200 }) + fadeIn(animationSpec = tween(200)) },
-            exitTransition = { slideOutHorizontally(targetOffsetX = { 200 }) + fadeOut(animationSpec = tween(200)) },
-            popEnterTransition = { slideInHorizontally(initialOffsetX = { 200 }) + fadeIn(animationSpec = tween(200)) },
-            popExitTransition = { slideOutHorizontally(targetOffsetX = { 200 }) + fadeOut(animationSpec = tween(200)) }
-        ) { AboutScreen(navController) }
+        composable( route = About.route ) { AboutScreen(navController) }
 
-        composable(
-            Settings.route,
-            enterTransition = { slideInHorizontally(initialOffsetX = { 200 }) + fadeIn(animationSpec = tween(200)) },
-            exitTransition = { slideOutHorizontally(targetOffsetX = { 200 }) + fadeOut(animationSpec = tween(200)) },
-            popEnterTransition = { slideInHorizontally(initialOffsetX = { -200 }) + fadeIn(animationSpec = tween(200)) },
-            popExitTransition = { slideOutHorizontally(targetOffsetX = { 200 }) + fadeOut(animationSpec = tween(200)) }
-        ) { SettingsScreen(navController) }
+        composable( route = Settings.route ) { SettingsScreen(navController) }
 
-        composable(
-            Loading.route,
-            enterTransition = { slideInHorizontally(initialOffsetX = { 200 }) + fadeIn(animationSpec = tween(200)) },
-            exitTransition = { slideOutHorizontally(targetOffsetX = { 200 }) + fadeOut(animationSpec = tween(200)) },
-            popEnterTransition = { slideInHorizontally(initialOffsetX = { -200 }) + fadeIn(animationSpec = tween(200)) },
-            popExitTransition = { slideOutHorizontally(targetOffsetX = { 200 }) + fadeOut(animationSpec = tween(200)) }
-        ) { LoadingScreen(navController) }
+        composable( route = Loading.route ) { LoadingScreen(navController) }
     }
 }
