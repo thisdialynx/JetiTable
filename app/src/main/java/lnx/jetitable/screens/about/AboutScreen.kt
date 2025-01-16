@@ -61,7 +61,9 @@ fun AboutScreen(navController: NavHostController) {
             LargeTopAppBar(
                 title = { Text(text = stringResource(id = R.string.about_screen_title)) },
                 navigationIcon = {
-                    IconButton(onClick = { navController.navigate(lnx.jetitable.navigation.Settings.route) }) {
+                    IconButton(
+                        onClick = { navController.popBackStack() }
+                    ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
                             contentDescription = "Back"

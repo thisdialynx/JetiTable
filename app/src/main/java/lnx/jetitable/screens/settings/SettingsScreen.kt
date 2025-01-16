@@ -30,7 +30,6 @@ import androidx.navigation.NavHostController
 import lnx.jetitable.R
 import lnx.jetitable.misc.getSemester
 import lnx.jetitable.navigation.About
-import lnx.jetitable.navigation.Home
 import lnx.jetitable.viewmodel.SettingsViewModel
 
 
@@ -42,7 +41,7 @@ fun SettingsScreen(navController: NavHostController) {
             TopAppBar(
                 title = { Text(text = stringResource(R.string.settings)) },
                 navigationIcon = {
-                    IconButton(onClick = { navController.navigate(Home.route) }) {
+                    IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back arrow"
