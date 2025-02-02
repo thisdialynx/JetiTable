@@ -24,7 +24,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -49,7 +48,7 @@ fun ScheduleCard(
 ) {
     Card(
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)
+            containerColor = MaterialTheme.colorScheme.surfaceContainer
         ),
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -74,7 +73,7 @@ fun ScheduleRow(
     meetingUrlIcon: ImageVector,
     elementIndex: Int,
     onClick: () -> Unit,
-    backgroundColor: Color,
+    backgroundColor: Color = MaterialTheme.colorScheme.surfaceContainerHigh,
 ) {
     var expanded by remember { mutableStateOf(false) }
     val localUriHandler = LocalUriHandler.current
@@ -82,7 +81,7 @@ fun ScheduleRow(
 
     if (elementIndex > 0) {
         HorizontalDivider(
-            color = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp),
+            color = MaterialTheme.colorScheme.surfaceContainer,
             thickness = 2.dp
         )
     }
@@ -223,13 +222,13 @@ fun StudentSchedule(content: @Composable () -> Unit) {
             .padding(bottom = 16.dp)
             .padding(horizontal = 16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(6.dp)
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
         )
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.surfaceColorAtElevation(6.dp))
+                .background(MaterialTheme.colorScheme.surfaceContainerHigh)
                 .animateContentSize(animationSpec = spring(stiffness = Spring.StiffnessMediumLow)),
             horizontalAlignment = Alignment.CenterHorizontally
         ) { content() }
