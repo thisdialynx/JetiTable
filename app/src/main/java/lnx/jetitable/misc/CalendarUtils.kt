@@ -18,7 +18,7 @@ fun getAcademicYear(selectedDate: Calendar = calendar): String {
 }
 
 fun getSemester(selectedDate: Calendar = calendar): Int {
-    return if (selectedDate.get(Calendar.MONTH) in 8..12 || selectedDate.get(Calendar.MONTH) in 1..2) 1 else 2
+    return if (selectedDate.get(Calendar.MONTH) in 8..12) 1 else 2
 }
 
 fun getFormattedDate(currentDate: Calendar = calendar): String {
