@@ -37,7 +37,6 @@ enum class UrlIconData(val icon: ImageVector, val description: Int, val shortUri
     GITHUB(lnx.jetitable.ui.icons.Github, R.string.github, "github.com/thisdialynx/JetiTable"),
     UNIVERSITY(lnx.jetitable.ui.icons.Snu, R.string.university, "snu.edu.ua"),
     TIMETABLE(lnx.jetitable.ui.icons.google.CalendarMonth, R.string.timetable, "timetable.lond.lg.ua"),
-    SUPPORT(lnx.jetitable.ui.icons.Telegram, R.string.support, "t.me/JetiTable")
 }
 
 enum class ContibutorsData(
