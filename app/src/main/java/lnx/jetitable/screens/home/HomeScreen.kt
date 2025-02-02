@@ -22,7 +22,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
-import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -144,7 +143,7 @@ fun HomeScreen(navController: NavHostController) {
                                         val bgColor = if (isLessonNow(lesson, currentTime)) {
                                             MaterialTheme.colorScheme.primaryContainer
                                         } else {
-                                            MaterialTheme.colorScheme.surfaceColorAtElevation(6.dp)
+                                            MaterialTheme.colorScheme.surfaceContainerHigh
                                         }
 
                                         ScheduleRow(
@@ -210,7 +209,6 @@ fun HomeScreen(navController: NavHostController) {
                                             meetingUrl = session.url,
                                             meetingUrlIcon = getMeetingIcon(session.url),
                                             onClick = {},
-                                            backgroundColor = MaterialTheme.colorScheme.surfaceColorAtElevation(6.dp),
                                             expandedText = "${stringResource(id = R.string.lesson_number, session.lessonNumber)}\n" +
                                                     "${stringResource(id = R.string.date, session.date)}\n" +
                                                     stringResource(id = R.string.teacher, session.teacher),
