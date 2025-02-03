@@ -1,7 +1,9 @@
 package lnx.jetitable.screens.about
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
@@ -20,25 +22,38 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.UriHandler
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
 
 @Composable
-fun ContributorCard(profilePicture: Int, title: String, description: Int, icon: ImageVector, iconDescription: String, localUriHandler: UriHandler, shortUri: String) {
+fun ContributorCard(profilePicture: String?, title: String, description: Int, icon: ImageVector, iconDescription: String, localUriHandler: UriHandler, shortUri: String) {
     Row(
         modifier = Modifier.padding(16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp), Alignment.CenterVertically
     ) {
-        Image(
-            painter = painterResource(id = profilePicture),
-            contentDescription = "$title $description",
+        Box(
             modifier = Modifier
                 .fillMaxWidth(0.15f)
                 .aspectRatio(1f)
                 .clip(CircleShape)
-        )
+                .background(MaterialTheme.colorScheme.surfaceContainerHigh),
+            contentAlignment = Alignment.Center
+        ) {
+            if (!profilePicture.isNullOrEmpty()) {
+                Image(
+                    painter = rememberAsyncImagePainter(profilePicture),
+                    contentDescription = "$title $description",
+                )
+            } else {
+                Text(
+                    text = title.first().toString(),
+                    fontSize = 32.sp
+                )
+            }
+        }
+
         Column(
             verticalArrangement = Arrangement.spacedBy(2.dp),
             modifier = Modifier.weight(1f)
