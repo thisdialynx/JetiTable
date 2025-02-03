@@ -40,15 +40,28 @@ enum class UrlIconData(val icon: ImageVector, val description: Int, val shortUri
 }
 
 enum class ContibutorsData(
-    val profilePicture: Int,
+    val profilePictureUrl: String? = null,
     val title: String,
     val description: Int,
     val icon: ImageVector,
     val iconDescription: String,
-    val shortUri: String
+    val shortUrl: String
 ) {
-    DIALYNX(0, "Dialynx", R.string.developer, lnx.jetitable.ui.icons.Telegram, "Telegram", "t.me/placeholder"),
-    DENYSRATOV(0, "Denys Ratov", R.string.timetable_developer, lnx.jetitable.ui.icons.Telegram, "Telegram", "t.me/placeholder")
+    DIALYNX(
+        profilePictureUrl = "https://github.com/thisdialynx.png",
+        title = "Dialynx",
+        description = R.string.developer,
+        icon = lnx.jetitable.ui.icons.Telegram,
+        iconDescription = "Telegram",
+        shortUrl = "t.me/placeholder"
+    ),
+    DENYSRATOV(
+        title = "Denys Ratov",
+        description = R.string.timetable_developer,
+        icon = lnx.jetitable.ui.icons.Telegram,
+        iconDescription = "Telegram",
+        shortUrl = "t.me/placeholder",
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -124,13 +137,13 @@ fun AboutScreen(navController: NavHostController) {
                             )
                         }
                         ContributorCard(
-                            profilePicture = data.profilePicture,
+                            profilePicture = data.profilePictureUrl,
                             title = data.title,
                             description = data.description,
                             icon = lnx.jetitable.ui.icons.Telegram,
                             iconDescription = data.iconDescription,
                             localUriHandler = localUriHandler,
-                            shortUri = data.shortUri
+                            shortUri = data.shortUrl
                         )
                     }
                 }
