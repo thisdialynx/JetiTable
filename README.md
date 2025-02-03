@@ -6,6 +6,9 @@ Some highlight features:
 - Password recover
 - Lession (including presence verification) and session schedule
 
+### Screenshots
+<img src="docs/images/auth_screen.png" width=25% height=25%> <img src="docs/images/home_screen.png" width=25% height=25%> <img src="docs/images/settings_screen.png" width=25% height=25%> <img src="docs/images/about_screen.png" width=25% height=25%>
+
 ## Downloads
 [GitHub](https://github.com/thisdialynx/JetiTable/releases/latest) and [SourceForge](https://sourceforge.net/projects/diaproduction/files/JetiTable/) is the only source at the moment
 
