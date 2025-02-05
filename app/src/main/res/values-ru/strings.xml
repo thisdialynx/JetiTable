@@ -45,4 +45,6 @@
     <string name="product">Продукт</string>
     <string name="sign_out">Выйти</string>
     <string name="getting_lists">Загрузка расписания…</string>
+    <string name="hide_password">Скрыть пароль</string>
+    <string name="show_password">Показать пароль</string>
 </resources>
