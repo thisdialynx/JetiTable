@@ -1,6 +1,5 @@
 package lnx.jetitable.screens.about
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,7 +24,7 @@ import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.rememberAsyncImagePainter
+import coil3.compose.AsyncImage
 
 @Composable
 fun ContributorCard(profilePicture: String?, title: String, description: Int, icon: ImageVector, iconDescription: String, localUriHandler: UriHandler, shortUri: String) {
@@ -42,9 +41,9 @@ fun ContributorCard(profilePicture: String?, title: String, description: Int, ic
             contentAlignment = Alignment.Center
         ) {
             if (!profilePicture.isNullOrEmpty()) {
-                Image(
-                    painter = rememberAsyncImagePainter(profilePicture),
-                    contentDescription = "$title $description",
+                AsyncImage(
+                    model = "$profilePicture",
+                    contentDescription = "$title $description"
                 )
             } else {
                 Text(
