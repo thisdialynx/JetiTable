@@ -47,4 +47,6 @@
     <string name="product">Product</string>
     <string name="sign_out">Sign out</string>
     <string name="getting_lists">Getting list…</string>
+    <string name="hide_password">Hide password</string>
+    <string name="show_password">Show password</string>
 </resources>
