@@ -1,6 +1,6 @@
 [versions]
 agp = "8.8.0"
-coilCompose = "2.1.0"
+coilComposeVersion = "3.1.0"
 converterGson = "2.11.0"
 converterScalars = "2.11.0"
 coreSplashscreen = "1.0.1"
@@ -26,7 +26,8 @@ androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", versi
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
-coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
+coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilComposeVersion" }
+coil3-coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilComposeVersion" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 jsoup-jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoupJsoup" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
