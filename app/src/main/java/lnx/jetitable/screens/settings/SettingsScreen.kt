@@ -63,6 +63,7 @@ fun SettingsScreen(navController: NavHostController) {
         val isFullTime = if (settingsViewModel.isFullTime == true) R.string.full_time else R.string.part_time
         val semester = if (getSemester(calendar) == 1) R.string.autumn_semester else R.string.spring_semester
         val academicYear = settingsViewModel.academicYear
+        val status = settingsViewModel.status
 
         Column(
             modifier = Modifier.padding(paddingValues),
@@ -70,7 +71,7 @@ fun SettingsScreen(navController: NavHostController) {
         ) {
             TTAccountCard(
                 title = stringResource(id = R.string.timetable_account, stringResource(id = R.string.timetable)),
-                description = "$fullName ($group). \n$academicYear. ${stringResource(id = semester)}. ${stringResource(id = isFullTime)}.",
+                description = "$fullName ($group). \n${stringResource(id = R.string.status)}: $status. $academicYear. ${stringResource(id = semester)}. ${stringResource(id = isFullTime)}.",
                 icon = lnx.jetitable.ui.icons.Snu,
                 context = context,
                 toastText = "UID: $userId, GID: $groupId, FNID: $fullNameId.",
