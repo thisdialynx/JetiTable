@@ -34,6 +34,8 @@ class SettingsViewModel(application: Application): AndroidViewModel(application)
         private set
     var academicYear by mutableStateOf<String?>(null)
         private set
+    var status by mutableStateOf<String?>(null)
+        private set
 
 
     init {
@@ -46,6 +48,7 @@ class SettingsViewModel(application: Application): AndroidViewModel(application)
             groupId = user.groupId
             isFullTime = user.isFullTime == 1
             academicYear = getAcademicYear(calendar)
+            status = user.status
         }
     }
 
