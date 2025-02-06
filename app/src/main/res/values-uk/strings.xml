@@ -47,4 +47,5 @@
     <string name="getting_lists">Завантаження розкладу…</string>
     <string name="hide_password">Приховати пароль</string>
     <string name="show_password">Показати пароль</string>
+    <string name="status">Статус</string>
 </resources>
