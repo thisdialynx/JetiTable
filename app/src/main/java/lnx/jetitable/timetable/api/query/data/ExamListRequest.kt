@@ -1,6 +1,6 @@
 package lnx.jetitable.timetable.api.query.data
 
-data class SessionListRequest(
+data class ExamListRequest(
     val param: String,
     val group: String,
     val id_group: String,

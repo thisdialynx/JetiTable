@@ -78,10 +78,7 @@ fun AppNavigation() {
             )
         },
     ) {
-        composable(
-            route = Auth.route,
-            exitTransition = { slideOutHorizontally(targetOffsetX = { -200 }) + fadeOut(animationSpec = tween(150)) }
-        ) {
+        composable(route = Auth.route) {
             AuthScreen(
                 onAuthComplete = {
                     navController.navigate(Home.route) {
