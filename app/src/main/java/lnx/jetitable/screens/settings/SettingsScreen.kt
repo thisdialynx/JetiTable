@@ -1,6 +1,5 @@
 package lnx.jetitable.screens.settings
 
-import android.icu.util.Calendar
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import lnx.jetitable.R
-import lnx.jetitable.misc.getSemester
+import lnx.jetitable.misc.DateManager
 import lnx.jetitable.navigation.About
 import lnx.jetitable.viewmodel.SettingsViewModel
 
@@ -53,7 +52,7 @@ fun SettingsScreen(navController: NavHostController) {
     ) { paddingValues ->
         val settingsViewModel: SettingsViewModel = viewModel()
         val context = LocalContext.current
-        val calendar = Calendar.getInstance()
+        val dateManager = DateManager()
 
         val userId = settingsViewModel.userId
         val fullName = settingsViewModel.fullName
@@ -61,7 +60,7 @@ fun SettingsScreen(navController: NavHostController) {
         val group = settingsViewModel.group
         val groupId = settingsViewModel.groupId
         val isFullTime = if (settingsViewModel.isFullTime == true) R.string.full_time else R.string.part_time
-        val semester = if (getSemester(calendar) == 1) R.string.autumn_semester else R.string.spring_semester
+        val semester = if (dateManager.getSemester() == 1) R.string.autumn_semester else R.string.spring_semester
         val academicYear = settingsViewModel.academicYear
         val status = settingsViewModel.status
 

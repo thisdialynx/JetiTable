@@ -1,7 +1,6 @@
 package lnx.jetitable.viewmodel
 
 import android.app.Application
-import android.icu.util.Calendar
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -11,14 +10,14 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import lnx.jetitable.datastore.CookieDataStore
 import lnx.jetitable.datastore.UserDataStore
-import lnx.jetitable.misc.getAcademicYear
+import lnx.jetitable.misc.DateManager
 
 class SettingsViewModel(application: Application): AndroidViewModel(application) {
     private val context
         get() = getApplication<Application>().applicationContext
     private val userDataStore = UserDataStore(context)
     private val cookieDataStore = CookieDataStore(context)
-    private val calendar = Calendar.getInstance()
+    val dateManager = DateManager()
 
     var userId by mutableStateOf<Int?>(null)
         private set
@@ -47,7 +46,7 @@ class SettingsViewModel(application: Application): AndroidViewModel(application)
             group = user.group
             groupId = user.groupId
             isFullTime = user.isFullTime == 1
-            academicYear = getAcademicYear(calendar)
+            academicYear = dateManager.getAcademicYears()
             status = user.status
         }
     }

@@ -6,12 +6,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -24,22 +24,16 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import lnx.jetitable.R
-import lnx.jetitable.misc.getAcademicYear
-import lnx.jetitable.misc.getFormattedDate
-import lnx.jetitable.misc.getSemester
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DatePickerView(selectedDate: Calendar, modifier: Modifier = Modifier, onDateSelected: (Calendar) -> Unit) {
+fun DatePickerView(
+    formattedDate: String,
+    datePickerState: DatePickerState,
+    modifier: Modifier = Modifier,
+    onDateSelected: (Calendar) -> Unit
+) {
     var showDialog by remember { mutableStateOf(false) }
-
-    val academicYearRange = getAcademicYear(selectedDate).split("/").map { it.toInt() }
-    val yearRange = if (getSemester(selectedDate) == 1) academicYearRange[0] else academicYearRange[1]
-    val datePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = selectedDate.timeInMillis,
-        yearRange = IntRange(yearRange, yearRange)
-    )
-    val selectedDateString = getFormattedDate(selectedDate)
 
     if (showDialog) {
         DatePickerDialog(
@@ -64,10 +58,10 @@ fun DatePickerView(selectedDate: Calendar, modifier: Modifier = Modifier, onDate
         ) { DatePicker(state = datePickerState) }
     }
 
-    Text(text = stringResource(id = R.string.schedule_for_day))
+    Text(text = stringResource(id = R.string.schedule_for_date))
     CompositionLocalProvider(value = LocalMinimumInteractiveComponentSize provides Dp.Unspecified) {
         Text(
-            text = selectedDateString,
+            text = formattedDate,
             modifier = modifier.clickable { showDialog = true },
             color = MaterialTheme.colorScheme.primary,
             style = MaterialTheme.typography.titleMedium,
