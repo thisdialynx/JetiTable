@@ -7,27 +7,31 @@ import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import java.util.regex.Pattern
 
-data class Lesson(
+data class ClassNetworkData(
     val id: String,
     val group: String,
     val number: String,
-    val teacherFullName: String,
+    val educator: String,
     val name: String,
-    val teacherId: String,
+    val educatorId: String,
     val date: String,
     val start: String,
     val end: String,
-    val items: String, // Contains nothing every time. We don't know what is it used for
+    val items: String,
     val meetingLink: String,
     val moodleLink: String,
     val type: String
 )
 
-fun parseLessonHtml(html: String): List<Lesson> {
+fun parseLessonHtml(html: String): List<ClassNetworkData> {
+    val classes = mutableListOf<ClassNetworkData>()
+
+    if (html.contains("відсутні", ignoreCase = true)) {
+        return emptyList()
+    }
 
     val doc: Document = Jsoup.parse("<html><body><table>$html</table></body></html>")
     val elements = doc.select("tr.tr1")
-    val lessons = mutableListOf<Lesson>()
 
     val meetingPattern = Pattern.compile("Modul_TT\\.loadZoom\\('([^']+)'\\)")
     val moodlePattern = Pattern.compile("Modul_TT\\.loadMoodleStudent\\('([^']+)'\\)")
@@ -48,13 +52,13 @@ fun parseLessonHtml(html: String): List<Lesson> {
 
             val type = element.selectFirst("td.tabPSC[style*=text-align:center; font-weight:bold;]")?.text() ?: ""
 
-            val lesson = Lesson(
+            val classNetworkData = ClassNetworkData(
                 id = element.attr("data-id_lesson"),
                 group = element.attr("data-group"),
                 number = element.attr("data-numlesson"),
-                teacherFullName = element.attr("data-fio"),
+                educator = element.attr("data-fio"),
                 name = element.attr("data-lesson"),
-                teacherId = element.attr("data-id_fio"),
+                educatorId = element.attr("data-id_fio"),
                 date = element.attr("data-dateles"),
                 start = element.attr("data-timebeg").substring(0, 5),
                 end = element.attr("data-timeend").substring(0, 5),
@@ -64,13 +68,13 @@ fun parseLessonHtml(html: String): List<Lesson> {
                 type = type
             )
 
-            if (BuildConfig.DEBUG) Log.d("Lession html parser", "Extracted data: $lesson")
+            if (BuildConfig.DEBUG) Log.d("Lession html parser", "Extracted data: $classNetworkData")
 
-            lessons.add(lesson)
+            classes.add(classNetworkData)
         }
     } catch (e: Exception) {
         Log.e("Lesson html parser", "Failed to parse html response", e)
     }
 
-    return lessons
+    return classes
 }

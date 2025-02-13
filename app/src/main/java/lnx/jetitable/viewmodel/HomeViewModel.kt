@@ -10,44 +10,40 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import lnx.jetitable.BuildConfig
 import lnx.jetitable.datastore.UserDataStore
 import lnx.jetitable.datastore.user.UserDataWorker
-import lnx.jetitable.misc.getAcademicYear
-import lnx.jetitable.misc.getFormattedDate
-import lnx.jetitable.misc.getSemester
+import lnx.jetitable.misc.DateManager
+import lnx.jetitable.screens.home.data.ClassUiData
 import lnx.jetitable.timetable.api.ApiService.Companion.CHECK_ZOOM
-import lnx.jetitable.timetable.api.ApiService.Companion.DAILY_LESSON_LIST
-import lnx.jetitable.timetable.api.ApiService.Companion.SESSION_LIST
+import lnx.jetitable.timetable.api.ApiService.Companion.DAILY_CLASS_LIST
+import lnx.jetitable.timetable.api.ApiService.Companion.EXAM_LIST
 import lnx.jetitable.timetable.api.ApiService.Companion.STATE
 import lnx.jetitable.timetable.api.RetrofitHolder
-import lnx.jetitable.timetable.api.query.data.Lesson
-import lnx.jetitable.timetable.api.query.data.LessonListRequest
-import lnx.jetitable.timetable.api.query.data.Session
-import lnx.jetitable.timetable.api.query.data.SessionListRequest
+import lnx.jetitable.timetable.api.query.data.ClassListRequest
+import lnx.jetitable.timetable.api.query.data.Exam
+import lnx.jetitable.timetable.api.query.data.ExamListRequest
 import lnx.jetitable.timetable.api.query.data.VerifyPresenceRequest
 import lnx.jetitable.timetable.api.query.data.parseLessonHtml
 import lnx.jetitable.timetable.api.query.data.parseSessionHtml
 import java.util.concurrent.TimeUnit
 
-data class UserUiState(
-    val lessonList: List<Lesson>?,
-    val sessionList: List<Session>?,
-    val selectedDate: Calendar
-)
-
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private val context
         get() = getApplication<Application>().applicationContext
+    private val dateManager = DateManager()
+    val dateState = dateManager.dateStateFlow
     private val userDataStore = UserDataStore(context)
     private val service = RetrofitHolder.getInstance(context)
 
@@ -55,94 +51,135 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private var userId by mutableStateOf<String?>(null)
     private var fullName by mutableStateOf<String?>(null)
 
-    private val _selectedDate = MutableStateFlow(Calendar.getInstance())
-    val selectedDate = _selectedDate.asStateFlow()
-
-    val currentTimeFlow = flow {
+    private val currentTime = flow {
         while (true) {
             emit(Calendar.getInstance().timeInMillis)
-            delay(1000)
+            delay(60000)
         }
     }
+        .flowOn(Dispatchers.IO)
 
-    val userInfoFlow = combine(userDataStore.getUserData(), selectedDate) { userInfo, date ->
-        group = userInfo.group
-        userId = userInfo.userId.toString()
-        fullName = userInfo.fullName
-
-        UserUiState(
-            lessonList = getLessons(
-                selectedDate = date,
-                group = userInfo.group to userInfo.groupId
-            ),
-            sessionList = getSession(group = userInfo.group to userInfo.groupId),
-            selectedDate = date
+    val classesFlow = combine(userDataStore.getUserData(), dateManager.selectedDate, currentTime) { userInfo, date, time ->
+        getClasses(group = userInfo.group to userInfo.groupId)
+    }
+        .flowOn(Dispatchers.IO)
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = null
         )
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = UserUiState(lessonList = null, sessionList = null, selectedDate = Calendar.getInstance())
-    )
+    val examsFlow = userDataStore.getUserData().map { userInfo ->
+        getExams(group = userInfo.group to userInfo.groupId)
+    }
+        .flowOn(Dispatchers.IO)
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = null
+        )
 
     init {
         viewModelScope.launch {
             val workRequest = PeriodicWorkRequestBuilder<UserDataWorker>(6, TimeUnit.HOURS).build()
             WorkManager.getInstance(context).enqueue(workRequest)
         }
-    }
 
-    fun onDateSelected(selectedDate: Calendar) {
-        _selectedDate.update { selectedDate }
-    }
-
-    fun shiftDay(shift: Int) {
-        val shiftedDate = (_selectedDate.value.clone() as Calendar).apply {
-            add(Calendar.DAY_OF_MONTH, shift)
-        }
-        if (shiftedDate.get(Calendar.YEAR) == _selectedDate.value.get(Calendar.YEAR)) {
-            _selectedDate.update { shiftedDate }
+        viewModelScope.launch(Dispatchers.IO) {
+            userDataStore.getUserData().collect {
+                group = it.group
+                userId = it.userId.toString()
+                fullName = it.fullName
+            }
         }
     }
 
-    private suspend fun getLessons(selectedDate: Calendar, group: Pair<String, String>): List<Lesson>? {
-        try {
-            val response = service.get_listLessonTodayStudent(
-                LessonListRequest(
-                    DAILY_LESSON_LIST,
-                    group.first,
-                    group.second,
-                    getFormattedDate(selectedDate),
-                    getAcademicYear(selectedDate),
-                    getSemester(selectedDate).toString()
+    fun shiftDayForward() {
+        dateManager.updateDate(dayShift = 1)
+    }
+
+    fun shiftDayBackward() {
+        dateManager.updateDate(dayShift = -1)
+    }
+
+    fun updateDate(calendar: Calendar) {
+        dateManager.updateDate(calendar)
+    }
+
+    private suspend fun getClasses(group: Pair<String, String>): List<ClassUiData> {
+        var classList: List<ClassUiData>
+
+        withContext(Dispatchers.IO) {
+            val currentDate = Calendar.getInstance().apply { timeInMillis = currentTime.first() }
+            val formattedTime = dateManager.timeFormat.format(currentDate.time)
+            val formattedDate = dateManager.dateFormat.format(currentDate)
+
+            try {
+                val response = service.get_listLessonTodayStudent(
+                    ClassListRequest(
+                        DAILY_CLASS_LIST,
+                        group.first,
+                        group.second,
+                        dateManager.getFormattedDate(),
+                        dateManager.getAcademicYears(),
+                        dateManager.getSemester().toString()
+                    )
                 )
-            )
-            return parseLessonHtml(response)
-        } catch (e: Exception) {
-            Log.e("Lesson list request", "Error in lesson list retrieval", e)
-            return null
+                val parsedResponse = parseLessonHtml(response).map {
+                    val isCurrentDate = formattedDate == it.date
+                    val isTimeInRange = formattedTime in it.start..it.end
+                    val isNow = isCurrentDate && isTimeInRange
+
+                    ClassUiData(
+                        id = it.id,
+                        group = it.group,
+                        number = it.number,
+                        educator = it.educator,
+                        name = it.name,
+                        educatorId = it.educatorId,
+                        date = it.date,
+                        start = it.start,
+                        end = it.end,
+                        items = it.items,
+                        meetingLink = it.meetingLink,
+                        moodleLink = it.moodleLink,
+                        type = it.type,
+                        isNow = isNow
+                    )
+                }
+                classList = parsedResponse
+
+            } catch (e: Exception) {
+                Log.e("Lesson list request", "Error in lesson list retrieval", e)
+                classList = emptyList()
+            }
         }
+        return classList
     }
 
-    private suspend fun getSession(group: Pair<String, String>): List<Session>? {
-        try {
-            val response = service.get_sessionStudent(
-                SessionListRequest(
-                    SESSION_LIST,
-                    group.first,
-                    group.second,
-                    getAcademicYear(),
-                    getSemester().toString()
+    private suspend fun getExams(group: Pair<String, String>): List<Exam> {
+        var examList: List<Exam>
+        withContext(Dispatchers.IO) {
+            try {
+                val response = service.get_sessionStudent(
+                    ExamListRequest(
+                        EXAM_LIST,
+                        group.first,
+                        group.second,
+                        dateManager.getAcademicYears(),
+                        dateManager.getSemester().toString()
+                    )
                 )
-            )
-            return parseSessionHtml(response)
-        } catch (e: Exception) {
-            Log.e("Session list request", "Error in session list retrieval", e)
-            return null
+                examList = parseSessionHtml(response)
+            } catch (e: Exception) {
+                Log.e("Session list request", "Error in session list retrieval", e)
+                examList = emptyList()
+            }
         }
+        return examList
     }
 
-    fun verifyPresence(lesson: Lesson) {
-        viewModelScope.launch {
+    fun verifyPresence(uiClass: ClassUiData) {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 val response = service.get_checkZoom(
                     VerifyPresenceRequest(
@@ -151,15 +188,15 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                         group!!,
                         fullName!!,
                         userId!!,
-                        lesson.number,
-                        lesson.name,
-                        lesson.id,
-                        lesson.type,
-                        lesson.teacherFullName,
-                        lesson.teacherId,
-                        lesson.date,
-                        "${lesson.start}:00",
-                        "${lesson.end}:00",
+                        uiClass.number,
+                        uiClass.name,
+                        uiClass.id,
+                        uiClass.type,
+                        uiClass.educator,
+                        uiClass.educatorId,
+                        uiClass.date,
+                        "${uiClass.start}:00",
+                        "${uiClass.end}:00",
                     )
                 )
 
