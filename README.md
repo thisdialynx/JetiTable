@@ -4,7 +4,7 @@ JetiTable is an open source application for the TimeTable scheduling information
 Some highlight features:
 - Sign in/Sign out
 - Password recover
-- Lession (including presence verification) and session schedule
+- Class (including presence verification) and exam schedule
 
 ### Screenshots
 <img src="docs/images/auth_screen.png" width=25% height=25%> <img src="docs/images/home_screen.png" width=25% height=25%> <img src="docs/images/settings_screen.png" width=25% height=25%> <img src="docs/images/about_screen.png" width=25% height=25%>
