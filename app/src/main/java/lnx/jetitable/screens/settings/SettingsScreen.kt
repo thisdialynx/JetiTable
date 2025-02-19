@@ -1,6 +1,5 @@
 package lnx.jetitable.screens.settings
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,7 +10,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -21,6 +23,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -31,6 +34,14 @@ import lnx.jetitable.misc.DateManager
 import lnx.jetitable.navigation.About
 import lnx.jetitable.viewmodel.SettingsViewModel
 
+enum class Setting(
+    val titleResId: Int,
+    val descriptionResId: Int,
+    val icon: ImageVector,
+    val destination: String
+) {
+    ABOUT(R.string.about_screen_title, R.string.about_screen_description, lnx.jetitable.ui.icons.google.Info, About.route)
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -77,45 +88,56 @@ fun SettingsScreen(navController: NavHostController) {
                 settingsViewModel = settingsViewModel
             )
             Spacer(modifier = Modifier.height(2.dp))
-            SettingsList(navController)
+            SettingEntries(navController)
         }
     }
 }
 
 @Composable
-fun SettingsList(navController: NavHostController) {
+fun SettingEntries(navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { navController.navigate(About.route) },
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier.padding(horizontal = 32.dp, vertical = 16.dp)
-            ) {
-                Icon(
-                    imageVector = lnx.jetitable.ui.icons.google.Info,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary
-                )
-                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    Text(
-                        text = "Info",
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                    Text(
-                        text = "App version, links and contributors",
-                        style = MaterialTheme.typography.bodySmall,
-                    )
-                }
+        Setting.entries.forEachIndexed { index, settingEntry ->
+            if (index > 0) {
+                HorizontalDivider(thickness = 2.dp, color = MaterialTheme.colorScheme.surface)
             }
 
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                onClick = { navController.navigate(settingEntry.destination) },
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceContainer
+                )
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                ) {
+                    Icon(
+                        imageVector = lnx.jetitable.ui.icons.google.Info,
+                        contentDescription = "${stringResource(id = settingEntry.titleResId)}. ${stringResource(id = settingEntry.descriptionResId)}",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                        Text(
+                            text = stringResource(id = settingEntry.titleResId),
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                        Text(
+                            text = stringResource(id = settingEntry.descriptionResId),
+                            style = MaterialTheme.typography.bodySmall,
+                        )
+                    }
+                }
+            }
         }
     }
 }

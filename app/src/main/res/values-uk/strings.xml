@@ -47,4 +47,5 @@
     <string name="hide_password">Приховати пароль</string>
     <string name="show_password">Показати пароль</string>
     <string name="status">Статус</string>
+    <string name="about_screen_description">Версія застосунку, посилання та дописувачі</string>
 </resources>

@@ -49,4 +49,5 @@
     <string name="hide_password">Hide password</string>
     <string name="show_password">Show password</string>
     <string name="status">Status</string>
+    <string name="about_screen_description">App version, links and contributors</string>
 </resources>
