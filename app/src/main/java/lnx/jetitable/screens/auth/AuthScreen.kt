@@ -23,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import lnx.jetitable.R
+import lnx.jetitable.viewmodel.AuthState
 import lnx.jetitable.viewmodel.AuthViewModel
 
 @Composable
@@ -34,14 +35,17 @@ fun AuthScreen(onAuthComplete: () -> Unit = {}) {
     val password = authViewModel.password
     val email = authViewModel.email
 
-    LaunchedEffect(authViewModel.isAuthorized, authViewModel.errorMessage) {
-        if (authViewModel.isAuthorized) {
-            Toast.makeText(context, R.string.authorized, Toast.LENGTH_SHORT).show()
-            onAuthComplete()
-        }
-        if (authViewModel.errorMessage != 0) {
-            Toast.makeText(context, authViewModel.errorMessage, Toast.LENGTH_SHORT).show()
-            authViewModel.clearErrorMessage()
+    LaunchedEffect(authViewModel.authState) {
+        when (val state = authViewModel.authState) {
+            is AuthState.Authorized -> {
+                Toast.makeText(context, R.string.authorized, Toast.LENGTH_SHORT).show()
+                onAuthComplete()
+            }
+            is AuthState.Error -> {
+                Toast.makeText(context, state.messageResIs, Toast.LENGTH_SHORT).show()
+                authViewModel.clearErrorMessage()
+            }
+            else -> {}
         }
     }
 
