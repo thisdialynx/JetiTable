@@ -47,4 +47,5 @@
     <string name="hide_password">Скрыть пароль</string>
     <string name="show_password">Показать пароль</string>
     <string name="status">Статус</string>
+    <string name="about_screen_description">Версия приложения, ссылки и участники проекта</string>
 </resources>
