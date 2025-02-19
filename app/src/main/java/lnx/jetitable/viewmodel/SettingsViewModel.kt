@@ -1,55 +1,55 @@
 package lnx.jetitable.viewmodel
 
 import android.app.Application
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import lnx.jetitable.R
 import lnx.jetitable.datastore.CookieDataStore
 import lnx.jetitable.datastore.UserDataStore
 import lnx.jetitable.misc.DateManager
+
+data class UserDataUiState(
+    val fullName: Pair<String, Int>,
+    val group: Pair<String, String>,
+    val formOfEducationResId: Int,
+    val academicYears: String,
+    val semesterResId: Int,
+    val status: String
+)
 
 class SettingsViewModel(application: Application): AndroidViewModel(application) {
     private val context
         get() = getApplication<Application>().applicationContext
     private val userDataStore = UserDataStore(context)
     private val cookieDataStore = CookieDataStore(context)
-    val dateManager = DateManager()
+    private val dateManager = DateManager()
 
-    var userId by mutableStateOf<Int?>(null)
-        private set
-    var fullName by mutableStateOf<String?>(null)
-        private set
-    var fullNameId by mutableStateOf<Int?>(null)
-        private set
-    var group by mutableStateOf<String?>(null)
-        private set
-    var groupId by mutableStateOf<String?>(null)
-        private set
-    var isFullTime by mutableStateOf<Boolean?>(null)
-        private set
-    var academicYear by mutableStateOf<String?>(null)
-        private set
-    var status by mutableStateOf<String?>(null)
-        private set
+    val userDataUiState = userDataStore.getUserData().map {
+        val formOfEducation = if (it.isFullTime == 1) R.string.full_time else R.string.part_time
+        val semester = if (dateManager.getSemester() == 1) R.string.autumn_semester else R.string.spring_semester
+        val academicYears = dateManager.getAcademicYears()
 
-
-    init {
-        viewModelScope.launch {
-            val user = userDataStore.getUserData().first()
-            userId = user.userId
-            fullName = user.fullName
-            fullNameId = user.fullNameId
-            group = user.group
-            groupId = user.groupId
-            isFullTime = user.isFullTime == 1
-            academicYear = dateManager.getAcademicYears()
-            status = user.status
-        }
+        UserDataUiState(
+            fullName = it.fullName to it.fullNameId,
+            group = it.group to it.groupId,
+            formOfEducationResId = formOfEducation,
+            academicYears = academicYears,
+            semesterResId = semester,
+            status = it.status
+        )
     }
+        .flowOn(Dispatchers.IO)
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = null
+        )
 
     fun signOut() {
         viewModelScope.launch {
