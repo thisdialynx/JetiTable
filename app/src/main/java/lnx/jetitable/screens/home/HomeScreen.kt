@@ -2,7 +2,6 @@ package lnx.jetitable.screens.home
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -41,9 +40,9 @@ import kotlinx.coroutines.delay
 import lnx.jetitable.R
 import lnx.jetitable.misc.DateState
 import lnx.jetitable.navigation.Settings
-import lnx.jetitable.screens.home.card.ScheduleStatus
 import lnx.jetitable.screens.home.card.ScheduleCard
 import lnx.jetitable.screens.home.card.ScheduleRow
+import lnx.jetitable.screens.home.card.ScheduleStatus
 import lnx.jetitable.screens.home.card.ScheduleTable
 import lnx.jetitable.screens.home.card.ScheduleTitle
 import lnx.jetitable.viewmodel.HomeViewModel
@@ -166,7 +165,6 @@ fun HomeScreen(navController: NavHostController) {
                 var expanded by remember { mutableStateOf(false) }
                 ScheduleCard(
                     expanded = expanded,
-                    modifier = Modifier.fillMaxWidth(),
                     title = {
                         ScheduleTitle(
                             icon = lnx.jetitable.ui.icons.google.ContractEdit,

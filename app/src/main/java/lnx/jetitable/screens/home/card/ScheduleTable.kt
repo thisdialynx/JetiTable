@@ -1,5 +1,8 @@
 package lnx.jetitable.screens.home.card
 
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -24,8 +27,11 @@ fun ScheduleTable(content: @Composable () -> Unit) {
     ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .animateContentSize(animationSpec = spring(stiffness = Spring.StiffnessMedium)),
             horizontalAlignment = Alignment.CenterHorizontally
-        ) { content() }
+        ) {
+            content()
+        }
     }
 }
