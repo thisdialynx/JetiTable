@@ -3,6 +3,7 @@ package lnx.jetitable.screens.about
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -93,8 +94,8 @@ fun AboutScreen(navController: NavHostController) {
         LazyColumn(
             modifier = Modifier
                 .padding(innerPadding)
-                .fillMaxWidth()
                 .padding(horizontal = 16.dp)
+                .fillMaxSize()
                 .nestedScroll(scrollBehavior.nestedScrollConnection),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
