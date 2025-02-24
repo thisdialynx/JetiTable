@@ -24,7 +24,6 @@ import androidx.navigation.NavHostController
 @Composable
 fun SettingsCard(navController: NavHostController) {
     Card(
-        modifier = Modifier.padding(horizontal = 16.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainer
         )
