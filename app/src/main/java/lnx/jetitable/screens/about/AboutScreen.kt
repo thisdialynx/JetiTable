@@ -2,14 +2,12 @@ package lnx.jetitable.screens.about
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material3.Card
@@ -22,24 +20,25 @@ import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import lnx.jetitable.R
 
-enum class UrlIconData(val icon: ImageVector, val description: Int, val shortUri: String) {
+enum class UrlIconItem(val icon: ImageVector, val description: Int, val shortUri: String) {
     GITHUB(lnx.jetitable.ui.icons.Github, R.string.github, "github.com/thisdialynx/JetiTable"),
     UNIVERSITY(lnx.jetitable.ui.icons.Snu, R.string.university, "snu.edu.ua"),
     TIMETABLE(lnx.jetitable.ui.icons.google.CalendarMonth, R.string.timetable, "timetable.lond.lg.ua"),
 }
 
-enum class ContibutorsData(
+enum class ContributorItem(
     val profilePictureUrl: String? = null,
     val title: String,
     val description: Int,
@@ -67,6 +66,9 @@ enum class ContibutorsData(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AboutScreen(navController: NavHostController) {
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+    val localUriHandler = LocalUriHandler.current
+
     Scaffold(
         topBar = {
             LargeTopAppBar(
@@ -77,106 +79,67 @@ fun AboutScreen(navController: NavHostController) {
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                            contentDescription = "Back"
+                            contentDescription = null
                         )
                     }
-                }
+                },
+                scrollBehavior = scrollBehavior,
+                colors = TopAppBarDefaults.topAppBarColors(
+                    scrolledContainerColor = MaterialTheme.colorScheme.surface
+                )
             )
         }
     ) { innerPadding ->
-        Column(
+        LazyColumn(
             modifier = Modifier
-                .fillMaxSize()
                 .padding(innerPadding)
-                .padding(horizontal = 16.dp),
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .nestedScroll(scrollBehavior.nestedScrollConnection),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            val localUriHandler = LocalUriHandler.current
-
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                AppInfo()
-
-                Spacer(modifier = Modifier.height(16.dp))
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    UrlIconData.entries.forEach { data ->
-                        UrlIconTile(
-                            icon = data.icon,
-                            description = data.description,
-                            shortUri = data.shortUri,
-                            localUriHandler = localUriHandler
-                        )
-                    }
-                }
+            item {
+                AppInfo(localUriHandler)
             }
-            Spacer(modifier = Modifier.height(32.dp))
-            Text(
-                text = stringResource(id = R.string.product),
-                modifier = Modifier.padding(horizontal = 16.dp),
-                style = MaterialTheme.typography.titleSmall,
-                color = MaterialTheme.colorScheme.primary
-            )
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainer
+            item {
+                Text(
+                    text = stringResource(id = R.string.product),
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    style = MaterialTheme.typography.titleSmall,
+                    color = MaterialTheme.colorScheme.primary
                 )
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentHeight(),
+                Spacer(modifier = Modifier.height(8.dp))
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainer
+                    )
                 ) {
-                    ContibutorsData.entries.forEachIndexed { index, data ->
-                        if (index > 0) {
-                            HorizontalDivider(
-                                thickness = 2.dp,
-                                color = MaterialTheme.colorScheme.surface
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentHeight(),
+                    ) {
+                        ContributorItem.entries.forEachIndexed { index, data ->
+                            if (index > 0) {
+                                HorizontalDivider(
+                                    thickness = 2.dp,
+                                    color = MaterialTheme.colorScheme.surface
+                                )
+                            }
+                            ContributorCard(
+                                profilePicture = data.profilePictureUrl,
+                                title = data.title,
+                                description = data.description,
+                                icon = lnx.jetitable.ui.icons.Telegram,
+                                iconDescription = data.iconDescription,
+                                localUriHandler = localUriHandler,
+                                shortUri = data.shortUrl
                             )
                         }
-                        ContributorCard(
-                            profilePicture = data.profilePictureUrl,
-                            title = data.title,
-                            description = data.description,
-                            icon = lnx.jetitable.ui.icons.Telegram,
-                            iconDescription = data.iconDescription,
-                            localUriHandler = localUriHandler,
-                            shortUri = data.shortUrl
-                        )
                     }
                 }
             }
         }
     }
 }
-
-@Composable
-fun UrlIconTile(icon: ImageVector, description: Int, shortUri: String, localUriHandler: UriHandler) {
-    Card(
-        onClick = { localUriHandler.openUri("https://$shortUri") },
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainer
-        )
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(8.dp)
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = stringResource(id = description),
-                tint = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.size(24.dp)
-            )
-            Text(
-                text = stringResource(id = description),
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-        }
-    }
-}
-
-
