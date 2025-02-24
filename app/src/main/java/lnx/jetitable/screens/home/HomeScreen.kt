@@ -80,8 +80,7 @@ fun HomeScreen(navController: NavHostController) {
                 },
                 scrollBehavior = scrollBehavior,
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    scrolledContainerColor = MaterialTheme.colorScheme.background
+                    scrolledContainerColor = MaterialTheme.colorScheme.surface
                 )
             )
         }
