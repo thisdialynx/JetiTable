@@ -2,6 +2,7 @@ package lnx.jetitable.screens.home
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -90,6 +91,7 @@ fun HomeScreen(navController: NavHostController) {
             modifier = Modifier
                 .padding(innerPadding)
                 .padding(horizontal = 16.dp)
+                .fillMaxSize()
                 .nestedScroll(scrollBehavior.nestedScrollConnection)
         ) {
             item {

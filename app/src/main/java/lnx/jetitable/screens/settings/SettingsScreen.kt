@@ -2,6 +2,7 @@ package lnx.jetitable.screens.settings
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -58,7 +59,9 @@ fun SettingsScreen(navController: NavHostController) {
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
-                .padding(paddingValues),
+                .padding(paddingValues)
+                .padding(horizontal = 16.dp)
+                .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             item {
