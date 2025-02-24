@@ -1,10 +1,10 @@
 package lnx.jetitable.screens.settings
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -26,7 +26,7 @@ import lnx.jetitable.R
 import lnx.jetitable.navigation.About
 import lnx.jetitable.viewmodel.SettingsViewModel
 
-enum class Setting(
+enum class SettingItem(
     val titleResId: Int,
     val descriptionResId: Int,
     val icon: ImageVector,
@@ -49,22 +49,27 @@ fun SettingsScreen(navController: NavHostController) {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                            contentDescription = "Back arrow"
+                            contentDescription = null
                         )
                     }
                 }
             )
         }
     ) { paddingValues ->
-        Column(
-            modifier = Modifier.padding(paddingValues),
+        LazyColumn(
+            modifier = Modifier
+                .padding(paddingValues),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            AccountCard(
-                userDataUiState = userDataUiState
-            ) { settingsViewModel.signOut() }
-            Spacer(modifier = Modifier.height(2.dp))
-            SettingEntries(navController)
+            item {
+                AccountCard(
+                    userDataUiState = userDataUiState
+                ) { settingsViewModel.signOut() }
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+            item {
+                SettingsCard(navController)
+            }
         }
     }
 }
