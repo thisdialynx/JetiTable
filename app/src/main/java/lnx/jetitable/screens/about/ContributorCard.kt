@@ -5,9 +5,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
@@ -27,28 +27,35 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 
 @Composable
-fun ContributorCard(profilePicture: String?, title: String, description: Int, icon: ImageVector, iconDescription: String, localUriHandler: UriHandler, shortUri: String) {
+fun ContributorCard(
+    profilePicture: String?,
+    title: String,
+    description: Int,
+    icon: ImageVector,
+    iconDescription: String,
+    localUriHandler: UriHandler,
+    shortUri: String
+) {
     Row(
         modifier = Modifier.padding(16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp), Alignment.CenterVertically
     ) {
         Box(
             modifier = Modifier
-                .fillMaxWidth(0.15f)
-                .aspectRatio(1f)
+                .wrapContentSize()
+                .size(48.dp)
                 .clip(CircleShape)
                 .background(MaterialTheme.colorScheme.surfaceContainerHigh),
             contentAlignment = Alignment.Center
         ) {
+            Text(
+                text = title.first().toString(),
+                style = MaterialTheme.typography.displaySmall
+            )
             if (!profilePicture.isNullOrEmpty()) {
                 AsyncImage(
-                    model = "$profilePicture",
-                    contentDescription = "$title $description"
-                )
-            } else {
-                Text(
-                    text = title.first().toString(),
-                    fontSize = 32.sp
+                    model = profilePicture,
+                    contentDescription = "$title, $description",
                 )
             }
         }
