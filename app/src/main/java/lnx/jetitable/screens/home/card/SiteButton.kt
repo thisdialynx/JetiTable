@@ -1,5 +1,6 @@
 package lnx.jetitable.screens.home.card
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.padding
@@ -31,8 +32,12 @@ fun SiteButton(url: String, icon: ImageVector, color: Color, uriHandler: UriHand
                 .size(40.dp)
                 .combinedClickable(
                     onClick = {
-                        uriHandler.openUri(url)
-                        onClick()
+                        try {
+                            uriHandler.openUri(url)
+                            onClick()
+                        } catch (e: Exception) {
+                            Log.d("Site Button", "Failed to open url", e)
+                        }
                     },
                     onLongClick = {
                         clipboardManager.setText(AnnotatedString(url))
