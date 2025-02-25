@@ -40,7 +40,7 @@ fun ScheduleTable(
         ) {
             when {
                 data == null && connectivityState == ConnectionState.Available -> {
-                    ScheduleStatus(text = R.string.getting_lists)
+                    ScheduleStatus(text = R.string.getting_list)
                 }
                 data.isNullOrEmpty() && connectivityState == ConnectionState.Unavailable -> {
                     ScheduleStatus(

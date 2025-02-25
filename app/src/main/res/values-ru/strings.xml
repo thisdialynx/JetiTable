@@ -24,7 +24,7 @@
     <string name="failed_to_fetch_data">не удалось получить данные</string>
     <string name="no_classes">Занятия на указанную дату отсувствуют</string>
     <string name="educator">Преподаватель: %1$s</string>
-    <string name="class_number">Номер занятия: %1$s</string>
+    <string name="class_number">Номер п/п: %1$s</string>
     <string name="class_group">Группа: %1$s</string>
     <string name="about_screen_title">О приложении</string>
     <string name="university">Университет</string>
@@ -43,7 +43,7 @@
     <string name="settings">Настройки</string>
     <string name="product">Продукт</string>
     <string name="sign_out">Выйти</string>
-    <string name="getting_lists">Загрузка расписания…</string>
+    <string name="getting_list">Загрузка расписания…</string>
     <string name="hide_password">Скрыть пароль</string>
     <string name="show_password">Показать пароль</string>
     <string name="status">Статус</string>
