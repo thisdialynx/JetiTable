@@ -14,5 +14,6 @@ data class ClassUiData(
     val meetingLink: String,
     val moodleLink: String,
     val type: String,
+    val room: String,
     val isNow: Boolean
 )
