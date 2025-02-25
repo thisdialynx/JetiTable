@@ -8,8 +8,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import lnx.jetitable.R
+import lnx.jetitable.misc.ConnectionState
+import lnx.jetitable.misc.NetworkConnectivityObserver
 import lnx.jetitable.timetable.api.ApiService.Companion.CHECK_PASSWORD
 import lnx.jetitable.timetable.api.ApiService.Companion.SEND_MAIL
 import lnx.jetitable.timetable.api.RetrofitHolder
@@ -27,6 +32,14 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     private val context
         get() = getApplication<Application>().applicationContext
     private val service = RetrofitHolder.getInstance(context)
+    val connectivityObserver = NetworkConnectivityObserver(context)
+    val connectivityState = connectivityObserver.observe()
+        .map { it }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = ConnectionState.Unavailable
+        )
 
     var authState by mutableStateOf<AuthState>(AuthState.Idle)
         private set
@@ -48,7 +61,13 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
     fun checkCredentials() {
         viewModelScope.launch {
+            if (connectivityState.value != ConnectionState.Available) {
+                authState = AuthState.Error(R.string.no_internet_connection)
+                return@launch
+            }
+
             try {
+
                 if (checkEmail(email)) return@launch
 
                 val basicAuth = Credentials.basic(email, password)
@@ -66,14 +85,18 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                 Log.e("TimeTable authentication", "Login process error.\nisAuthorized: $authState", e)
             }
         }
-
     }
 
     fun sendMail() {
-        if (checkEmail(email)) return
-
         viewModelScope.launch {
+            if (connectivityState.value != ConnectionState.Available) {
+                authState = AuthState.Error(R.string.no_internet_connection)
+                return@launch
+            }
+
             try {
+                if (checkEmail(email)) return@launch
+
                 val response = service.sendMail(MailRequest(SEND_MAIL, email))
                 if (response.status == "ok") {
                     Toast.makeText(context, R.string.password_sent, Toast.LENGTH_SHORT).show()

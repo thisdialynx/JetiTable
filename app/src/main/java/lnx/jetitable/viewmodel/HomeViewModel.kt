@@ -3,9 +3,6 @@ package lnx.jetitable.viewmodel
 import android.app.Application
 import android.icu.util.Calendar
 import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.PeriodicWorkRequestBuilder
@@ -24,13 +21,16 @@ import kotlinx.coroutines.withContext
 import lnx.jetitable.BuildConfig
 import lnx.jetitable.datastore.UserDataStore
 import lnx.jetitable.datastore.user.UserDataWorker
+import lnx.jetitable.misc.ConnectionState
 import lnx.jetitable.misc.DateManager
+import lnx.jetitable.misc.NetworkConnectivityObserver
 import lnx.jetitable.screens.home.data.ClassUiData
 import lnx.jetitable.timetable.api.ApiService.Companion.CHECK_ZOOM
 import lnx.jetitable.timetable.api.ApiService.Companion.DAILY_CLASS_LIST
 import lnx.jetitable.timetable.api.ApiService.Companion.EXAM_LIST
 import lnx.jetitable.timetable.api.ApiService.Companion.STATE
 import lnx.jetitable.timetable.api.RetrofitHolder
+import lnx.jetitable.timetable.api.login.data.User
 import lnx.jetitable.timetable.api.query.data.ClassListRequest
 import lnx.jetitable.timetable.api.query.data.Exam
 import lnx.jetitable.timetable.api.query.data.ExamListRequest
@@ -42,14 +42,11 @@ import java.util.concurrent.TimeUnit
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private val context
         get() = getApplication<Application>().applicationContext
+    private val connectivityObserver = NetworkConnectivityObserver(context)
     private val dateManager = DateManager()
     val dateState = dateManager.dateStateFlow
     private val userDataStore = UserDataStore(context)
     private val service = RetrofitHolder.getInstance(context)
-
-    private var group by mutableStateOf<String?>(null)
-    private var userId by mutableStateOf<String?>(null)
-    private var fullName by mutableStateOf<String?>(null)
 
     private val currentTime = flow {
         while (true) {
@@ -59,8 +56,26 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     }
         .flowOn(Dispatchers.IO)
 
-    val classesFlow = combine(userDataStore.getUserData(), dateManager.selectedDate, currentTime) { userInfo, date, time ->
-        getClasses(group = userInfo.group to userInfo.groupId)
+    val connectivityState = connectivityObserver.observe()
+        .map { it }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = ConnectionState.Unavailable
+        )
+
+    val userData = userDataStore.getUserData()
+        .map { it }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = User()
+        )
+
+    val classesFlow = combine(userData, dateManager.selectedDate, currentTime, connectivityState) { userData, date, time, connectivity ->
+        if (connectivity == ConnectionState.Available) {
+            getClasses(group = userData.group to userData.groupId)
+        } else emptyList()
     }
         .flowOn(Dispatchers.IO)
         .stateIn(
@@ -68,8 +83,10 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = null
         )
-    val examsFlow = userDataStore.getUserData().map { userInfo ->
-        getExams(group = userInfo.group to userInfo.groupId)
+    val examsFlow = combine(userData, connectivityState) { userData, connectivity ->
+        if (connectivity == ConnectionState.Available) {
+            getExams(group = userData.group to userData.groupId)
+        } else emptyList()
     }
         .flowOn(Dispatchers.IO)
         .stateIn(
@@ -82,14 +99,6 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             val workRequest = PeriodicWorkRequestBuilder<UserDataWorker>(6, TimeUnit.HOURS).build()
             WorkManager.getInstance(context).enqueue(workRequest)
-        }
-
-        viewModelScope.launch(Dispatchers.IO) {
-            userDataStore.getUserData().collect {
-                group = it.group
-                userId = it.userId.toString()
-                fullName = it.fullName
-            }
         }
     }
 
@@ -185,9 +194,9 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                     VerifyPresenceRequest(
                         CHECK_ZOOM,
                         STATE,
-                        group!!,
-                        fullName!!,
-                        userId!!,
+                        userData.value.group,
+                        userData.value.fullName,
+                        userData.value.userId.toString(),
                         uiClass.number,
                         uiClass.name,
                         uiClass.id,

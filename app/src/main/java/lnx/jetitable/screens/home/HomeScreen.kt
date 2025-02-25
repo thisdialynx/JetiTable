@@ -53,6 +53,7 @@ import lnx.jetitable.viewmodel.HomeViewModel
 fun HomeScreen(navController: NavHostController) {
     val homeViewModel: HomeViewModel = viewModel()
     val dateState by homeViewModel.dateState.collectAsStateWithLifecycle(DateState())
+    val connectivityState by homeViewModel.connectivityState.collectAsStateWithLifecycle()
     val classList by homeViewModel.classesFlow.collectAsStateWithLifecycle()
     val examList by homeViewModel.examsFlow.collectAsStateWithLifecycle()
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
@@ -127,37 +128,36 @@ fun HomeScreen(navController: NavHostController) {
                         }
                     },
                 ) {
-                    ScheduleTable {
-                        when {
-                            classList == null -> {
-                                ScheduleStatus(text = R.string.getting_lists)
+                    ScheduleTable(
+                        connectivityState = connectivityState,
+                        emptyContent = {
+                            ScheduleStatus(
+                                icon = lnx.jetitable.ui.icons.google.Mood,
+                                text = R.string.no_classes
+                            )
+                        },
+                        data = classList
+                    ) {
+                        classList?.forEachIndexed { index, uiClass ->
+                            val bgColor = if (uiClass.isNow) {
+                                MaterialTheme.colorScheme.primaryContainer
+                            } else {
+                                MaterialTheme.colorScheme.surfaceContainerHigh
                             }
-                            classList!!.isEmpty() -> {
-                                ScheduleStatus(icon = lnx.jetitable.ui.icons.google.Mood, text = R.string.no_classes)
-                            }
-                            else -> {
-                                classList!!.forEachIndexed { index, uiClass ->
-                                    val bgColor = if (uiClass.isNow) {
-                                        MaterialTheme.colorScheme.primaryContainer
-                                    } else {
-                                        MaterialTheme.colorScheme.surfaceContainerHigh
-                                    }
 
-                                    ScheduleRow(
-                                        time = "${uiClass.start}\n${uiClass.end}",
-                                        title = uiClass.name,
-                                        type = uiClass.type,
-                                        meetingUrl = uiClass.meetingLink,
-                                        moodleUrl = uiClass.moodleLink,
-                                        onClick = { homeViewModel.verifyPresence(uiClass) },
-                                        backgroundColor = bgColor,
-                                        expandedText = "${stringResource(id = R.string.class_number, uiClass.number)}\n" +
-                                                "${stringResource(id = R.string.class_group, uiClass.group)}\n" +
-                                                stringResource(id = R.string.educator, uiClass.educator),
-                                        elementIndex = index
-                                    )
-                                }
-                            }
+                            ScheduleRow(
+                                time = "${uiClass.start}\n${uiClass.end}",
+                                title = uiClass.name,
+                                type = uiClass.type,
+                                meetingUrl = uiClass.meetingLink,
+                                moodleUrl = uiClass.moodleLink,
+                                onClick = { homeViewModel.verifyPresence(uiClass) },
+                                backgroundColor = bgColor,
+                                expandedText = "${stringResource(id = R.string.class_number, uiClass.number)}\n" +
+                                        "${stringResource(id = R.string.class_group, uiClass.group)}\n" +
+                                        stringResource(id = R.string.educator, uiClass.educator),
+                                elementIndex = index
+                            )
                         }
                     }
                 }
@@ -185,29 +185,28 @@ fun HomeScreen(navController: NavHostController) {
                         }
                     }
                 ) {
-                    ScheduleTable {
-                        when {
-                            examList == null -> {
-                                ScheduleStatus(text = R.string.getting_lists)
-                            }
-                            examList!!.isEmpty() -> {
-                                ScheduleStatus(icon = lnx.jetitable.ui.icons.google.Mood, text = R.string.no_exams)
-                            }
-                            else -> {
-                                examList!!.forEachIndexed { index, session ->
-                                    ScheduleRow(
-                                        time = session.time,
-                                        title = session.name,
-                                        meetingUrl = session.url,
-                                        onClick = {},
-                                        backgroundColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                                        expandedText = "${stringResource(id = R.string.class_number, session.number)}\n" +
-                                                "${stringResource(id = R.string.date, session.date)}\n" +
-                                                stringResource(id = R.string.educator, session.educator),
-                                        elementIndex = index
-                                    )
-                                }
-                            }
+                    ScheduleTable(
+                        connectivityState = connectivityState,
+                        emptyContent = {
+                            ScheduleStatus(
+                                icon = lnx.jetitable.ui.icons.google.Mood,
+                                text = R.string.no_exams
+                            )
+                        },
+                        data = examList
+                    ) {
+                        examList?.forEachIndexed { index, session ->
+                            ScheduleRow(
+                                time = session.time,
+                                title = session.name,
+                                meetingUrl = session.url,
+                                onClick = {},
+                                backgroundColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                                expandedText = "${stringResource(id = R.string.class_number, session.number)}\n" +
+                                        "${stringResource(id = R.string.date, session.date)}\n" +
+                                        stringResource(id = R.string.educator, session.educator),
+                                elementIndex = index
+                            )
                         }
                     }
                 }
@@ -215,4 +214,3 @@ fun HomeScreen(navController: NavHostController) {
         }
     }
 }
-
