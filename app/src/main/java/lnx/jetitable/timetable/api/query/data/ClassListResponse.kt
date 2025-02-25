@@ -20,7 +20,8 @@ data class ClassNetworkData(
     val items: String,
     val meetingLink: String,
     val moodleLink: String,
-    val type: String
+    val type: String,
+    val room: String
 )
 
 fun parseLessonHtml(html: String): List<ClassNetworkData> {
@@ -51,6 +52,7 @@ fun parseLessonHtml(html: String): List<ClassNetworkData> {
             val moodleLink = if (moodleMatcher.find()) moodleMatcher.group(1) else ""
 
             val type = element.selectFirst("td.tabPSC[style*=text-align:center; font-weight:bold;]")?.text() ?: ""
+            val room = element.select("td.tabPSC").last()?.text() ?: ""
 
             val classNetworkData = ClassNetworkData(
                 id = element.attr("data-id_lesson"),
@@ -65,7 +67,8 @@ fun parseLessonHtml(html: String): List<ClassNetworkData> {
                 items = element.attr("data-items"),
                 meetingLink = meetingLink,
                 moodleLink = moodleLink,
-                type = type
+                type = type,
+                room = room
             )
 
             if (BuildConfig.DEBUG) Log.d("Lession html parser", "Extracted data: $classNetworkData")

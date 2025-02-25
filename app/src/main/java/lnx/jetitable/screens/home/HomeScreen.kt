@@ -144,18 +144,23 @@ fun HomeScreen(navController: NavHostController) {
                             } else {
                                 MaterialTheme.colorScheme.surfaceContainerHigh
                             }
+                            val time = "${uiClass.start}\n${uiClass.end}"
+                            val room = if (uiClass.room.isNotBlank()) {
+                                "${stringResource(id = R.string.class_room, uiClass.room)}\n"
+                            } else ""
+                            val classNumber = "${stringResource(R.string.class_number, uiClass.number)}\n"
+                            val classGroup = "${stringResource(id = R.string.class_group, uiClass.group)}\n"
+                            val educator = stringResource(id = R.string.educator, uiClass.educator)
 
                             ScheduleRow(
-                                time = "${uiClass.start}\n${uiClass.end}",
+                                time = time,
                                 title = uiClass.name,
                                 type = uiClass.type,
                                 meetingUrl = uiClass.meetingLink,
                                 moodleUrl = uiClass.moodleLink,
                                 onClick = { homeViewModel.verifyPresence(uiClass) },
                                 backgroundColor = bgColor,
-                                expandedText = "${stringResource(id = R.string.class_number, uiClass.number)}\n" +
-                                        "${stringResource(id = R.string.class_group, uiClass.group)}\n" +
-                                        stringResource(id = R.string.educator, uiClass.educator),
+                                expandedText = classNumber + room + classGroup + educator,
                                 elementIndex = index
                             )
                         }
