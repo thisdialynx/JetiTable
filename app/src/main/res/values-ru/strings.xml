@@ -49,4 +49,5 @@
     <string name="status">Статус</string>
     <string name="about_screen_description">Версия приложения, ссылки и участники проекта</string>
     <string name="no_internet_connection">Интернет подключение отсутствует</string>
+    <string name="class_room">Аудитория: %1$s</string>
 </resources>

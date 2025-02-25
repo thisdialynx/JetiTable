@@ -152,6 +152,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                         meetingLink = it.meetingLink,
                         moodleLink = it.moodleLink,
                         type = it.type,
+                        room = it.room,
                         isNow = isNow
                     )
                 }
