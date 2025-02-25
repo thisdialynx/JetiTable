@@ -24,7 +24,7 @@
     <string name="failed_to_fetch_data">не вдалося отримати дані</string>
     <string name="no_classes">Заняття на вказану дату відсутні</string>
     <string name="educator">Викладач: %1$s</string>
-    <string name="class_number">Номер заняття: %1$s</string>
+    <string name="class_number">Номер з/п: %1$s</string>
     <string name="class_group">Група: %1$s</string>
     <string name="about_screen_title">Про застосунок</string>
     <string name="university">Університет</string>
@@ -43,7 +43,7 @@
     <string name="settings">Налаштування</string>
     <string name="product">Продукт</string>
     <string name="sign_out">Вийти</string>
-    <string name="getting_lists">Завантаження розкладу…</string>
+    <string name="getting_list">Завантаження розкладу…</string>
     <string name="hide_password">Приховати пароль</string>
     <string name="show_password">Показати пароль</string>
     <string name="status">Статус</string>
