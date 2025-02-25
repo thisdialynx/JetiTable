@@ -13,9 +13,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import lnx.jetitable.R
+import lnx.jetitable.misc.ConnectionState
 
 @Composable
-fun ScheduleTable(content: @Composable () -> Unit) {
+fun ScheduleTable(
+    connectivityState: ConnectionState,
+    emptyContent: @Composable () -> Unit,
+    data: List<Any>?,
+    content: @Composable () -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -31,7 +38,23 @@ fun ScheduleTable(content: @Composable () -> Unit) {
                 .animateContentSize(animationSpec = spring(stiffness = Spring.StiffnessMedium)),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            content()
+            when {
+                data == null && connectivityState == ConnectionState.Available -> {
+                    ScheduleStatus(text = R.string.getting_lists)
+                }
+                data.isNullOrEmpty() && connectivityState == ConnectionState.Unavailable -> {
+                    ScheduleStatus(
+                        text = R.string.no_internet_connection,
+                        icon = lnx.jetitable.ui.icons.google.WifiOff
+                    )
+                }
+                data?.isEmpty() == true && connectivityState == ConnectionState.Available -> {
+                    emptyContent()
+                }
+                !data.isNullOrEmpty() -> {
+                    content()
+                }
+            }
         }
     }
 }
