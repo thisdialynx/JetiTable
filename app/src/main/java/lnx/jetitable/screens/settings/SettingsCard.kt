@@ -19,10 +19,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 
 @Composable
-fun SettingsCard(navController: NavHostController) {
+fun SettingsCard(onDestinationNavigate: (String) -> Unit) {
     Card(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainer
@@ -39,7 +38,7 @@ fun SettingsCard(navController: NavHostController) {
                 }
 
                 Box(
-                    modifier = Modifier.clickable { navController.navigate(settingEntry.destination) },
+                    modifier = Modifier.clickable { onDestinationNavigate(settingEntry.destination) },
                     contentAlignment = Alignment.TopStart
                 ) {
                     Row(
