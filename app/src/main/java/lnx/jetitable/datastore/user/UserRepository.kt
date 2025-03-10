@@ -7,7 +7,6 @@ import lnx.jetitable.misc.DateManager
 import lnx.jetitable.timetable.api.ApiService.Companion.CHECK_ACCESS
 import lnx.jetitable.timetable.api.RetrofitHolder
 import lnx.jetitable.timetable.api.login.data.AccessRequest
-import lnx.jetitable.timetable.api.login.data.parseAccessResponse
 
 class UserRepository(context: Context) {
     private val userDataStore = UserDataStore(context)
@@ -19,8 +18,7 @@ class UserRepository(context: Context) {
             val response = service.checkAccess(
                 AccessRequest(CHECK_ACCESS, dateManager.getSemester().toString(), dateManager.getAcademicYears())
             )
-            val parsedResponse = parseAccessResponse(response)
-            userDataStore.saveUserData(parsedResponse)
+            userDataStore.saveUserData(response)
         } catch (e: Exception) {
             Log.e("UserRepo", "Failed to fetch user data", e)
         }

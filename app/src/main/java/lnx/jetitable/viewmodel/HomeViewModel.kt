@@ -32,11 +32,9 @@ import lnx.jetitable.timetable.api.ApiService.Companion.STATE
 import lnx.jetitable.timetable.api.RetrofitHolder
 import lnx.jetitable.timetable.api.login.data.User
 import lnx.jetitable.timetable.api.query.data.ClassListRequest
-import lnx.jetitable.timetable.api.query.data.Exam
+import lnx.jetitable.timetable.api.query.data.ExamNetworkData
 import lnx.jetitable.timetable.api.query.data.ExamListRequest
 import lnx.jetitable.timetable.api.query.data.VerifyPresenceRequest
-import lnx.jetitable.timetable.api.query.data.parseLessonHtml
-import lnx.jetitable.timetable.api.query.data.parseSessionHtml
 import java.util.concurrent.TimeUnit
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
@@ -123,7 +121,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             val formattedDate = dateManager.dateFormat.format(currentDate)
 
             try {
-                val response = service.get_listLessonTodayStudent(
+                classList = service.get_listLessonTodayStudent(
                     ClassListRequest(
                         DAILY_CLASS_LIST,
                         group.first,
@@ -132,8 +130,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                         dateManager.getAcademicYears(),
                         dateManager.getSemester().toString()
                     )
-                )
-                val parsedResponse = parseLessonHtml(response).map {
+                ).map {
                     val isCurrentDate = formattedDate == it.date
                     val isTimeInRange = formattedTime in it.start..it.end
                     val isNow = isCurrentDate && isTimeInRange
@@ -156,7 +153,6 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                         isNow = isNow
                     )
                 }
-                classList = parsedResponse
 
             } catch (e: Exception) {
                 Log.e("Lesson list request", "Error in lesson list retrieval", e)
@@ -166,11 +162,11 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         return classList
     }
 
-    private suspend fun getExams(group: Pair<String, String>): List<Exam> {
-        var examList: List<Exam>
+    private suspend fun getExams(group: Pair<String, String>): List<ExamNetworkData> {
+        var examList: List<ExamNetworkData>
         withContext(Dispatchers.IO) {
             try {
-                val response = service.get_sessionStudent(
+                examList = service.get_sessionStudent(
                     ExamListRequest(
                         EXAM_LIST,
                         group.first,
@@ -179,7 +175,6 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                         dateManager.getSemester().toString()
                     )
                 )
-                examList = parseSessionHtml(response)
             } catch (e: Exception) {
                 Log.e("Session list request", "Error in session list retrieval", e)
                 examList = emptyList()

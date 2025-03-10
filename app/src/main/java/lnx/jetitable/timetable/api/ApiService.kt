@@ -1,12 +1,15 @@
 package lnx.jetitable.timetable.api
 
 import lnx.jetitable.timetable.api.login.data.AccessRequest
+import lnx.jetitable.timetable.api.login.data.AccessResponse
 import lnx.jetitable.timetable.api.login.data.LoginRequest
 import lnx.jetitable.timetable.api.login.data.LoginResponse
 import lnx.jetitable.timetable.api.login.data.MailRequest
 import lnx.jetitable.timetable.api.login.data.MailResponse
 import lnx.jetitable.timetable.api.query.data.ClassListRequest
+import lnx.jetitable.timetable.api.query.data.ClassNetworkData
 import lnx.jetitable.timetable.api.query.data.ExamListRequest
+import lnx.jetitable.timetable.api.query.data.ExamNetworkData
 import lnx.jetitable.timetable.api.query.data.VerifyPresenceRequest
 import retrofit2.http.Body
 import retrofit2.http.Header
@@ -28,12 +31,12 @@ interface ApiService {
     @POST(AUTHORISATION_PHP)
     suspend fun checkAccess(
         @Body request: AccessRequest
-    ): String
+    ): AccessResponse
 
     @POST(QUERY_PHP)
     suspend fun get_listLessonTodayStudent(
         @Body request: ClassListRequest
-    ): String
+    ): List<ClassNetworkData>
 
     @POST(QUERY_PHP)
     suspend fun get_checkZoom(
@@ -43,7 +46,7 @@ interface ApiService {
     @POST(QUERY_PHP)
     suspend fun get_sessionStudent(
         @Body request: ExamListRequest
-    ): String
+    ): List<ExamNetworkData>
 
     companion object {
         const val BASE_URL = "https://timetable.lond.lg.ua"
