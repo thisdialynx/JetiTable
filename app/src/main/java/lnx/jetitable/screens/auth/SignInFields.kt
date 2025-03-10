@@ -24,12 +24,11 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import lnx.jetitable.R
-import kotlin.reflect.KFunction1
 
 @Composable
 fun SignInFields(
-    updateEmail: KFunction1<String, Unit>,
-    updatePassword: KFunction1<String, Unit>,
+    onEmailUpdate: (String) -> Unit,
+    onPasswordUpdate: (String) -> Unit,
     checkCredentials: () -> Unit,
     password: String,
     email: String
@@ -40,7 +39,7 @@ fun SignInFields(
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
             value = email,
-            onValueChange = updateEmail,
+            onValueChange = { onEmailUpdate(it) },
             label = {
                 Text(
                     text = stringResource(id = R.string.corporate_email_label),
@@ -63,7 +62,7 @@ fun SignInFields(
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
             value = password,
-            onValueChange = updatePassword,
+            onValueChange = { onPasswordUpdate(it) },
             label = {
                 Text(
                     text = stringResource(id = R.string.password_label),

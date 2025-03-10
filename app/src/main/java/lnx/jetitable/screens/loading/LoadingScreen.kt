@@ -11,29 +11,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
-import lnx.jetitable.navigation.Auth
-import lnx.jetitable.navigation.Home
-import lnx.jetitable.navigation.Loading
 import lnx.jetitable.viewmodel.LoadingViewModel
 
 @Composable
-fun LoadingScreen(navController: NavHostController) {
+fun LoadingScreen(onAuthNavigate: () -> Unit, onHomeNavigate: () -> Unit) {
     val loadingViewModel: LoadingViewModel = viewModel()
     val isAuthorized = loadingViewModel.isAuthorized
 
     LaunchedEffect(isAuthorized) {
         when(isAuthorized) {
-            true -> {
-                navController.navigate(Home.route) {
-                    popUpTo(Loading.route) { inclusive = true }
-                }
-            }
-            false -> {
-                navController.navigate(Auth.route) {
-                    popUpTo(Loading.route) { inclusive = true }
-                }
-            }
+            true -> { onHomeNavigate() }
+            false -> { onAuthNavigate() }
             null -> loadingViewModel.checkToken()
         }
     }

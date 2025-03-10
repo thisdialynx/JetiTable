@@ -9,6 +9,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -42,6 +43,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
@@ -87,12 +89,33 @@ fun AppNavigation() {
                 }
             )
         }
-        composable( route = Home.route ) { HomeScreen(navController) }
 
-        composable( route = About.route ) { AboutScreen(navController) }
+        composable(route = Home.route) {
+            HomeScreen(onSettingsNavigate = { navController.navigate(Settings.route) })
+        }
 
-        composable( route = Settings.route ) { SettingsScreen(navController) }
+        composable(route = About.route) { AboutScreen(onBack = { navController.popBackStack() }) }
 
-        composable( route = Loading.route ) { LoadingScreen(navController) }
+        composable(route = Settings.route) {
+            SettingsScreen(
+                onBack = { navController.popBackStack() },
+                onDestinationNavigate = { navController.navigate(it) }
+            )
+        }
+
+        composable(route = Loading.route) {
+            LoadingScreen(
+                onHomeNavigate = {
+                    navController.navigate(Home.route) {
+                        popUpTo(Loading.route) { inclusive = true }
+                    }
+                },
+                onAuthNavigate = {
+                    navController.navigate(Auth.route) {
+                        popUpTo(Loading.route) { inclusive = true }
+                    }
+                }
+            )
+        }
     }
 }

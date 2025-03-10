@@ -67,7 +67,6 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
             }
 
             try {
-
                 if (checkEmail(email)) return@launch
 
                 val basicAuth = Credentials.basic(email, password)
@@ -87,7 +86,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun sendMail() {
+    fun sendEmail() {
         viewModelScope.launch {
             if (connectivityState.value != ConnectionState.Available) {
                 authState = AuthState.Error(R.string.no_internet_connection)

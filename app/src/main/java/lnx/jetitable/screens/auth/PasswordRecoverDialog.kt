@@ -17,13 +17,12 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import lnx.jetitable.R
-import kotlin.reflect.KFunction1
 
 @Composable
 fun PasswordRecoverDialog(
     isOpen: MutableState<Boolean>,
-    sendEmail: () -> Unit,
-    updateEmail: KFunction1<String, Unit>,
+    onEmailSend: () -> Unit,
+    onEmailUpdate: (String) -> Unit,
     email: String,
 ) {
     if (isOpen.value) {
@@ -32,7 +31,7 @@ fun PasswordRecoverDialog(
             confirmButton = {
                 Button(
                     onClick = {
-                        sendEmail()
+                        onEmailSend()
                         isOpen.value = false
                     }
                 ) {
@@ -45,7 +44,7 @@ fun PasswordRecoverDialog(
                     Text(text = stringResource(id = R.string.forgot_password_dialog_description))
                     OutlinedTextField(
                         value = email,
-                        onValueChange = updateEmail,
+                        onValueChange = { onEmailUpdate(it) },
                         label = {
                             Text(
                                 text = stringResource(id = R.string.corporate_email_label),

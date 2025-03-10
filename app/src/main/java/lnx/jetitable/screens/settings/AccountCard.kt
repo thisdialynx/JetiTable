@@ -3,6 +3,7 @@ package lnx.jetitable.screens.settings
 import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,6 +17,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.stringResource
@@ -50,10 +52,15 @@ fun AccountCard(
                 .animateContentSize()
         ) {
             if (description.isEmpty()) {
-                CircularProgressIndicator(
-                    modifier = Modifier.padding(vertical = 16.dp),
-                    strokeCap = StrokeCap.Round
-                )
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.padding(vertical = 16.dp),
+                        strokeCap = StrokeCap.Round
+                    )
+                }
             } else {
                 Column(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
