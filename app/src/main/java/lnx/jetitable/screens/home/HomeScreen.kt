@@ -1,221 +1,175 @@
 package lnx.jetitable.screens.home
 
-import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowLeft
-import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.LargeTopAppBar
-import androidx.compose.material3.LocalMinimumInteractiveComponentSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
-import kotlinx.coroutines.delay
-import lnx.jetitable.R
+import lnx.jetitable.misc.ConnectionState
 import lnx.jetitable.misc.DateState
-import lnx.jetitable.navigation.Settings
-import lnx.jetitable.screens.home.card.ScheduleCard
-import lnx.jetitable.screens.home.card.ScheduleRow
-import lnx.jetitable.screens.home.card.ScheduleStatus
-import lnx.jetitable.screens.home.card.ScheduleTable
-import lnx.jetitable.screens.home.card.ScheduleTitle
+import lnx.jetitable.screens.home.data.ClassUiData
+import lnx.jetitable.timetable.api.query.data.Exam
 import lnx.jetitable.viewmodel.HomeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavHostController) {
-    val homeViewModel: HomeViewModel = viewModel()
-    val dateState by homeViewModel.dateState.collectAsStateWithLifecycle(DateState())
-    val connectivityState by homeViewModel.connectivityState.collectAsStateWithLifecycle()
-    val classList by homeViewModel.classesFlow.collectAsStateWithLifecycle()
-    val examList by homeViewModel.examsFlow.collectAsStateWithLifecycle()
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
-    var title by rememberSaveable { mutableIntStateOf(R.string.welcome_title) }
+fun HomeScreen(onSettingsNavigate: () -> Unit) {
+    val viewModel = viewModel<HomeViewModel>()
+    val dateState by viewModel.dateState.collectAsStateWithLifecycle(DateState())
+    val connectivityState by viewModel.connectivityState.collectAsStateWithLifecycle()
+    val classList by viewModel.classesFlow.collectAsStateWithLifecycle()
+    val examList by viewModel.examsFlow.collectAsStateWithLifecycle()
 
-    LaunchedEffect(Unit) {
-        delay(3000)
-        title = R.string.home_screen
-    }
+    HomeUI(
+        dateState = dateState,
+        connectivityState = connectivityState,
+        classList = classList,
+        examList = examList,
+        onDateUpdate = { viewModel.updateDate(it) },
+        onForwardDateShift = { viewModel.shiftDayForward() },
+        onBackwardDateShift = { viewModel.shiftDayBackward() },
+        onPresenceVerify = { viewModel.verifyPresence(it) },
+        onSettingsNavigate = { onSettingsNavigate() },
+    )
+}
 
-    Scaffold(
-        topBar = {
-            LargeTopAppBar(
-                title = {
-                    Crossfade(targetState = title, label = "") { currentTitle ->
-                        Text(text = stringResource(id = currentTitle))
-                    }
-                },
-                actions = {
-                    IconButton(onClick = { navController.navigate(Settings.route) }) {
-                        Icon(
-                            imageVector = lnx.jetitable.ui.icons.google.Settings,
-                            contentDescription = null
-                        )
-                    }
-                },
-                scrollBehavior = scrollBehavior,
-                colors = TopAppBarDefaults.topAppBarColors(
-                    scrolledContainerColor = MaterialTheme.colorScheme.surface
-                )
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview
+@Composable()
+private fun HomeScreenPreview() {
+    HomeUI(
+        dateState = DateState(
+            formattedDate = "01.01.2001"
+        ),
+        connectivityState = ConnectionState.Available,
+        classList = listOf(
+            ClassUiData(
+                id = "",
+                group = "IPZ-22d",
+                number = "1",
+                educator = "John Doe",
+                name = "Programming for beginners",
+                educatorId = "123",
+                date = "01.01.2001",
+                start = "9:30",
+                end = "10:30",
+                items = "",
+                meetingLink = "zoom.us",
+                moodleLink = "moodle",
+                type = "LC",
+                room = "432",
+                isNow = true
+            ),
+            ClassUiData(
+                id = "",
+                group = "IPZ-22d",
+                number = "2",
+                educator = "Novikova Maryna Fedorivna",
+                name = "Ukrainian language",
+                educatorId = "123",
+                date = "01.01.2001",
+                start = "10:40",
+                end = "11:40",
+                items = "",
+                meetingLink = "teams.microsoft.com",
+                moodleLink = "",
+                type = "PT",
+                room = "432",
+                isNow = false
+            ),
+            ClassUiData(
+                id = "",
+                group = "IPZ-22d",
+                number = "3",
+                educator = "Jonathan White",
+                name = "Software engineering",
+                educatorId = "123",
+                date = "01.01.2001",
+                start = "12:00",
+                end = "13:00",
+                items = "",
+                meetingLink = "meet.google.com",
+                moodleLink = "",
+                type = "LB",
+                room = "432",
+                isNow = false
+            ),
+            ClassUiData(
+                id = "",
+                group = "IPZ-22d",
+                number = "4",
+                educator = "Camellia Anderson",
+                name = "American literature",
+                educatorId = "123",
+                date = "01.01.2001",
+                start = "13:10",
+                end = "14:10",
+                items = "",
+                meetingLink = "unknown.link",
+                moodleLink = "",
+                type = "PT",
+                room = "432",
+                isNow = false
             )
-        }
-    ) { innerPadding ->
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            modifier = Modifier
-                .padding(innerPadding)
-                .padding(horizontal = 16.dp)
-                .fillMaxSize()
-                .nestedScroll(scrollBehavior.nestedScrollConnection)
-        ) {
-            item {
-                ScheduleCard(
-                    title = {
-                        ScheduleTitle(
-                            icon = lnx.jetitable.ui.icons.google.CalendarMonth,
-                            title = {
-                                DatePickerView(
-                                    datePickerState = dateState.datePickerState,
-                                    formattedDate = dateState.formattedDate
-                                ) { date -> homeViewModel.updateDate(date) }
-                            }
-                        ) {
-                            CompositionLocalProvider(value = LocalMinimumInteractiveComponentSize provides Dp.Unspecified) {
-                                IconButton(
-                                    onClick = { homeViewModel.shiftDayBackward() },
-                                    modifier = Modifier.padding(end = 4.dp)
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowLeft,
-                                        contentDescription = null
-                                    )
-                                }
+        ),
+        examList = listOf(
+            Exam(
+                date = "02.03.2001",
+                time = "9:30",
+                number = "1",
+                name = "Programming for beginners",
+                educator = "John Doe",
+                url = "meet.google.com"
+            ),
+            Exam(
+                date = "05.03.2001",
+                time = "10:40",
+                number = "2",
+                name = "Ukrainian language",
+                educator = "Novikova Maryna Fedorivna",
+                url = "zoom.us"
+            ),
+            Exam(
+                date = "09.03.2001",
+                time = "12:00",
+                number = "3",
+                name = "Software engineering",
+                educator = "Jonathan White",
+                url = "teams.microsoft.com"
+            ),
+            Exam(
+                date = "09.03.2001",
+                time = "13:10",
+                number = "4",
+                name = "American literature",
+                educator = "Camellia Anderson",
+                url = "unknown.link"
+            )
+        ),
+        onDateUpdate = {},
+        onForwardDateShift = {},
+        onBackwardDateShift = {},
+        onPresenceVerify = {},
+        onSettingsNavigate = {}
+    )
+}
 
-                                IconButton(onClick = { homeViewModel.shiftDayForward() }) {
-                                    Icon(
-                                        imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowRight,
-                                        contentDescription = null
-                                    )
-                                }
-                            }
-                        }
-                    },
-                ) {
-                    ScheduleTable(
-                        connectivityState = connectivityState,
-                        emptyContent = {
-                            ScheduleStatus(
-                                icon = lnx.jetitable.ui.icons.google.Mood,
-                                text = R.string.no_classes
-                            )
-                        },
-                        data = classList
-                    ) {
-                        classList?.forEachIndexed { index, uiClass ->
-                            val bgColor = if (uiClass.isNow) {
-                                MaterialTheme.colorScheme.primaryContainer
-                            } else {
-                                MaterialTheme.colorScheme.surfaceContainerHigh
-                            }
-                            val time = "${uiClass.start}\n${uiClass.end}"
-                            val room = if (uiClass.room.isNotBlank()) {
-                                "${stringResource(id = R.string.class_room, uiClass.room)}\n"
-                            } else ""
-                            val classNumber = "${stringResource(R.string.class_number, uiClass.number)}\n"
-                            val classGroup = "${stringResource(id = R.string.class_group, uiClass.group)}\n"
-                            val educator = stringResource(id = R.string.educator, uiClass.educator)
-
-                            ScheduleRow(
-                                time = time,
-                                title = uiClass.name,
-                                type = uiClass.type,
-                                meetingUrl = uiClass.meetingLink,
-                                moodleUrl = uiClass.moodleLink,
-                                onClick = { homeViewModel.verifyPresence(uiClass) },
-                                backgroundColor = bgColor,
-                                expandedText = classNumber + room + classGroup + educator,
-                                elementIndex = index
-                            )
-                        }
-                    }
-                }
-            }
-            item {
-                var expanded by remember { mutableStateOf(false) }
-                ScheduleCard(
-                    expanded = expanded,
-                    title = {
-                        ScheduleTitle(
-                            icon = lnx.jetitable.ui.icons.google.ContractEdit,
-                            title = {
-                                Text(text = stringResource(id = R.string.exam_schedule))
-                            },
-                        ) {
-                            CompositionLocalProvider(value = LocalMinimumInteractiveComponentSize provides Dp.Unspecified) {
-                                IconButton(onClick = {expanded = !expanded}) {
-                                    if (expanded) {
-                                        Icon(imageVector = Icons.Default.KeyboardArrowUp, contentDescription = null)
-                                    } else {
-                                        Icon(imageVector = Icons.Default.KeyboardArrowDown, contentDescription = null)
-                                    }
-                                }
-                            }
-                        }
-                    }
-                ) {
-                    ScheduleTable(
-                        connectivityState = connectivityState,
-                        emptyContent = {
-                            ScheduleStatus(
-                                icon = lnx.jetitable.ui.icons.google.Mood,
-                                text = R.string.no_exams
-                            )
-                        },
-                        data = examList
-                    ) {
-                        examList?.forEachIndexed { index, session ->
-                            ScheduleRow(
-                                time = session.time,
-                                title = session.name,
-                                meetingUrl = session.url,
-                                onClick = {},
-                                backgroundColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                                expandedText = "${stringResource(id = R.string.class_number, session.number)}\n" +
-                                        "${stringResource(id = R.string.date, session.date)}\n" +
-                                        stringResource(id = R.string.educator, session.educator),
-                                elementIndex = index
-                            )
-                        }
-                    }
-                }
-            }
-        }
-    }
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview
+@Composable()
+private fun EmptyHomeScreenPreview() {
+    HomeUI(
+        dateState = DateState(
+            formattedDate = "02.01.2001"
+        ),
+        connectivityState = ConnectionState.Available,
+        classList = emptyList(),
+        examList = emptyList(),
+        onDateUpdate = {},
+        onForwardDateShift = {},
+        onBackwardDateShift = {},
+        onPresenceVerify = {},
+        onSettingsNavigate = {}
+    )
 }
