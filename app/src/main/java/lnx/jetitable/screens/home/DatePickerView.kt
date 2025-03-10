@@ -1,15 +1,20 @@
 package lnx.jetitable.screens.home
 
 import android.icu.util.Calendar
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -18,9 +23,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import lnx.jetitable.R
@@ -30,7 +36,6 @@ import lnx.jetitable.R
 fun DatePickerView(
     formattedDate: String,
     datePickerState: DatePickerState,
-    modifier: Modifier = Modifier,
     onDateSelected: (Calendar) -> Unit
 ) {
     var showDialog by remember { mutableStateOf(false) }
@@ -58,14 +63,27 @@ fun DatePickerView(
         ) { DatePicker(state = datePickerState) }
     }
 
-    Text(text = stringResource(id = R.string.schedule_for_date))
     CompositionLocalProvider(value = LocalMinimumInteractiveComponentSize provides Dp.Unspecified) {
-        Text(
-            text = formattedDate,
-            modifier = modifier.clickable { showDialog = true },
-            color = MaterialTheme.colorScheme.primary,
-            style = MaterialTheme.typography.titleMedium,
-            textDecoration = TextDecoration.Underline
-        )
+        Surface(
+            onClick = { showDialog = true },
+            shape = RoundedCornerShape(8.dp),
+            color = Color.Transparent
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+            ) {
+                Text(
+                    text = formattedDate,
+                    color = MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Icon(
+                    imageVector = Icons.Rounded.KeyboardArrowDown,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                )
+            }
+        }
     }
 }
