@@ -7,7 +7,6 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.converter.scalars.ScalarsConverterFactory
 
 class RetrofitHolder(context: Context) {
     private val cookieDataStore = CookieDataStore(context)
@@ -25,7 +24,7 @@ class RetrofitHolder(context: Context) {
 
     private val retrofit = Retrofit.Builder()
         .baseUrl(ApiService.BASE_URL)
-        .addConverterFactory(ScalarsConverterFactory.create())
+        .addConverterFactory(HtmlConverterFactory())
         .addConverterFactory(GsonConverterFactory.create())
         .client(okHttpClient)
         .build()

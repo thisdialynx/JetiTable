@@ -9,7 +9,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import lnx.jetitable.misc.ConnectionState
 import lnx.jetitable.misc.DateState
 import lnx.jetitable.screens.home.data.ClassUiData
-import lnx.jetitable.timetable.api.query.data.Exam
+import lnx.jetitable.timetable.api.query.data.ExamNetworkData
 import lnx.jetitable.viewmodel.HomeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -114,7 +114,7 @@ private fun HomeScreenPreview() {
             )
         ),
         examList = listOf(
-            Exam(
+            ExamNetworkData(
                 date = "02.03.2001",
                 time = "9:30",
                 number = "1",
@@ -122,7 +122,7 @@ private fun HomeScreenPreview() {
                 educator = "John Doe",
                 url = "meet.google.com"
             ),
-            Exam(
+            ExamNetworkData(
                 date = "05.03.2001",
                 time = "10:40",
                 number = "2",
@@ -130,7 +130,7 @@ private fun HomeScreenPreview() {
                 educator = "Novikova Maryna Fedorivna",
                 url = "zoom.us"
             ),
-            Exam(
+            ExamNetworkData(
                 date = "09.03.2001",
                 time = "12:00",
                 number = "3",
@@ -138,7 +138,7 @@ private fun HomeScreenPreview() {
                 educator = "Jonathan White",
                 url = "teams.microsoft.com"
             ),
-            Exam(
+            ExamNetworkData(
                 date = "09.03.2001",
                 time = "13:10",
                 number = "4",

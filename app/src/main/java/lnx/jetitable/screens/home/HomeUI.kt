@@ -45,7 +45,7 @@ import lnx.jetitable.screens.home.card.ScheduleStatus
 import lnx.jetitable.screens.home.card.ScheduleTable
 import lnx.jetitable.screens.home.card.ScheduleTitle
 import lnx.jetitable.screens.home.data.ClassUiData
-import lnx.jetitable.timetable.api.query.data.Exam
+import lnx.jetitable.timetable.api.query.data.ExamNetworkData
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -53,7 +53,7 @@ fun HomeUI(
     dateState: DateState,
     connectivityState: ConnectionState,
     classList: List<ClassUiData>?,
-    examList: List<Exam>?,
+    examList: List<ExamNetworkData>?,
     onDateUpdate: (Calendar) -> Unit,
     onForwardDateShift: () -> Unit,
     onBackwardDateShift: () -> Unit,
