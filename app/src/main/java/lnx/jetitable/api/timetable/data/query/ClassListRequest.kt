@@ -1,4 +1,4 @@
-package lnx.jetitable.timetable.api.query.data
+package lnx.jetitable.api.timetable.data.query
 
 data class ClassListRequest(
     val param: String,

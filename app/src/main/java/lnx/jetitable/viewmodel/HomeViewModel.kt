@@ -19,22 +19,24 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import lnx.jetitable.BuildConfig
+import lnx.jetitable.R
+import lnx.jetitable.api.RetrofitHolder
+import lnx.jetitable.api.timetable.TimeTableApiService.Companion.CHECK_ZOOM
+import lnx.jetitable.api.timetable.TimeTableApiService.Companion.DAILY_CLASS_LIST
+import lnx.jetitable.api.timetable.TimeTableApiService.Companion.EXAM_LIST
+import lnx.jetitable.api.timetable.TimeTableApiService.Companion.STATE
+import lnx.jetitable.api.timetable.data.login.User
+import lnx.jetitable.api.timetable.data.query.ClassListRequest
+import lnx.jetitable.api.timetable.data.query.ExamListRequest
+import lnx.jetitable.api.timetable.data.query.ExamNetworkData
+import lnx.jetitable.api.timetable.data.query.VerifyPresenceRequest
 import lnx.jetitable.datastore.UserDataStore
 import lnx.jetitable.datastore.user.UserDataWorker
 import lnx.jetitable.misc.ConnectionState
 import lnx.jetitable.misc.DateManager
 import lnx.jetitable.misc.NetworkConnectivityObserver
+import lnx.jetitable.misc.DataState
 import lnx.jetitable.screens.home.data.ClassUiData
-import lnx.jetitable.timetable.api.ApiService.Companion.CHECK_ZOOM
-import lnx.jetitable.timetable.api.ApiService.Companion.DAILY_CLASS_LIST
-import lnx.jetitable.timetable.api.ApiService.Companion.EXAM_LIST
-import lnx.jetitable.timetable.api.ApiService.Companion.STATE
-import lnx.jetitable.timetable.api.RetrofitHolder
-import lnx.jetitable.timetable.api.login.data.User
-import lnx.jetitable.timetable.api.query.data.ClassListRequest
-import lnx.jetitable.timetable.api.query.data.ExamNetworkData
-import lnx.jetitable.timetable.api.query.data.ExamListRequest
-import lnx.jetitable.timetable.api.query.data.VerifyPresenceRequest
 import java.util.concurrent.TimeUnit
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
@@ -44,7 +46,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private val dateManager = DateManager()
     val dateState = dateManager.dateStateFlow
     private val userDataStore = UserDataStore(context)
-    private val service = RetrofitHolder.getInstance(context)
+    private val service = RetrofitHolder.getTimeTableApiInstance(context)
 
     private val currentTime = flow {
         while (true) {
@@ -59,7 +61,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = ConnectionState.Unavailable
+            initialValue = ConnectionState.Idle
         )
 
     val userData = userDataStore.getUserData()
@@ -71,26 +73,47 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         )
 
     val classesFlow = combine(userData, dateManager.selectedDate, currentTime, connectivityState) { userData, date, time, connectivity ->
-        if (connectivity == ConnectionState.Available) {
-            getClasses(group = userData.group to userData.groupId)
-        } else emptyList()
+        when (connectivity) {
+            ConnectionState.Unavailable -> DataState.Error(R.string.no_internet_connection)
+            ConnectionState.Available -> {
+                try {
+                    val classes = getClasses(userData.group to userData.groupId)
+                    if (classes.isEmpty()) DataState.Empty else DataState.Success(classes)
+
+                } catch (e: Exception) {
+                    DataState.Error(R.string.schedule_load_fail, e)
+                }
+            }
+            ConnectionState.Idle -> DataState.Loading
+        }
     }
         .flowOn(Dispatchers.IO)
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = null
+            initialValue = DataState.Loading
         )
+
     val examsFlow = combine(userData, connectivityState) { userData, connectivity ->
-        if (connectivity == ConnectionState.Available) {
-            getExams(group = userData.group to userData.groupId)
-        } else emptyList()
+        when (connectivity) {
+            ConnectionState.Unavailable -> DataState.Error(R.string.no_internet_connection)
+            ConnectionState.Available -> {
+                try {
+                    val exams = getExams(userData.group to userData.groupId)
+                    if (exams.isEmpty()) DataState.Empty else DataState.Success(exams)
+
+                } catch (e: Exception) {
+                    DataState.Error(R.string.schedule_load_fail, e)
+                }
+            }
+            ConnectionState.Idle -> DataState.Loading
+        }
     }
         .flowOn(Dispatchers.IO)
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = null
+            initialValue = DataState.Loading
         )
 
     init {

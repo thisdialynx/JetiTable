@@ -13,13 +13,13 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import lnx.jetitable.R
+import lnx.jetitable.api.RetrofitHolder
+import lnx.jetitable.api.timetable.TimeTableApiService.Companion.CHECK_PASSWORD
+import lnx.jetitable.api.timetable.TimeTableApiService.Companion.SEND_MAIL
+import lnx.jetitable.api.timetable.data.login.LoginRequest
+import lnx.jetitable.api.timetable.data.login.MailRequest
 import lnx.jetitable.misc.ConnectionState
 import lnx.jetitable.misc.NetworkConnectivityObserver
-import lnx.jetitable.timetable.api.ApiService.Companion.CHECK_PASSWORD
-import lnx.jetitable.timetable.api.ApiService.Companion.SEND_MAIL
-import lnx.jetitable.timetable.api.RetrofitHolder
-import lnx.jetitable.timetable.api.login.data.LoginRequest
-import lnx.jetitable.timetable.api.login.data.MailRequest
 import okhttp3.Credentials
 
 sealed class AuthState {
@@ -31,7 +31,7 @@ sealed class AuthState {
 class AuthViewModel(application: Application) : AndroidViewModel(application) {
     private val context
         get() = getApplication<Application>().applicationContext
-    private val service = RetrofitHolder.getInstance(context)
+    private val service = RetrofitHolder.getTimeTableApiInstance(context)
     val connectivityObserver = NetworkConnectivityObserver(context)
     val connectivityState = connectivityObserver.observe()
         .map { it }

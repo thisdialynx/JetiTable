@@ -65,9 +65,9 @@ fun AuthUI(
             LogoAppTitle()
             Spacer(modifier = Modifier.height(12.dp))
             SignInFields(
-                onEmailUpdate = { onEmailUpdate(it) },
-                onPasswordUpdate = { onPasswordUpdate(it) },
-                checkCredentials = { onCredentialsCheck() },
+                onEmailUpdate = onEmailUpdate,
+                onPasswordUpdate = onPasswordUpdate,
+                checkCredentials = onCredentialsCheck,
                 email = emailState,
                 password = passwordState
             )
@@ -77,7 +77,7 @@ fun AuthUI(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Button(onClick = { onCredentialsCheck() }) {
+                Button(onClick = onCredentialsCheck) {
                     Text(text = stringResource(id = R.string.sign_in))
                 }
                 TextButton(onClick = { openPasswordRecover.value = true }) {
@@ -88,8 +88,8 @@ fun AuthUI(
 
         PasswordRecoverDialog(
             isOpen = openPasswordRecover,
-            onEmailSend = { onEmailSend() },
-            onEmailUpdate = { onEmailUpdate(it) },
+            onEmailSend = onEmailSend,
+            onEmailUpdate = onEmailUpdate,
             email = emailState
         )
         UnofficialAlertDialog(isOpen = openNoticeDialog)

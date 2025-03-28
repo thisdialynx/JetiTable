@@ -6,54 +6,41 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowLeft
-import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
-import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import lnx.jetitable.R
-import lnx.jetitable.misc.ConnectionState
+import lnx.jetitable.api.timetable.data.query.ExamNetworkData
 import lnx.jetitable.misc.DateState
-import lnx.jetitable.screens.home.card.ScheduleCard
-import lnx.jetitable.screens.home.card.ScheduleRow
-import lnx.jetitable.screens.home.card.ScheduleStatus
-import lnx.jetitable.screens.home.card.ScheduleTable
-import lnx.jetitable.screens.home.card.ScheduleTitle
+import lnx.jetitable.misc.DataState
+import lnx.jetitable.screens.home.card.ClassScheduleCard
+import lnx.jetitable.screens.home.card.ExamScheduleCard
 import lnx.jetitable.screens.home.data.ClassUiData
-import lnx.jetitable.timetable.api.query.data.ExamNetworkData
+import lnx.jetitable.ui.icons.google.Settings
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeUI(
     dateState: DateState,
-    connectivityState: ConnectionState,
-    classList: List<ClassUiData>?,
-    examList: List<ExamNetworkData>?,
+    classList: DataState<out List<ClassUiData>>,
+    examList: DataState<out List<ExamNetworkData>>,
     onDateUpdate: (Calendar) -> Unit,
     onForwardDateShift: () -> Unit,
     onBackwardDateShift: () -> Unit,
@@ -79,7 +66,7 @@ fun HomeUI(
                 actions = {
                     IconButton(onClick = { onSettingsNavigate() }) {
                         Icon(
-                            imageVector = lnx.jetitable.ui.icons.google.Settings,
+                            imageVector = Settings,
                             contentDescription = null
                         )
                     }
@@ -100,125 +87,17 @@ fun HomeUI(
                 .nestedScroll(scrollBehavior.nestedScrollConnection)
         ) {
             item {
-                ScheduleCard(
-                    title = {
-                        ScheduleTitle(
-                            icon = lnx.jetitable.ui.icons.google.CalendarMonth,
-                            title = {
-                                DatePickerView(
-                                    datePickerState = dateState.datePickerState,
-                                    formattedDate = dateState.formattedDate,
-                                    onDateSelected = { onDateUpdate(it) }
-                                )
-                            }
-                        ) {
-                            CompositionLocalProvider(value = LocalMinimumInteractiveComponentSize provides Dp.Unspecified) {
-                                IconButton(
-                                    onClick = { onBackwardDateShift() },
-                                    modifier = Modifier.padding(end = 4.dp)
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowLeft,
-                                        contentDescription = null
-                                    )
-                                }
-                                IconButton(onClick = { onForwardDateShift() }) {
-                                    Icon(
-                                        imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowRight,
-                                        contentDescription = null
-                                    )
-                                }
-                            }
-                        }
-                    },
-                ) {
-                    ScheduleTable(
-                        connectivityState = connectivityState,
-                        emptyContent = {
-                            ScheduleStatus(
-                                icon = lnx.jetitable.ui.icons.google.Mood,
-                                text = R.string.no_classes
-                            )
-                        },
-                        data = classList
-                    ) {
-                        classList?.forEachIndexed { index, uiClass ->
-                            val bgColor = if (uiClass.isNow) {
-                                MaterialTheme.colorScheme.primaryContainer
-                            } else {
-                                MaterialTheme.colorScheme.surfaceContainerHigh
-                            }
-                            val time = "${uiClass.start}\n${uiClass.end}"
-                            val room = if (uiClass.room.isNotBlank()) {
-                                "${stringResource(id = R.string.class_room, uiClass.room)}\n"
-                            } else ""
-                            val classNumber = "${stringResource(R.string.class_number, uiClass.number)}\n"
-                            val classGroup = "${stringResource(id = R.string.class_group, uiClass.group)}\n"
-                            val educator = stringResource(id = R.string.educator, uiClass.educator)
-
-                            ScheduleRow(
-                                time = time,
-                                title = uiClass.name,
-                                type = uiClass.type,
-                                meetingUrl = uiClass.meetingLink,
-                                moodleUrl = uiClass.moodleLink,
-                                onClick = { onPresenceVerify(uiClass) },
-                                backgroundColor = bgColor,
-                                expandedText = classNumber + room + classGroup + educator,
-                                elementIndex = index
-                            )
-                        }
-                    }
-                }
+                ClassScheduleCard(
+                    classList = classList,
+                    dateState = dateState,
+                    onPresenceVerify = onPresenceVerify,
+                    onDateUpdate = onDateUpdate,
+                    onBackwardDateShift = onBackwardDateShift,
+                    onForwardDateShift = onForwardDateShift
+                )
             }
             item {
-                var expanded by remember { mutableStateOf(false) }
-                ScheduleCard(
-                    expanded = expanded,
-                    title = {
-                        ScheduleTitle(
-                            icon = lnx.jetitable.ui.icons.google.ContractEdit,
-                            title = {
-                                Text(text = stringResource(id = R.string.exam_schedule))
-                            },
-                        ) {
-                            CompositionLocalProvider(value = LocalMinimumInteractiveComponentSize provides Dp.Unspecified) {
-                                IconButton(onClick = {expanded = !expanded}) {
-                                    if (expanded) {
-                                        Icon(imageVector = Icons.Default.KeyboardArrowUp, contentDescription = null)
-                                    } else {
-                                        Icon(imageVector = Icons.Default.KeyboardArrowDown, contentDescription = null)
-                                    }
-                                }
-                            }
-                        }
-                    }
-                ) {
-                    ScheduleTable(
-                        connectivityState = connectivityState,
-                        emptyContent = {
-                            ScheduleStatus(
-                                icon = lnx.jetitable.ui.icons.google.Mood,
-                                text = R.string.no_exams
-                            )
-                        },
-                        data = examList
-                    ) {
-                        examList?.forEachIndexed { index, session ->
-                            ScheduleRow(
-                                time = session.time,
-                                title = session.name,
-                                meetingUrl = session.url,
-                                onClick = {},
-                                backgroundColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                                expandedText = "${stringResource(id = R.string.class_number, session.number)}\n" +
-                                        "${stringResource(id = R.string.date, session.date)}\n" +
-                                        stringResource(id = R.string.educator, session.educator),
-                                elementIndex = index
-                            )
-                        }
-                    }
-                }
+                ExamScheduleCard(examList)
             }
         }
     }

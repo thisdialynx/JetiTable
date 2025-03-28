@@ -1,11 +1,11 @@
-package lnx.jetitable.timetable.api
+package lnx.jetitable.api.timetable
 
 import android.util.Log
 import lnx.jetitable.BuildConfig
-import lnx.jetitable.timetable.api.login.data.AccessResponse
-import lnx.jetitable.timetable.api.login.data.User
-import lnx.jetitable.timetable.api.query.data.ClassNetworkData
-import lnx.jetitable.timetable.api.query.data.ExamNetworkData
+import lnx.jetitable.api.timetable.data.login.AccessResponse
+import lnx.jetitable.api.timetable.data.login.User
+import lnx.jetitable.api.timetable.data.query.ClassNetworkData
+import lnx.jetitable.api.timetable.data.query.ExamNetworkData
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import org.jsoup.Jsoup
