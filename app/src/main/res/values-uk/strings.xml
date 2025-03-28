@@ -49,4 +49,14 @@
     <string name="about_screen_description">Версія застосунку, посилання та дописувачі</string>
     <string name="no_internet_connection">Немає інтернет з\'єднання</string>
     <string name="class_room">Аудиторія: %1$s</string>
+    <string name="schedule_load_fail">Не вдалося завантажити розклад</string>
+    <string name="could_not_check_for_updates">Не вдалося перевірити наявність оновлень</string>
+    <string name="update_available_card">Оновлення %1$s доступне! Натисніть щоб дізнатися більше</string>
+    <string name="no_updates">Установлена остання версія застосунку</string>
+    <string name="download_action">Завантажити</string>
+    <string name="cancel_action">Скасувати</string>
+    <string name="update_available_dialog_title">Доступне оновлення!</string>
+    <string name="current_version">Поточна версія:</string>
+    <string name="latest_version">Остання версія:</string>
+    <string name="fetching_updates">Перевірка оновлень…</string>
 </resources>

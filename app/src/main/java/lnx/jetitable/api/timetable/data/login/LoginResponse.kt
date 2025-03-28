@@ -1,4 +1,4 @@
-package lnx.jetitable.timetable.api.login.data
+package lnx.jetitable.api.timetable.data.login
 
 data class LoginResponse(
     val status: String,

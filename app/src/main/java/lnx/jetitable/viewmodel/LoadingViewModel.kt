@@ -9,8 +9,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import lnx.jetitable.datastore.CookieDataStore
-import lnx.jetitable.timetable.api.ApiService.Companion.AUTHORISATION_PHP
-import lnx.jetitable.timetable.api.ApiService.Companion.BASE_URL
+import lnx.jetitable.api.timetable.TimeTableApiService.Companion.AUTHORISATION_PHP
+import lnx.jetitable.api.timetable.TimeTableApiService.Companion.BASE_URL
 import okhttp3.HttpUrl.Companion.toHttpUrl
 
 class LoadingViewModel(application: Application) : AndroidViewModel(application) {

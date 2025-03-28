@@ -1,9 +1,7 @@
 package lnx.jetitable.screens.settings
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -20,7 +18,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import lnx.jetitable.R
+import lnx.jetitable.misc.DataState
 import lnx.jetitable.navigation.About
+import lnx.jetitable.viewmodel.SettingsViewModel
 import lnx.jetitable.viewmodel.UserDataUiState
 
 enum class SettingItem(
@@ -34,7 +34,13 @@ enum class SettingItem(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsUI(onBack: () -> Unit, onDestinationNavigate: (String) -> Unit, onSignOut: () -> Unit, userDataUiState: UserDataUiState?) {
+fun SettingsUI(
+    onBack: () -> Unit,
+    onDestinationNavigate: (String) -> Unit,
+    onSignOut: () -> Unit,
+    updateInfo: DataState<out SettingsViewModel.AppUpdateInfo>,
+    userDataUiState: UserDataUiState?
+) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -55,17 +61,19 @@ fun SettingsUI(onBack: () -> Unit, onDestinationNavigate: (String) -> Unit, onSi
                 .padding(paddingValues)
                 .padding(horizontal = 16.dp)
                 .fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             item {
                 AccountCard(
                     userDataUiState = userDataUiState,
                     onSignOut = { onSignOut() }
                 )
-                Spacer(modifier = Modifier.height(8.dp))
             }
             item {
-                SettingsCard(onDestinationNavigate = { onDestinationNavigate(it) })
+                UpdateCard(updateInfo)
+            }
+            item {
+                SettingsCard(onDestinationNavigate = onDestinationNavigate)
             }
         }
     }

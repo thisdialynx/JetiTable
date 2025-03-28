@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.callbackFlow
 sealed class ConnectionState {
     object Available : ConnectionState()
     object Unavailable : ConnectionState()
+    object Idle: ConnectionState()
 }
 
 class NetworkConnectivityObserver(context: Context) {
