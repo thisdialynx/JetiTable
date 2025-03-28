@@ -2,14 +2,15 @@ package lnx.jetitable.screens.home.card
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -33,12 +34,25 @@ fun ScheduleRow(
     meetingUrl: String,
     moodleUrl: String? = null,
     elementIndex: Int,
+    isLastElement: Boolean,
     onClick: () -> Unit,
     backgroundColor: Color,
 ) {
     var expanded by remember { mutableStateOf(false) }
     val localUriHandler = LocalUriHandler.current
     val clipboardManager = LocalClipboardManager.current
+
+    val topStart = if (elementIndex == 0) 12.dp else 4.dp
+    val topEnd = if (elementIndex == 0) 12.dp else 4.dp
+    val bottomStart = if (isLastElement) 12.dp else 4.dp
+    val bottomEnd = if (isLastElement) 12.dp else 4.dp
+
+    val shape = RoundedCornerShape(
+        topStart = topStart,
+        topEnd = topEnd,
+        bottomStart = bottomStart,
+        bottomEnd = bottomEnd
+    )
 
     if (elementIndex > 0) {
         HorizontalDivider(
@@ -47,70 +61,73 @@ fun ScheduleRow(
         )
     }
 
-    Box(
-        modifier = Modifier
-            .background(backgroundColor)
-            .clickable { expanded = !expanded }
+    Surface(
+        color = backgroundColor,
+        onClick = { expanded = !expanded },
+        shape = shape,
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            modifier = Modifier.padding(12.dp)
-        ) {
-            Text(
-                text = time,
-                style = MaterialTheme.typography.bodyMedium
-            )
-            Text(
-                text = title,
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.weight(1f)
-            )
-            if (type != null) {
-                Text(
-                    text = type,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
-
-            if (meetingUrl.isNotEmpty()) {
-                SiteButton(
-                    url = meetingUrl,
-                    icon = getMeetingIcon(meetingUrl),
-                    color = MaterialTheme.colorScheme.secondary,
-                    uriHandler = localUriHandler,
-                    clipboardManager = clipboardManager
-                ) { onClick() }
-            }
-
-            if (!moodleUrl.isNullOrBlank()) {
-                SiteButton(
-                    url = moodleUrl,
-                    icon = lnx.jetitable.ui.icons.Moodle,
-                    color = MaterialTheme.colorScheme.tertiary,
-                    uriHandler = localUriHandler,
-                    clipboardManager = clipboardManager,
-                    onClick = {}
-                )
-            }
-        }
-    }
-
-    if (expandedText != null) {
-        AnimatedVisibility(
-            visible = expanded,
-
-            modifier = Modifier
-                .background(backgroundColor)
-                .fillMaxWidth()
-        ) {
+        Column {
             Row(
-                modifier = Modifier.padding(vertical = 12.dp, horizontal = 24.dp)
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                modifier = Modifier
+                    .padding(12.dp)
+                    .fillMaxWidth()
             ) {
                 Text(
-                    text = expandedText,
+                    text = time,
                     style = MaterialTheme.typography.bodyMedium
                 )
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.weight(1f)
+                )
+                if (type != null) {
+                    Text(
+                        text = type,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+
+                if (meetingUrl.isNotEmpty()) {
+                    SiteButton(
+                        url = meetingUrl,
+                        icon = getMeetingIcon(meetingUrl),
+                        color = MaterialTheme.colorScheme.secondary,
+                        uriHandler = localUriHandler,
+                        clipboardManager = clipboardManager
+                    ) { onClick() }
+                }
+
+                if (!moodleUrl.isNullOrBlank()) {
+                    SiteButton(
+                        url = moodleUrl,
+                        icon = lnx.jetitable.ui.icons.Moodle,
+                        color = MaterialTheme.colorScheme.tertiary,
+                        uriHandler = localUriHandler,
+                        clipboardManager = clipboardManager,
+                        onClick = {}
+                    )
+                }
+            }
+
+            if (expandedText != null) {
+                AnimatedVisibility(
+                    visible = expanded,
+                    modifier = Modifier
+                        .background(backgroundColor)
+                        .fillMaxWidth()
+                ) {
+                    Row(
+                        modifier = Modifier.padding(vertical = 12.dp, horizontal = 24.dp)
+                    ) {
+                        Text(
+                            text = expandedText,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                }
             }
         }
     }

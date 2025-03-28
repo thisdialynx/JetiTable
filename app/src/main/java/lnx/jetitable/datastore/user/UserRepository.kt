@@ -4,13 +4,13 @@ import android.content.Context
 import android.util.Log
 import lnx.jetitable.datastore.UserDataStore
 import lnx.jetitable.misc.DateManager
-import lnx.jetitable.timetable.api.ApiService.Companion.CHECK_ACCESS
-import lnx.jetitable.timetable.api.RetrofitHolder
-import lnx.jetitable.timetable.api.login.data.AccessRequest
+import lnx.jetitable.api.timetable.TimeTableApiService.Companion.CHECK_ACCESS
+import lnx.jetitable.api.RetrofitHolder
+import lnx.jetitable.api.timetable.data.login.AccessRequest
 
 class UserRepository(context: Context) {
     private val userDataStore = UserDataStore(context)
-    private val service = RetrofitHolder.getInstance(context)
+    private val service = RetrofitHolder.getTimeTableApiInstance(context)
     private val dateManager = DateManager()
 
     suspend fun fetchUserData() {

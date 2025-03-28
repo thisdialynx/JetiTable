@@ -6,6 +6,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import lnx.jetitable.R
+import lnx.jetitable.misc.DataState
 import lnx.jetitable.viewmodel.SettingsViewModel
 import lnx.jetitable.viewmodel.UserDataUiState
 
@@ -13,11 +14,13 @@ import lnx.jetitable.viewmodel.UserDataUiState
 fun SettingsScreen(onBack: () -> Unit, onDestinationNavigate: (String) -> Unit) {
     val viewModel = viewModel<SettingsViewModel>()
     val userDataUiState by viewModel.userDataUiState.collectAsStateWithLifecycle()
+    val updateInfo by viewModel.updateInfo.collectAsStateWithLifecycle()
 
     SettingsUI(
         onBack = { onBack() },
         userDataUiState = userDataUiState,
-        onDestinationNavigate = { onDestinationNavigate(it) },
+        onDestinationNavigate = onDestinationNavigate,
+        updateInfo = updateInfo,
         onSignOut = { viewModel.signOut() }
     )
 }
@@ -29,6 +32,7 @@ private fun NoAccountPreview() {
         onBack = {},
         userDataUiState = null,
         onDestinationNavigate = {},
+        updateInfo = DataState.Empty,
         onSignOut = {}
     )
 }
@@ -47,6 +51,11 @@ private fun AboutScreenPreview() {
             status = "student"
         ),
         onDestinationNavigate = {},
+        updateInfo = DataState.Success(
+            SettingsViewModel.AppUpdateInfo(
+                currentVersion = "0.0.0"
+            )
+        ),
         onSignOut = {}
     )
 }

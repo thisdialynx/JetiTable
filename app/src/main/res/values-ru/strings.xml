@@ -49,4 +49,14 @@
     <string name="about_screen_description">Версия приложения, ссылки и участники проекта</string>
     <string name="no_internet_connection">Интернет подключение отсутствует</string>
     <string name="class_room">Аудитория: %1$s</string>
+    <string name="schedule_load_fail">Не удалось загрузить расписание</string>
+    <string name="could_not_check_for_updates">Не удалось проверить наличие обновлений</string>
+    <string name="update_available_card">Обновление %1$s доступно! Нажмите для подробностей</string>
+    <string name="no_updates">Установлена последняя версия приложения</string>
+    <string name="download_action">Загрузить</string>
+    <string name="cancel_action">Отменить</string>
+    <string name="update_available_dialog_title">Доступно обновление!</string>
+    <string name="current_version">Установленная версия:</string>
+    <string name="latest_version">Последняя версия:</string>
+    <string name="fetching_updates">Получение обновлений…</string>
 </resources>

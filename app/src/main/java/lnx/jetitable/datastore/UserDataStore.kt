@@ -9,8 +9,8 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import lnx.jetitable.timetable.api.login.data.AccessResponse
-import lnx.jetitable.timetable.api.login.data.User
+import lnx.jetitable.api.timetable.data.login.AccessResponse
+import lnx.jetitable.api.timetable.data.login.User
 
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "user_data_store")
