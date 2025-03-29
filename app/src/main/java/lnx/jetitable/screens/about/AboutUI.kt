@@ -1,20 +1,14 @@
 package lnx.jetitable.screens.about
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
@@ -30,7 +24,6 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import lnx.jetitable.R
-import lnx.jetitable.screens.auth.ContributorItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -78,36 +71,7 @@ fun AboutUI(onBack: () -> Unit, appIcon: @Composable () -> Unit) {
                     color = MaterialTheme.colorScheme.primary
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceContainer
-                    )
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentHeight(),
-                    ) {
-                        ContributorItem.entries.forEachIndexed { index, data ->
-                            if (index > 0) {
-                                HorizontalDivider(
-                                    thickness = 2.dp,
-                                    color = MaterialTheme.colorScheme.surface
-                                )
-                            }
-                            ContributorCard(
-                                profilePicture = data.profilePictureUrl,
-                                title = data.title,
-                                description = data.description,
-                                icon = lnx.jetitable.ui.icons.Telegram,
-                                iconDescription = data.iconDescription,
-                                localUriHandler = localUriHandler,
-                                shortUri = data.shortUrl
-                            )
-                        }
-                    }
-                }
+                ContributorsCard(localUriHandler)
             }
         }
     }
