@@ -34,7 +34,7 @@ class SettingsViewModel(application: Application): AndroidViewModel(application)
     private val userDataStore = UserDataStore(context)
     private val cookieDataStore = CookieDataStore(context)
     private val dateManager = DateManager()
-    val connectivityObserver = NetworkConnectivityObserver(context)
+    private val connectivityObserver = NetworkConnectivityObserver(context)
     private val githubService = RetrofitHolder.getGitHubApiInstance()
 
     val userDataUiState = userDataStore.getUserData().map {
@@ -69,7 +69,7 @@ class SettingsViewModel(application: Application): AndroidViewModel(application)
                         val isDebug = BuildConfig.DEBUG
                         val release = githubService.getLatestRelease()
                         val latestVersion = release.tag_name.removePrefix("v")
-                        val updateAvailable = isNewerVersion(currentVersion, latestVersion)
+                        val updateAvailable = isNewerVersion(latestVersion, currentVersion)
                         val downloadUrl = if (isDebug) release.assets[0].browser_download_url else release.assets[1].browser_download_url
 
                         if (updateAvailable) {

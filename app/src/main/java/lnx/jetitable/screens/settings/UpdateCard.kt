@@ -79,7 +79,7 @@ fun UpdateCard(updateInfo: DataState<out SettingsViewModel.AppUpdateInfo>) {
                         contentDescription = null
                     )
                     Text(
-                        text = stringResource(R.string.update_available_card),
+                        text = stringResource(R.string.update_available_card, updateInfo.data.latestVersion),
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
