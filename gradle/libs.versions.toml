@@ -2,7 +2,6 @@
 agp = "8.9.1"
 coilComposeVersion = "3.1.0"
 converterGson = "2.11.0"
-converterScalars = "2.11.0"
 coreSplashscreen = "1.0.1"
 datastorePreferences = "1.1.4"
 jsoupJsoup = "1.19.1"
@@ -45,7 +44,6 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "loggingInterceptor" }
 okhttp3-okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
-retrofit2-converter-scalars = { module = "com.squareup.retrofit2:converter-scalars", version.ref = "converterScalars" }
 retrofit2-retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 
 

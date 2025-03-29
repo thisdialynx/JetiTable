@@ -60,7 +60,6 @@ dependencies {
     implementation(libs.coil.network.okhttp)
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.androidx.core.splashscreen)
-    implementation(libs.retrofit2.converter.scalars)
     implementation(libs.jsoup.jsoup)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.retrofit2.retrofit)
