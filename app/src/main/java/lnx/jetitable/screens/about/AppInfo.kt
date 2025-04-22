@@ -17,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import lnx.jetitable.BuildConfig
 import lnx.jetitable.R
-import lnx.jetitable.screens.auth.UrlIconItem
 
 @Composable
 fun AppInfo(localUriHandler: UriHandler, appIcon: @Composable () -> Unit) {
@@ -43,15 +42,10 @@ fun AppInfo(localUriHandler: UriHandler, appIcon: @Composable () -> Unit) {
         )
 
         Spacer(modifier = Modifier.height(16.dp))
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            UrlIconItem.entries.forEach { data ->
-                UrlIconTile(
-                    icon = data.icon,
-                    description = data.description,
-                    shortUri = data.shortUri,
-                    localUriHandler = localUriHandler
-                )
-            }
+        Row(horizontalArrangement = Arrangement.spacedBy(2.dp)) {
+            UrlIconTiles(
+                localUriHandler = localUriHandler,
+            )
         }
     }
     Spacer(modifier = Modifier.height(32.dp))
