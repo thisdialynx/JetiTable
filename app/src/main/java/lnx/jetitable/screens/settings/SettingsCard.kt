@@ -3,10 +3,11 @@ package lnx.jetitable.screens.settings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -34,12 +35,7 @@ fun SettingsCard(onDestinationNavigate: (String) -> Unit) {
             bottomEnd = bottomEnd
         )
 
-        if (index > 0) {
-            HorizontalDivider(
-                color = MaterialTheme.colorScheme.surface,
-                thickness = 2.dp
-            )
-        }
+        if (index > 0) Spacer(modifier = Modifier.height(2.dp))
 
         Surface(
             color = MaterialTheme.colorScheme.surfaceContainer,

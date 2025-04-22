@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
@@ -14,7 +16,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -49,12 +50,7 @@ fun ContributorsCard(localUriHandler: UriHandler) {
                 bottomEnd = bottomEnd
             )
 
-            if (index > 0) {
-                HorizontalDivider(
-                    thickness = 2.dp,
-                    color = MaterialTheme.colorScheme.surface
-                )
-            }
+            if (index > 0) Spacer(modifier = Modifier.height(2.dp))
 
             Surface(
                 color = MaterialTheme.colorScheme.surfaceContainer,

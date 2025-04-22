@@ -5,10 +5,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -54,12 +55,7 @@ fun ScheduleRow(
         bottomEnd = bottomEnd
     )
 
-    if (elementIndex > 0) {
-        HorizontalDivider(
-            color = MaterialTheme.colorScheme.surfaceContainer,
-            thickness = 2.dp
-        )
-    }
+    if (elementIndex > 0) Spacer(modifier = Modifier.height(2.dp))
 
     Surface(
         color = backgroundColor,
