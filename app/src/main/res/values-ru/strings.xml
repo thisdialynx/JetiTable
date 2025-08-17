@@ -59,4 +59,26 @@
     <string name="current_version">Установленная версия:</string>
     <string name="latest_version">Последняя версия:</string>
     <string name="fetching_updates">Получение обновлений…</string>
+    <string name="meeting_url_label">Ссылка на конференцию</string>
+    <string name="notifications_settings_entry_title">Уведомления</string>
+    <string name="notifications_settings_entry_description">Напоминания об экзаменах и занятиях</string>
+    <string name="class_reminders_channel_description">Уведомления об экзаменах</string>
+    <string name="exam_reminders_channel_description">Уведомления о занятиях</string>
+    <string name="exam_reminders_channel">Напоминания об экзаменах</string>
+    <string name="class_reminders_channel">Напоминания о занятиях</string>
+    <string name="class_notification_title">Предстоящее занятие</string>
+    <string name="exam_notification_title">Предстоящий экзамен</string>
+    <string name="reminder_notification_description_minutes">%1$s начнётся через %2$s мин.</string>
+    <string name="class_notification_description">Занятие по %1$s уже началось!</string>
+    <string name="exam_notification_description">Экзамен по %1$s уже начался!</string>
+    <string name="permissions_required_title_dialog">Нужны разрешения!</string>
+    <string name="permissions_required_text_dialog">Чтобы получать уведомления, вам необходимо предоставить следующие разрешения:</string>
+    <string name="enable_notifications">Включить уведомления</string>
+    <string name="grant_button_title">Предоставить</string>
+    <string name="notifications_screen_description">Уведомления могут помочь вам увеличить посещаемость и не пропустить важное.</string>
+    <string name="granted_button_title">Предоставлено</string>
+    <string name="post_notifications_permission_dialog">Отправка увдомлений</string>
+    <string name="alarms_and_reminders_permission_dialog">Оповещения и напоминания</string>
+    <string name="activity_type_classes">Занятия</string>
+    <string name="activity_type_exams">Экзамены</string>
 </resources>

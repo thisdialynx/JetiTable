@@ -1,4 +1,4 @@
-package lnx.jetitable.screens.home.card
+package lnx.jetitable.screens.home.elements.schedule
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

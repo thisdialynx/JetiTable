@@ -36,7 +36,7 @@ import lnx.jetitable.screens.settings.SettingItem
 fun ContributorsCard(localUriHandler: UriHandler) {
     Column(modifier = Modifier.fillMaxWidth()) {
         ContributorItem.entries.forEachIndexed { index, item ->
-            val isLastItem = index == SettingItem.entries.size
+            val isLastItem = index == SettingItem.entries.size - 1
             
             val topStart = if (index == 0) 12.dp else 4.dp
             val topEnd = if (index == 0) 12.dp else 4.dp

@@ -20,11 +20,13 @@ import lnx.jetitable.navigation.About
 import lnx.jetitable.navigation.Auth
 import lnx.jetitable.navigation.Home
 import lnx.jetitable.navigation.Loading
+import lnx.jetitable.navigation.Notifications
 import lnx.jetitable.navigation.Settings
 import lnx.jetitable.screens.about.AboutScreen
 import lnx.jetitable.screens.auth.AuthScreen
 import lnx.jetitable.screens.home.HomeScreen
 import lnx.jetitable.screens.loading.LoadingScreen
+import lnx.jetitable.screens.notifications.NotificationsScreen
 import lnx.jetitable.screens.settings.SettingsScreen
 import lnx.jetitable.ui.theme.JetiTableTheme
 
@@ -37,7 +39,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             JetiTableTheme {
-                Surface { AppNavigation() }
+                Surface {
+                    AppNavigation()
+                }
             }
         }
     }
@@ -91,7 +95,10 @@ fun AppNavigation() {
         }
 
         composable(route = Home.route) {
-            HomeScreen(onSettingsNavigate = { navController.navigate(Settings.route) })
+            HomeScreen(
+                onSettingsNavigate = { navController.navigate(Settings.route) },
+                onNotificationsNavigate = { navController.navigate(Notifications.route) }
+            )
         }
 
         composable(route = About.route) { AboutScreen(onBack = { navController.popBackStack() }) }
@@ -115,6 +122,12 @@ fun AppNavigation() {
                         popUpTo(Loading.route) { inclusive = true }
                     }
                 }
+            )
+        }
+
+        composable(route = Notifications.route) {
+            NotificationsScreen(
+                onBack = { navController.popBackStack() }
             )
         }
     }

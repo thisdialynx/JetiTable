@@ -1,4 +1,4 @@
-package lnx.jetitable.screens.home.card
+package lnx.jetitable.screens.home.elements.schedule
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
@@ -19,6 +19,9 @@ import androidx.compose.ui.unit.Dp
 import lnx.jetitable.R
 import lnx.jetitable.api.timetable.data.query.ExamNetworkData
 import lnx.jetitable.misc.DataState
+import lnx.jetitable.ui.icons.google.ContractEdit
+import lnx.jetitable.ui.icons.google.Mood
+import lnx.jetitable.ui.icons.google.Warning
 
 @Composable
 fun ExamScheduleCard(examList: DataState<out List<ExamNetworkData>>) {
@@ -26,7 +29,7 @@ fun ExamScheduleCard(examList: DataState<out List<ExamNetworkData>>) {
 
     ScheduleCard(
         expanded = expanded,
-        icon = lnx.jetitable.ui.icons.google.ContractEdit,
+        icon = ContractEdit,
         title = {
             Text(
                 text = stringResource(id = R.string.exam_schedule),
@@ -54,7 +57,7 @@ fun ExamScheduleCard(examList: DataState<out List<ExamNetworkData>>) {
         when (examList) {
             is DataState.Empty -> {
                 ScheduleStatus(
-                    icon = lnx.jetitable.ui.icons.google.Mood,
+                    icon = Mood,
                     text = R.string.no_exams
                 )
             }
@@ -63,7 +66,7 @@ fun ExamScheduleCard(examList: DataState<out List<ExamNetworkData>>) {
             }
             is DataState.Error -> {
                 ScheduleStatus(
-                    icon = lnx.jetitable.ui.icons.google.Warning,
+                    icon = Warning,
                     text = examList.messageResId
                 )
             }

@@ -1,4 +1,4 @@
-package lnx.jetitable.screens.settings
+package lnx.jetitable.screens.settings.cards
 
 import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.animateContentSize
@@ -23,6 +23,8 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import lnx.jetitable.R
+import lnx.jetitable.ui.icons.Snu
+import lnx.jetitable.ui.icons.google.Logout
 import lnx.jetitable.viewmodel.UserDataUiState
 
 @Composable
@@ -37,7 +39,7 @@ fun AccountCard(
                 "${stringResource(id = R.string.status)}: ${userDataUiState.status}. ${userDataUiState.academicYears}. " +
                 "${stringResource(id = userDataUiState.semesterResId)}. ${stringResource(id = userDataUiState.formOfEducationResId)}."
     } ?: ""
-    val icon = lnx.jetitable.ui.icons.Snu
+    val icon = Snu
 
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -93,7 +95,7 @@ fun AccountCard(
                         }
                     ) {
                         Icon(
-                            imageVector = lnx.jetitable.ui.icons.google.Logout,
+                            imageVector = Logout,
                             contentDescription = stringResource(id = R.string.sign_out),
                             tint = MaterialTheme.colorScheme.onSecondaryContainer
                         )

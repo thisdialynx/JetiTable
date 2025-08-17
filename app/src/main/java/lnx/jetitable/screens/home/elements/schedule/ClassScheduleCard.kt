@@ -1,4 +1,4 @@
-package lnx.jetitable.screens.home.card
+package lnx.jetitable.screens.home.elements.schedule
 
 import android.icu.util.Calendar
 import androidx.compose.foundation.layout.padding
@@ -17,10 +17,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import lnx.jetitable.R
+import lnx.jetitable.misc.ConnectionState
 import lnx.jetitable.misc.DataState
-import lnx.jetitable.misc.DateState
-import lnx.jetitable.screens.home.DatePickerView
+import lnx.jetitable.screens.home.elements.datepicker.DateState
+import lnx.jetitable.screens.home.elements.datepicker.DatePickerView
 import lnx.jetitable.screens.home.data.ClassUiData
+import lnx.jetitable.ui.icons.google.CalendarMonth
+import lnx.jetitable.ui.icons.google.Mood
+import lnx.jetitable.ui.icons.google.Warning
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,29 +34,35 @@ fun ClassScheduleCard(
     onPresenceVerify: (ClassUiData) -> Unit,
     onDateUpdate: (Calendar) -> Unit,
     onBackwardDateShift: () -> Unit,
-    onForwardDateShift: () -> Unit
+    onForwardDateShift: () -> Unit,
+    connectionState: ConnectionState
 ) {
     ScheduleCard(
-        icon = lnx.jetitable.ui.icons.google.CalendarMonth,
+        icon = CalendarMonth,
         title = {
             DatePickerView(
                 datePickerState = dateState.datePickerState,
                 formattedDate = dateState.formattedDate,
-                onDateSelected = onDateUpdate
+                onDateSelected = onDateUpdate,
+                connectionState = connectionState
             )
         },
         additionalTitleContent = {
             CompositionLocalProvider(value = LocalMinimumInteractiveComponentSize provides Dp.Unspecified) {
                 IconButton(
                     onClick = onBackwardDateShift,
-                    modifier = Modifier.padding(end = 4.dp)
+                    modifier = Modifier.padding(end = 4.dp),
+                    enabled = connectionState == ConnectionState.Available
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowLeft,
                         contentDescription = null
                     )
                 }
-                IconButton(onClick = onForwardDateShift) {
+                IconButton(
+                    onClick = onForwardDateShift,
+                    enabled = connectionState == ConnectionState.Available
+                ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowRight,
                         contentDescription = null
@@ -64,7 +74,7 @@ fun ClassScheduleCard(
         when (classList) {
             is DataState.Empty -> {
                 ScheduleStatus(
-                    icon = lnx.jetitable.ui.icons.google.Mood,
+                    icon = Mood,
                     text = R.string.no_classes
                 )
             }
@@ -102,7 +112,7 @@ fun ClassScheduleCard(
             }
             is DataState.Error -> {
                 ScheduleStatus(
-                    icon = lnx.jetitable.ui.icons.google.Warning,
+                    icon = Warning,
                     text = classList.messageResId
                 )
             }

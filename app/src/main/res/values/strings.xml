@@ -61,4 +61,26 @@
     <string name="current_version">Current version:</string>
     <string name="latest_version">Latest version:</string>
     <string name="fetching_updates">Fetching updates…</string>
+    <string name="meeting_url_label">Meeting url</string>
+    <string name="notifications_settings_entry_title">Notifications</string>
+    <string name="notifications_settings_entry_description">Exam and class reminders</string>
+    <string name="class_reminders_channel_description">Class notifications</string>
+    <string name="exam_reminders_channel_description">Exam notifications</string>
+    <string name="exam_reminders_channel">Exam reminders</string>
+    <string name="class_reminders_channel">Class reminders</string>
+    <string name="class_notification_title">Upcoming class</string>
+    <string name="exam_notification_title">Upcoming exam</string>
+    <string name="reminder_notification_description_minutes">%1$s starts in %2$s min.</string>
+    <string name="class_notification_description">The %1$s class just started!</string>
+    <string name="exam_notification_description">The %1$s exam just started!</string>
+    <string name="permissions_required_title_dialog">Permissions required!</string>
+    <string name="permissions_required_text_dialog">In order to receive notifications, you need to grant the following permissions:</string>
+    <string name="enable_notifications">Enable notifications</string>
+    <string name="grant_button_title">Grant</string>
+    <string name="notifications_screen_description">Notifications can help you increase your traffic and ensure you don\'t miss anything important.</string>
+    <string name="granted_button_title">Granted</string>
+    <string name="post_notifications_permission_dialog">Post notifications</string>
+    <string name="alarms_and_reminders_permission_dialog">Alarms and reminders</string>
+    <string name="activity_type_classes">Classes</string>
+    <string name="activity_type_exams">Exams</string>
 </resources>

@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.compose.compiler)
+    kotlin("plugin.serialization")
 }
 
 android {
@@ -56,6 +57,8 @@ android {
 }
 
 dependencies {
+    implementation(libs.accompanist.permissions)
+    implementation(libs.kotlinx.serialization.json)
     implementation(libs.coil3.coil.compose)
     implementation(libs.coil.network.okhttp)
     implementation(libs.androidx.work.runtime.ktx)

@@ -44,7 +44,7 @@ enum class ContributorItem(
 @Composable
 fun AuthScreen(onAuthComplete: () -> Unit) {
     val viewModel = viewModel<AuthViewModel>()
-    val connectivityState by viewModel.connectivityState.collectAsStateWithLifecycle()
+    val connectionState by viewModel.connectivityState.collectAsStateWithLifecycle()
 
     AuthUI(
         onAuthComplete = { onAuthComplete() },

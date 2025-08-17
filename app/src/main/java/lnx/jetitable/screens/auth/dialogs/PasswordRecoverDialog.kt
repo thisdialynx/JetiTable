@@ -1,4 +1,4 @@
-package lnx.jetitable.screens.auth
+package lnx.jetitable.screens.auth.dialogs
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,6 +17,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import lnx.jetitable.R
+import lnx.jetitable.ui.icons.google.Mail
+import lnx.jetitable.ui.icons.google.Password
 
 @Composable
 fun PasswordRecoverDialog(
@@ -58,7 +60,7 @@ fun PasswordRecoverDialog(
                         placeholder = { Text(text = "example@snu.edu.ua") },
                         singleLine = true,
                         leadingIcon = {
-                            Icon(imageVector = lnx.jetitable.ui.icons.google.Mail, contentDescription = null)
+                            Icon(imageVector = Mail, contentDescription = null)
                         }
                     )
                 }
@@ -66,7 +68,7 @@ fun PasswordRecoverDialog(
             dismissButton = {
                 TextButton(onClick = { isOpen.value = false }) { Text(text = stringResource(id = R.string.dismiss)) }
             },
-            icon = { Icon(imageVector = lnx.jetitable.ui.icons.google.Password, contentDescription = null) }
+            icon = { Icon(imageVector = Password, contentDescription = null) }
         )
     }
 }

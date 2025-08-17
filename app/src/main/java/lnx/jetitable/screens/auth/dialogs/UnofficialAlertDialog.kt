@@ -1,4 +1,4 @@
-package lnx.jetitable.screens.auth
+package lnx.jetitable.screens.auth.dialogs
 
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Box
@@ -14,6 +14,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.stringResource
 import lnx.jetitable.R
+import lnx.jetitable.ui.icons.google.Warning
 
 @Composable
 fun UnofficialAlertDialog(isOpen: MutableState<Boolean>) {
@@ -45,7 +46,7 @@ fun UnofficialAlertDialog(isOpen: MutableState<Boolean>) {
             },
             icon = {
                 Icon(
-                    imageVector = lnx.jetitable.ui.icons.google.Warning,
+                    imageVector = Warning,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.onErrorContainer
                 )

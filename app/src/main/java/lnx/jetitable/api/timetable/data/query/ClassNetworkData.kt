@@ -1,5 +1,8 @@
 package lnx.jetitable.api.timetable.data.query
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class ClassNetworkData(
     val id: String,
     val group: String,

@@ -16,8 +16,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.ContentType
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentType
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -37,9 +40,8 @@ fun SignInFields(
 
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
             value = email,
-            onValueChange = { onEmailUpdate(it) },
+            onValueChange = onEmailUpdate,
             label = {
                 Text(
                     text = stringResource(id = R.string.corporate_email_label),
@@ -52,7 +54,10 @@ fun SignInFields(
             ),
             placeholder = { Text(text = "example@snu.edu.ua") },
             singleLine = true,
-            leadingIcon = { Icon(imageVector = lnx.jetitable.ui.icons.google.Mail, contentDescription = "Mail icon") }
+            leadingIcon = { Icon(imageVector = lnx.jetitable.ui.icons.google.Mail, contentDescription = "Mail icon") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .semantics { contentType = ContentType.Username }
         )
         Text(
             text = stringResource(id = R.string.corporate_email_description),
@@ -60,9 +65,8 @@ fun SignInFields(
         )
 
         OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
             value = password,
-            onValueChange = { onPasswordUpdate(it) },
+            onValueChange = onPasswordUpdate,
             label = {
                 Text(
                     text = stringResource(id = R.string.password_label),
@@ -91,7 +95,10 @@ fun SignInFields(
                         contentDescription = stringResource(id = visibilityIcon.second)
                     )
                 }
-            }
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .semantics { contentType = ContentType.Password }
         )
     }
 }

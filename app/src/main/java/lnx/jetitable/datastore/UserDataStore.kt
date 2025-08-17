@@ -17,7 +17,7 @@ private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(na
 
 class UserDataStore (private val context: Context) {
 
-    suspend fun saveUserData(response: AccessResponse) {
+    suspend fun saveApiUserData(response: AccessResponse) {
         context.dataStore.edit {
             it[FULL_NAME] = response.user.fullName
             it[FULL_NAME_ID] = response.user.fullNameId
@@ -31,7 +31,7 @@ class UserDataStore (private val context: Context) {
         }
     }
 
-    fun getUserData(): Flow<User> {
+    fun getApiUserData(): Flow<User> {
         return context.dataStore.data.map {
             User(
                 fullName = it[FULL_NAME] ?: "",
@@ -47,7 +47,7 @@ class UserDataStore (private val context: Context) {
         }
     }
 
-    suspend fun clearDataStore() = context.dataStore.edit { it.clear() }
+    suspend fun clearAll() = context.dataStore.edit { it.clear() }
 
     companion object {
         val FULL_NAME = stringPreferencesKey("FULL_NAME")
