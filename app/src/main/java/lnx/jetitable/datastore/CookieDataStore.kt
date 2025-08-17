@@ -12,7 +12,7 @@ import okhttp3.Cookie
 import okhttp3.CookieJar
 import okhttp3.HttpUrl
 
-private val Context.dataStore by preferencesDataStore(name = "cookies")
+private val Context.dataStore by preferencesDataStore("cookies")
 
 class CookieDataStore(context: Context) : CookieJar {
     private val dataStore = context.dataStore
@@ -22,16 +22,16 @@ class CookieDataStore(context: Context) : CookieJar {
         val cookieString = cookies.joinToString(";") { it.toString() }
 
         runBlocking {
-            dataStore.edit { preferences ->
-                preferences[key] = cookieString
+            dataStore.edit {
+                it[key] = cookieString
             }
         }
     }
 
     override fun loadForRequest(url: HttpUrl): List<Cookie> {
         val key = stringPreferencesKey(url.toString())
-        val cookies: Flow<String?> = dataStore.data.map { preferences ->
-            preferences[key]
+        val cookies: Flow<String?> = dataStore.data.map {
+            it[key]
         }
 
         val cookieString = runBlocking {
@@ -40,10 +40,11 @@ class CookieDataStore(context: Context) : CookieJar {
 
         return cookieString?.split(";")?.mapNotNull { Cookie.parse(url, it) } ?: emptyList()
     }
+
     fun clearCookies() {
         runBlocking {
-            dataStore.edit { preferences ->
-                preferences.clear()
+            dataStore.edit {
+                it.clear()
             }
         }
     }

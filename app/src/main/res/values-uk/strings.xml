@@ -59,4 +59,26 @@
     <string name="current_version">Поточна версія:</string>
     <string name="latest_version">Остання версія:</string>
     <string name="fetching_updates">Перевірка оновлень…</string>
+    <string name="meeting_url_label">Посилання на конференцію</string>
+    <string name="notifications_settings_entry_title">Повідомлення</string>
+    <string name="notifications_settings_entry_description">Нагадування про іспити та заняття</string>
+    <string name="class_reminders_channel_description">Повідомлення про іспити</string>
+    <string name="exam_reminders_channel_description">Повідомлення про заняття</string>
+    <string name="exam_reminders_channel">Нагадування про іспити</string>
+    <string name="class_reminders_channel">Нагадування про заняття</string>
+    <string name="class_notification_title">Майбутнє заняття</string>
+    <string name="exam_notification_title">Майбутній іспит</string>
+    <string name="reminder_notification_description_minutes">%1$s розпочнеться через %2$s хв.</string>
+    <string name="class_notification_description">Заняття з %1$s вже почалось!</string>
+    <string name="exam_notification_description">Іспит з %1$s вже почався!</string>
+    <string name="permissions_required_title_dialog">Потрібні дозволи!</string>
+    <string name="permissions_required_text_dialog">Щоб отримувати сповіщення, вам потрібно надати наступні дозволи:</string>
+    <string name="enable_notifications">Увімкнути сповіщення</string>
+    <string name="grant_button_title">Надати</string>
+    <string name="notifications_screen_description">Повідомлення можуть допомогти вам збільшити відвідуваність і не пропустити важливе.</string>
+    <string name="granted_button_title">Надано</string>
+    <string name="post_notifications_permission_dialog">Відправлення повідомлень</string>
+    <string name="alarms_and_reminders_permission_dialog">Сповіщення та нагадування</string>
+    <string name="activity_type_classes">Заняття</string>
+    <string name="activity_type_exams">Іспити</string>
 </resources>

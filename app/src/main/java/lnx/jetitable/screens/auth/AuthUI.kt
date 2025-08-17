@@ -22,6 +22,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import lnx.jetitable.R
+import lnx.jetitable.screens.auth.dialogs.PasswordRecoverDialog
+import lnx.jetitable.screens.auth.dialogs.UnofficialAlertDialog
 import lnx.jetitable.viewmodel.AuthState
 
 @Composable

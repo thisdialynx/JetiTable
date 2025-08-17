@@ -1,4 +1,4 @@
-package lnx.jetitable.screens.home.card
+package lnx.jetitable.screens.home.elements.schedule
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize

@@ -12,6 +12,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
@@ -19,43 +22,72 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import lnx.jetitable.R
 import lnx.jetitable.api.timetable.data.query.ExamNetworkData
-import lnx.jetitable.misc.DateState
+import lnx.jetitable.misc.ConnectionState
 import lnx.jetitable.misc.DataState
-import lnx.jetitable.screens.home.card.ClassScheduleCard
-import lnx.jetitable.screens.home.card.ExamScheduleCard
 import lnx.jetitable.screens.home.data.ClassUiData
-import lnx.jetitable.ui.icons.google.Settings
+import lnx.jetitable.screens.home.elements.datepicker.DateState
+import lnx.jetitable.screens.home.elements.schedule.ClassScheduleCard
+import lnx.jetitable.screens.home.elements.schedule.ExamScheduleCard
+import lnx.jetitable.ui.components.AppSnackbar
+import lnx.jetitable.ui.icons.google.Settings as SettingsIcon
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
 fun HomeUI(
     dateState: DateState,
     classList: DataState<out List<ClassUiData>>,
     examList: DataState<out List<ExamNetworkData>>,
+    connectionState: ConnectionState,
     onDateUpdate: (Calendar) -> Unit,
     onForwardDateShift: () -> Unit,
     onBackwardDateShift: () -> Unit,
     onPresenceVerify: (ClassUiData) -> Unit,
-    onSettingsNavigate: () -> Unit
+    onSettingsNavigate: () -> Unit,
+    onNotificationsNavigate: () -> Unit
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     var title by rememberSaveable { mutableIntStateOf(R.string.welcome_title) }
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
+        scope.launch {
+            val result = snackbarHostState
+                .showSnackbar(
+                    message = "Would you like to receive reminders about upcoming events?",
+                    actionLabel = "Yes",
+                    withDismissAction = true
+                )
+            when (result) {
+                SnackbarResult.Dismissed -> {}
+                SnackbarResult.ActionPerformed -> {
+                    onNotificationsNavigate()
+                }
+            }
+        }
         delay(3000)
         title = R.string.home_screen
     }
 
     Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState) {
+                AppSnackbar(it)
+            }
+        },
         topBar = {
             LargeTopAppBar(
                 title = {
@@ -66,7 +98,7 @@ fun HomeUI(
                 actions = {
                     IconButton(onClick = { onSettingsNavigate() }) {
                         Icon(
-                            imageVector = Settings,
+                            imageVector = SettingsIcon,
                             contentDescription = null
                         )
                     }
@@ -93,7 +125,8 @@ fun HomeUI(
                     onPresenceVerify = onPresenceVerify,
                     onDateUpdate = onDateUpdate,
                     onBackwardDateShift = onBackwardDateShift,
-                    onForwardDateShift = onForwardDateShift
+                    onForwardDateShift = onForwardDateShift,
+                    connectionState = connectionState
                 )
             }
             item {

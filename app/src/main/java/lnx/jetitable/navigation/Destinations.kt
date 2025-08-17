@@ -19,3 +19,6 @@ object About: Destinations {
 object Loading: Destinations {
     override val route = "Loading"
 }
+object Notifications: Destinations {
+    override val route = "Notifications"
+}

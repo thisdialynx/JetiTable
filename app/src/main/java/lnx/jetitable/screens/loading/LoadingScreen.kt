@@ -15,14 +15,17 @@ import lnx.jetitable.viewmodel.LoadingViewModel
 
 @Composable
 fun LoadingScreen(onAuthNavigate: () -> Unit, onHomeNavigate: () -> Unit) {
-    val loadingViewModel: LoadingViewModel = viewModel()
-    val isAuthorized = loadingViewModel.isAuthorized
+    val viewModel: LoadingViewModel = viewModel()
+    val isAuthorized = viewModel.isAuthorized
 
     LaunchedEffect(isAuthorized) {
         when(isAuthorized) {
-            true -> { onHomeNavigate() }
+            true -> {
+                viewModel.startSyncService()
+                onHomeNavigate()
+            }
             false -> { onAuthNavigate() }
-            null -> loadingViewModel.checkToken()
+            null -> viewModel.checkToken()
         }
     }
 

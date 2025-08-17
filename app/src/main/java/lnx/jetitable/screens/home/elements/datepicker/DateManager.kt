@@ -1,8 +1,7 @@
-package lnx.jetitable.misc
+package lnx.jetitable.screens.home.elements.datepicker
 
 import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
-import androidx.compose.material3.CalendarLocale
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,7 +29,7 @@ class DateManager {
             datePickerState = DatePickerState(
                 initialSelectedDateMillis = it.timeInMillis,
                 yearRange = currentAcademicYear,
-                locale = CalendarLocale("ROOT")
+                locale = Locale("ROOT")
             )
         )
     }

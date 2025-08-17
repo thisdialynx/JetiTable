@@ -1,4 +1,4 @@
-package lnx.jetitable.screens.settings
+package lnx.jetitable.screens.settings.cards
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,6 +27,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import lnx.jetitable.R
 import lnx.jetitable.misc.DataState
+import lnx.jetitable.ui.icons.google.Check
+import lnx.jetitable.ui.icons.google.Download
+import lnx.jetitable.ui.icons.google.Upgrade
+import lnx.jetitable.ui.icons.google.Warning
 import lnx.jetitable.viewmodel.SettingsViewModel
 
 @Composable
@@ -52,20 +56,20 @@ fun UpdateCard(updateInfo: DataState<out SettingsViewModel.AppUpdateInfo>) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            when (updateInfo) {
+            when (val info = updateInfo) {
                 is DataState.Error -> {
                     Icon(
-                        imageVector = lnx.jetitable.ui.icons.google.Warning,
+                        imageVector = Warning,
                         contentDescription = null
                     )
                     Text(
-                        text = stringResource(R.string.could_not_check_for_updates),
+                        text = stringResource(info.messageResId),
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
                 is DataState.Empty -> {
                     Icon(
-                        imageVector = lnx.jetitable.ui.icons.google.Check,
+                        imageVector = Check,
                         contentDescription = null
                     )
                     Text(
@@ -75,11 +79,11 @@ fun UpdateCard(updateInfo: DataState<out SettingsViewModel.AppUpdateInfo>) {
                 }
                 is DataState.Success -> {
                     Icon(
-                        imageVector = lnx.jetitable.ui.icons.google.Upgrade,
+                        imageVector = Upgrade,
                         contentDescription = null
                     )
                     Text(
-                        text = stringResource(R.string.update_available_card, updateInfo.data.latestVersion),
+                        text = stringResource(R.string.update_available_card, info.data.latestVersion),
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
@@ -148,7 +152,7 @@ fun UpdateDialog(
         },
         icon = {
             Icon(
-                imageVector = lnx.jetitable.ui.icons.google.Download,
+                imageVector = Download,
                 contentDescription = null
             )
         },

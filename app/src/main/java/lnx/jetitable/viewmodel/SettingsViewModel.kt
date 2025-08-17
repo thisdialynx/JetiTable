@@ -13,10 +13,12 @@ import lnx.jetitable.BuildConfig
 import lnx.jetitable.R
 import lnx.jetitable.api.RetrofitHolder
 import lnx.jetitable.datastore.CookieDataStore
+import lnx.jetitable.datastore.AppPreferences
+import lnx.jetitable.datastore.ScheduleDataStore
 import lnx.jetitable.datastore.UserDataStore
 import lnx.jetitable.misc.ConnectionState
 import lnx.jetitable.misc.DataState
-import lnx.jetitable.misc.DateManager
+import lnx.jetitable.screens.home.elements.datepicker.DateManager
 import lnx.jetitable.misc.NetworkConnectivityObserver
 
 data class UserDataUiState(
@@ -33,11 +35,13 @@ class SettingsViewModel(application: Application): AndroidViewModel(application)
         get() = getApplication<Application>().applicationContext
     private val userDataStore = UserDataStore(context)
     private val cookieDataStore = CookieDataStore(context)
+    private val scheduleDataStore = ScheduleDataStore(context)
     private val dateManager = DateManager()
     private val connectivityObserver = NetworkConnectivityObserver(context)
     private val githubService = RetrofitHolder.getGitHubApiInstance()
+    private val appPreferences = AppPreferences(context)
 
-    val userDataUiState = userDataStore.getUserData().map {
+    val userDataUiState = userDataStore.getApiUserData().map {
         val formOfEducation = if (it.isFullTime == 1) R.string.full_time else R.string.part_time
         val semester = if (dateManager.getSemester() == 1) R.string.autumn_semester else R.string.spring_semester
         val academicYears = dateManager.getAcademicYears()
@@ -74,13 +78,7 @@ class SettingsViewModel(application: Application): AndroidViewModel(application)
 
                         if (updateAvailable) {
                             DataState.Success(
-                                AppUpdateInfo(
-                                    currentVersion = currentVersion,
-                                    latestVersion = latestVersion,
-                                    updateAvailable = updateAvailable,
-                                    downloadUrl = downloadUrl,
-                                    releaseNotes = release.body
-                                )
+                                AppUpdateInfo(currentVersion, latestVersion, updateAvailable, downloadUrl, release.body)
                             )
                         } else {
                             DataState.Empty
@@ -100,8 +98,10 @@ class SettingsViewModel(application: Application): AndroidViewModel(application)
 
     fun signOut() {
         viewModelScope.launch {
-            userDataStore.clearDataStore()
+            userDataStore.clearAll()
             cookieDataStore.clearCookies()
+            scheduleDataStore.clearAll()
+            appPreferences.clearAll()
         }
     }
 

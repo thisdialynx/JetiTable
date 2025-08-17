@@ -9,7 +9,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import lnx.jetitable.R
@@ -34,7 +33,6 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     private val service = RetrofitHolder.getTimeTableApiInstance(context)
     val connectivityObserver = NetworkConnectivityObserver(context)
     val connectivityState = connectivityObserver.observe()
-        .map { it }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
@@ -74,10 +72,10 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                     basicAuth,
                     LoginRequest(CHECK_PASSWORD, email, password)
                 )
-                if (response.status == "ok") {
-                    authState = AuthState.Authorized
+                authState = if (response.status == "ok") {
+                    AuthState.Authorized
                 } else {
-                    authState = AuthState.Error(R.string.wrong_credentials)
+                    AuthState.Error(R.string.wrong_credentials)
                 }
 
             } catch (e: Exception) {

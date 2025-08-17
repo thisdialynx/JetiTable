@@ -1,4 +1,4 @@
-package lnx.jetitable.screens.home.card
+package lnx.jetitable.screens.home.elements.schedule
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -22,9 +22,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
+import lnx.jetitable.screens.home.elements.SiteButton
+import lnx.jetitable.ui.icons.GoogleMeet
+import lnx.jetitable.ui.icons.Moodle
+import lnx.jetitable.ui.icons.MsTeams
+import lnx.jetitable.ui.icons.ZoomMeeting
+import lnx.jetitable.ui.icons.google.Link
 
 @Composable
 fun ScheduleRow(
@@ -41,7 +47,7 @@ fun ScheduleRow(
 ) {
     var expanded by remember { mutableStateOf(false) }
     val localUriHandler = LocalUriHandler.current
-    val clipboardManager = LocalClipboardManager.current
+    val clipboardManager = LocalClipboard.current
 
     val topStart = if (elementIndex == 0) 12.dp else 4.dp
     val topEnd = if (elementIndex == 0) 12.dp else 4.dp
@@ -99,7 +105,7 @@ fun ScheduleRow(
                 if (!moodleUrl.isNullOrBlank()) {
                     SiteButton(
                         url = moodleUrl,
-                        icon = lnx.jetitable.ui.icons.Moodle,
+                        icon = Moodle,
                         color = MaterialTheme.colorScheme.tertiary,
                         uriHandler = localUriHandler,
                         clipboardManager = clipboardManager,
@@ -131,9 +137,9 @@ fun ScheduleRow(
 
 fun getMeetingIcon(url: String): ImageVector {
     return when {
-        url.contains("zoom.us") -> lnx.jetitable.ui.icons.ZoomMeeting
-        url.contains("meet.google.com") -> lnx.jetitable.ui.icons.GoogleMeet
-        url.contains("teams.microsoft.com") -> lnx.jetitable.ui.icons.MsTeams
-        else -> lnx.jetitable.ui.icons.google.Link
+        url.contains("zoom.us") -> ZoomMeeting
+        url.contains("meet.google.com") -> GoogleMeet
+        url.contains("teams.microsoft.com") -> MsTeams
+        else -> Link
     }
 }

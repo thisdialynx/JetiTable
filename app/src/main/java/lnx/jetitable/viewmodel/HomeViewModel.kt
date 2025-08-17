@@ -5,7 +5,7 @@ import android.icu.util.Calendar
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -27,17 +26,19 @@ import lnx.jetitable.api.timetable.TimeTableApiService.Companion.EXAM_LIST
 import lnx.jetitable.api.timetable.TimeTableApiService.Companion.STATE
 import lnx.jetitable.api.timetable.data.login.User
 import lnx.jetitable.api.timetable.data.query.ClassListRequest
+import lnx.jetitable.api.timetable.data.query.ClassNetworkData
 import lnx.jetitable.api.timetable.data.query.ExamListRequest
 import lnx.jetitable.api.timetable.data.query.ExamNetworkData
 import lnx.jetitable.api.timetable.data.query.VerifyPresenceRequest
+import lnx.jetitable.datastore.ScheduleDataStore
 import lnx.jetitable.datastore.UserDataStore
-import lnx.jetitable.datastore.user.UserDataWorker
 import lnx.jetitable.misc.ConnectionState
-import lnx.jetitable.misc.DateManager
-import lnx.jetitable.misc.NetworkConnectivityObserver
 import lnx.jetitable.misc.DataState
+import lnx.jetitable.misc.NetworkConnectivityObserver
 import lnx.jetitable.screens.home.data.ClassUiData
-import java.util.concurrent.TimeUnit
+import lnx.jetitable.screens.home.elements.datepicker.DateManager
+import lnx.jetitable.services.data.DataSyncService.Companion.DATA_SYNC_SERVICE_NAME
+import lnx.jetitable.services.data.UserDataWorker
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private val context
@@ -46,8 +47,16 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private val dateManager = DateManager()
     val dateState = dateManager.dateStateFlow
     private val userDataStore = UserDataStore(context)
+    private val scheduleDataStore = ScheduleDataStore(context)
     private val service = RetrofitHolder.getTimeTableApiInstance(context)
 
+    init {
+        val syncRequest = OneTimeWorkRequestBuilder<UserDataWorker>()
+            .addTag(DATA_SYNC_SERVICE_NAME)
+            .build()
+
+        WorkManager.getInstance(context).enqueue(syncRequest)
+    }
     private val currentTime = flow {
         while (true) {
             emit(Calendar.getInstance().timeInMillis)
@@ -57,31 +66,57 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         .flowOn(Dispatchers.IO)
 
     val connectivityState = connectivityObserver.observe()
-        .map { it }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = ConnectionState.Idle
         )
 
-    val userData = userDataStore.getUserData()
-        .map { it }
+    val userData = userDataStore.getApiUserData()
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = User()
         )
 
-    val classesFlow = combine(userData, dateManager.selectedDate, currentTime, connectivityState) { userData, date, time, connectivity ->
+    val classesFlow = combine(
+        userData,
+        dateManager.selectedDate,
+        currentTime,
+        connectivityState
+    ) { userData, date, time, connectivity ->
+        val currentDate = Calendar.getInstance()
+        val formattedTime = dateManager.timeFormat.format(currentDate.time)
+        val formattedDate = dateManager.dateFormat.format(currentDate.time)
+
         when (connectivity) {
-            ConnectionState.Unavailable -> DataState.Error(R.string.no_internet_connection)
+            ConnectionState.Unavailable -> {
+                val storedSchedule = scheduleDataStore.getClassList().first()
+                    .map { it.toUiData(formattedDate, formattedTime) }
+
+                if (storedSchedule.isEmpty())
+                    DataState.Error(R.string.no_internet_connection)
+                else
+                    DataState.Success(storedSchedule)
+            }
             ConnectionState.Available -> {
                 try {
                     val classes = getClasses(userData.group to userData.groupId)
-                    if (classes.isEmpty()) DataState.Empty else DataState.Success(classes)
+                        .map { it.toUiData(formattedDate, formattedTime)}
 
+                    if (classes.isEmpty())
+                        DataState.Empty
+                    else
+                        DataState.Success(classes)
                 } catch (e: Exception) {
-                    DataState.Error(R.string.schedule_load_fail, e)
+                    val storedSchedule = scheduleDataStore.getClassList().first()
+                        .map { it.toUiData(formattedDate, formattedTime) }
+
+                    if (storedSchedule.isNotEmpty()) {
+                        DataState.Success(storedSchedule)
+                    } else {
+                        DataState.Error(R.string.schedule_load_fail, e)
+                    }
                 }
             }
             ConnectionState.Idle -> DataState.Loading
@@ -96,7 +131,10 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     val examsFlow = combine(userData, connectivityState) { userData, connectivity ->
         when (connectivity) {
-            ConnectionState.Unavailable -> DataState.Error(R.string.no_internet_connection)
+            ConnectionState.Unavailable -> {
+                val storedSchedule = scheduleDataStore.getExamList().first()
+                if (storedSchedule.isEmpty()) DataState.Error(R.string.no_internet_connection) else DataState.Success(storedSchedule)
+            }
             ConnectionState.Available -> {
                 try {
                     val exams = getExams(userData.group to userData.groupId)
@@ -116,13 +154,6 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             initialValue = DataState.Loading
         )
 
-    init {
-        viewModelScope.launch {
-            val workRequest = PeriodicWorkRequestBuilder<UserDataWorker>(6, TimeUnit.HOURS).build()
-            WorkManager.getInstance(context).enqueue(workRequest)
-        }
-    }
-
     fun shiftDayForward() {
         dateManager.updateDate(dayShift = 1)
     }
@@ -135,14 +166,10 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         dateManager.updateDate(calendar)
     }
 
-    private suspend fun getClasses(group: Pair<String, String>): List<ClassUiData> {
-        var classList: List<ClassUiData>
+    private suspend fun getClasses(group: Pair<String, String>): List<ClassNetworkData> {
+        var classList: List<ClassNetworkData>
 
         withContext(Dispatchers.IO) {
-            val currentDate = Calendar.getInstance().apply { timeInMillis = currentTime.first() }
-            val formattedTime = dateManager.timeFormat.format(currentDate.time)
-            val formattedDate = dateManager.dateFormat.format(currentDate)
-
             try {
                 classList = service.get_listLessonTodayStudent(
                     ClassListRequest(
@@ -153,29 +180,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                         dateManager.getAcademicYears(),
                         dateManager.getSemester().toString()
                     )
-                ).map {
-                    val isCurrentDate = formattedDate == it.date
-                    val isTimeInRange = formattedTime in it.start..it.end
-                    val isNow = isCurrentDate && isTimeInRange
-
-                    ClassUiData(
-                        id = it.id,
-                        group = it.group,
-                        number = it.number,
-                        educator = it.educator,
-                        name = it.name,
-                        educatorId = it.educatorId,
-                        date = it.date,
-                        start = it.start,
-                        end = it.end,
-                        items = it.items,
-                        meetingLink = it.meetingLink,
-                        moodleLink = it.moodleLink,
-                        type = it.type,
-                        room = it.room,
-                        isNow = isNow
-                    )
-                }
+                )
 
             } catch (e: Exception) {
                 Log.e("Lesson list request", "Error in lesson list retrieval", e)
@@ -183,6 +188,30 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
         return classList
+    }
+
+    private fun ClassNetworkData.toUiData(currentDate: String, currentTime: String): ClassUiData {
+        val isCurrentDate = currentDate == this.date
+        val isTimeInRange = currentTime in this.start..this.end
+        val isNow = isCurrentDate && isTimeInRange
+
+        return ClassUiData(
+            id = id,
+            group = group,
+            number = number,
+            educator = educator,
+            name = name,
+            educatorId = educatorId,
+            date = date,
+            start = start,
+            end = end,
+            items = items,
+            meetingLink = meetingLink,
+            moodleLink = moodleLink,
+            type = type,
+            room = room,
+            isNow = isNow
+        )
     }
 
     private suspend fun getExams(group: Pair<String, String>): List<ExamNetworkData> {
@@ -199,7 +228,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                     )
                 )
             } catch (e: Exception) {
-                Log.e("Session list request", "Error in session list retrieval", e)
+                Log.e("Exam list request", "Error in exam list retrieval", e)
                 examList = emptyList()
             }
         }

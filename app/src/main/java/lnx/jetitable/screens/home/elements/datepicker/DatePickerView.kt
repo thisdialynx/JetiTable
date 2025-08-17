@@ -1,4 +1,4 @@
-package lnx.jetitable.screens.home
+package lnx.jetitable.screens.home.elements.datepicker
 
 import android.icu.util.Calendar
 import androidx.compose.foundation.layout.Row
@@ -30,13 +30,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import lnx.jetitable.R
+import lnx.jetitable.misc.ConnectionState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DatePickerView(
     formattedDate: String,
     datePickerState: DatePickerState,
-    onDateSelected: (Calendar) -> Unit
+    onDateSelected: (Calendar) -> Unit,
+    connectionState: ConnectionState
 ) {
     var showDialog by remember { mutableStateOf(false) }
 
@@ -67,7 +69,8 @@ fun DatePickerView(
         Surface(
             onClick = { showDialog = true },
             shape = RoundedCornerShape(8.dp),
-            color = Color.Transparent
+            color = Color.Transparent,
+            enabled = connectionState == ConnectionState.Available
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
