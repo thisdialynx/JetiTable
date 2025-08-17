@@ -15,7 +15,14 @@ fun NotificationsScreen(onBack: () -> Unit) {
 
     NotificationsUI(
         onBack = onBack,
-        isNotificationsEnabled = notificationPreference,
+        notificationsEnabled = notificationPreference,
+        onNotificationSwitchChange = {
+            if (it) {
+                viewModel.enableNotifications()
+            } else {
+                viewModel.disableNotifications()
+            }
+        },
         onExamSwitchChange = {
             if (it) {
                 viewModel.enableExamNotifications()
@@ -39,7 +46,8 @@ private fun Preview() {
     val fakeState = remember { mutableStateOf(false) }
     NotificationsUI(
         onBack = {},
-        isNotificationsEnabled = fakeState,
+        onNotificationSwitchChange = {},
+        notificationsEnabled = fakeState,
         onExamSwitchChange = {},
         onClassSwitchChange = {}
     )

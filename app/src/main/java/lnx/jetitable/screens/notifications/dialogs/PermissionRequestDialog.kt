@@ -15,7 +15,6 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -32,20 +31,18 @@ import lnx.jetitable.ui.icons.google.Warning
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun PermissionRequestDialog(
-    isDialogOpened: MutableState<Boolean>,
-    isNotificationsEnabled: MutableState<Boolean>,
+    dialogVisibility: Boolean,
+    onDismissRequest: () -> Unit,
     notificationPermissionState: PermissionState,
-    alarmPermissionState: MutableState<Boolean>,
+    alarmPermissionState: Boolean,
     onConfirmButtonPress: () -> Unit,
     onExactAlarmPermissionRequest: () -> Unit
 ) {
     val context = LocalContext.current
 
-    if (isDialogOpened.value) {
+    if (dialogVisibility) {
         AlertDialog(
-            onDismissRequest = {
-                dismissRequest(isDialogOpened, isNotificationsEnabled, alarmPermissionState, notificationPermissionState)
-            },
+            onDismissRequest = onDismissRequest,
             icon = {
                 Icon(
                     imageVector = Warning,
@@ -84,7 +81,7 @@ fun PermissionRequestDialog(
                         )
 
                         DialogPermission(
-                            isPermissionGranted = alarmPermissionState.value,
+                            isPermissionGranted = alarmPermissionState,
                             permissionResId = R.string.alarms_and_reminders_permission_dialog,
                             onClick = onExactAlarmPermissionRequest
                         )
@@ -94,7 +91,7 @@ fun PermissionRequestDialog(
             confirmButton = {
                 Button(
                     onClick = onConfirmButtonPress,
-                    enabled = alarmPermissionState.value && notificationPermissionState.status.isGranted
+                    enabled = alarmPermissionState && notificationPermissionState.status.isGranted
                 ) {
                     Text(
                         text = "OK"
@@ -103,9 +100,7 @@ fun PermissionRequestDialog(
             },
             dismissButton = {
                 OutlinedButton(
-                    onClick = {
-                        dismissRequest(isDialogOpened, isNotificationsEnabled, alarmPermissionState, notificationPermissionState)
-                    },
+                    onClick = onDismissRequest,
                 ) {
                     Text(
                         text = stringResource(id = R.string.dismiss)
@@ -146,15 +141,4 @@ private fun DialogPermission(
         }
     }
 
-}
-
-@OptIn(ExperimentalPermissionsApi::class)
-private fun dismissRequest(
-    isDialogOpened: MutableState<Boolean>,
-    isNotificationsEnabled: MutableState<Boolean>,
-    alarmPermissionState: MutableState<Boolean>,
-    notificationPermissionState: PermissionState
-) {
-    isDialogOpened.value = false
-    isNotificationsEnabled.value = !(!notificationPermissionState.status.isGranted || !alarmPermissionState.value)
 }
