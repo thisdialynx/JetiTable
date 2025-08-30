@@ -47,7 +47,7 @@ class DateManager {
     }
 
     fun getAcademicYears(): String {
-        return if (selectedMonth >= 8) {
+        return if (selectedMonth >= 7) {
             "${selectedYear}/${selectedYear + 1}"
         } else {
             "${selectedYear - 1}/${selectedYear}"
@@ -55,7 +55,7 @@ class DateManager {
     }
 
     fun getSemester(): Int {
-        return if (selectedMonth in 8..12) 1 else 2
+        return if (selectedMonth in 7..11) 1 else 2
     }
 
     fun getFormattedDate(): String {
