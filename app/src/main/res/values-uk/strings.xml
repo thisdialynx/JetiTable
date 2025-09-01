@@ -36,7 +36,7 @@
     <string name="autumn_semester">Осінній семестр</string>
     <string name="support">Підтримка</string>
     <string name="exam_schedule">Розклад сесії</string>
-    <string name="no_exams">Розкладу сесії немає на даний момент</string>
+    <string name="no_exams">Розклад сесії не опубліковано</string>
     <string name="date">Дата: %1$s</string>
     <string name="home_screen">Головний екран</string>
     <string name="settings">Налаштування</string>
@@ -75,10 +75,18 @@
     <string name="permissions_required_text_dialog">Щоб отримувати сповіщення, вам потрібно надати наступні дозволи:</string>
     <string name="enable_notifications">Увімкнути сповіщення</string>
     <string name="grant_button_title">Надати</string>
-    <string name="notifications_screen_description">Повідомлення можуть допомогти вам збільшити відвідуваність і не пропустити важливе.</string>
+    <string name="notifications_screen_description">Повідомлення можуть допомогти вам збільшити відвідуваність і не пропустити важливі події.</string>
     <string name="granted_button_title">Надано</string>
     <string name="post_notifications_permission_dialog">Відправлення повідомлень</string>
     <string name="alarms_and_reminders_permission_dialog">Сповіщення та нагадування</string>
     <string name="activity_type_classes">Заняття</string>
     <string name="activity_type_exams">Іспити</string>
+    <string name="priority_card_title">Пріоритет</string>
+    <string name="time_before_card_title">Час до події</string>
+    <string name="priority_low">Низький</string>
+    <string name="priority_default">За замовченням</string>
+    <string name="priority_high">Високий</string>
+    <string name="before_event_minutes">%1$s хвилин(-а)</string>
+    <string name="notification_tip_description">Хочете отримувати нагадування про майбутні події?</string>
+    <string name="answer_yes">Так</string>
 </resources>

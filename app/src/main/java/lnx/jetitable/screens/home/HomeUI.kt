@@ -23,16 +23,15 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import lnx.jetitable.R
 import lnx.jetitable.api.timetable.data.query.ExamNetworkData
 import lnx.jetitable.misc.ConnectionState
@@ -51,35 +50,42 @@ fun HomeUI(
     classList: DataState<out List<ClassUiData>>,
     examList: DataState<out List<ExamNetworkData>>,
     connectionState: ConnectionState,
+    notificationTipState: Boolean,
     onDateUpdate: (Calendar) -> Unit,
     onForwardDateShift: () -> Unit,
     onBackwardDateShift: () -> Unit,
     onPresenceVerify: (ClassUiData) -> Unit,
     onSettingsNavigate: () -> Unit,
-    onNotificationsNavigate: () -> Unit
+    onNotificationsNavigate: () -> Unit,
+    onSnackbarDismiss: () -> Unit
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     var title by rememberSaveable { mutableIntStateOf(R.string.welcome_title) }
     val snackbarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
-        scope.launch {
+        delay(3000)
+        title = R.string.home_screen
+    }
+
+    LaunchedEffect(notificationTipState) {
+        if (notificationTipState) {
             val result = snackbarHostState
                 .showSnackbar(
-                    message = "Would you like to receive reminders about upcoming events?",
-                    actionLabel = "Yes",
+                    message = context.getString(R.string.notification_tip_description),
+                    actionLabel = context.getString(R.string.answer_yes),
                     withDismissAction = true
                 )
             when (result) {
-                SnackbarResult.Dismissed -> {}
+                SnackbarResult.Dismissed -> {
+                    onSnackbarDismiss()
+                }
                 SnackbarResult.ActionPerformed -> {
                     onNotificationsNavigate()
                 }
             }
         }
-        delay(3000)
-        title = R.string.home_screen
     }
 
     Scaffold(

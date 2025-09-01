@@ -38,7 +38,7 @@
     <string name="support">Support</string>
     <string name="github" translatable="false">GitHub</string>
     <string name="exam_schedule">Exam schedule</string>
-    <string name="no_exams">The exam schedule is not available yet</string>
+    <string name="no_exams">The exam schedule is not published yet</string>
     <string name="date">Date: %1$s</string>
     <string name="home_screen">Home</string>
     <string name="settings">Settings</string>
@@ -77,10 +77,18 @@
     <string name="permissions_required_text_dialog">In order to receive notifications, you need to grant the following permissions:</string>
     <string name="enable_notifications">Enable notifications</string>
     <string name="grant_button_title">Grant</string>
-    <string name="notifications_screen_description">Notifications can help you increase your traffic and ensure you don\'t miss anything important.</string>
+    <string name="notifications_screen_description">Notifications can help you increase your traffic and ensure you don\'t miss anything important. Here you can set the priority and time of notifications before the event starts.</string>
     <string name="granted_button_title">Granted</string>
     <string name="post_notifications_permission_dialog">Post notifications</string>
     <string name="alarms_and_reminders_permission_dialog">Alarms and reminders</string>
     <string name="activity_type_classes">Classes</string>
     <string name="activity_type_exams">Exams</string>
+    <string name="priority_card_title">Priority</string>
+    <string name="time_before_card_title">Time before event</string>
+    <string name="priority_low">Low</string>
+    <string name="priority_default">Default</string>
+    <string name="priority_high">High</string>
+    <string name="before_event_minutes">%1$s minutes</string>
+    <string name="notification_tip_description">Would you like to receive reminders about upcoming events?</string>
+    <string name="answer_yes">Yes</string>
 </resources>

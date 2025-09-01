@@ -18,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import lnx.jetitable.screens.settings.SettingItem
-import lnx.jetitable.ui.icons.google.Info
 
 @Composable
 fun SettingsCard(onDestinationNavigate: (String) -> Unit) {
@@ -53,7 +52,7 @@ fun SettingsCard(onDestinationNavigate: (String) -> Unit) {
                     .fillMaxWidth()
             ) {
                 Icon(
-                    imageVector = Info,
+                    imageVector = item.icon,
                     contentDescription = "${stringResource(id = item.titleResId)}. ${stringResource(id = item.descriptionResId)}",
                     tint = MaterialTheme.colorScheme.primary
                 )

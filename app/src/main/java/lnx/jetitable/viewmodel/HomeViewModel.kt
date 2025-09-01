@@ -30,6 +30,7 @@ import lnx.jetitable.api.timetable.data.query.ClassNetworkData
 import lnx.jetitable.api.timetable.data.query.ExamListRequest
 import lnx.jetitable.api.timetable.data.query.ExamNetworkData
 import lnx.jetitable.api.timetable.data.query.VerifyPresenceRequest
+import lnx.jetitable.datastore.AppPreferences
 import lnx.jetitable.datastore.ScheduleDataStore
 import lnx.jetitable.datastore.UserDataStore
 import lnx.jetitable.misc.ConnectionState
@@ -49,6 +50,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private val userDataStore = UserDataStore(context)
     private val scheduleDataStore = ScheduleDataStore(context)
     private val service = RetrofitHolder.getTimeTableApiInstance(context)
+    private val appPrefs = AppPreferences(context)
 
     init {
         val syncRequest = OneTimeWorkRequestBuilder<UserDataWorker>()
@@ -77,6 +79,13 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = User()
+        )
+
+    val notificationTipState = appPrefs.getNotificationTipPreference()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = false
         )
 
     val classesFlow = combine(
@@ -153,6 +162,12 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = DataState.Loading
         )
+
+    fun disableNotificationTip() {
+        viewModelScope.launch(Dispatchers.IO) {
+            appPrefs.saveNotificationTipPreference(false)
+        }
+    }
 
     fun shiftDayForward() {
         dateManager.updateDate(dayShift = 1)
