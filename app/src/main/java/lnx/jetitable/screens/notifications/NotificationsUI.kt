@@ -1,6 +1,7 @@
 package lnx.jetitable.screens.notifications
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
@@ -53,6 +54,7 @@ import lnx.jetitable.screens.notifications.dialogs.PermissionRequestDialog
 import lnx.jetitable.ui.components.AppSnackbar
 import lnx.jetitable.viewmodel.SchedulePrefs
 
+@SuppressLint("InlinedApi")
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
 fun NotificationsUI(
