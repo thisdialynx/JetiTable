@@ -155,6 +155,9 @@ fun NotificationsUI(
                 alarmPermissionState = alarmPermissionState,
                 onConfirmButtonPress = {
                     isPermissionRequestDialogOpened = !isPermissionRequestDialogOpened
+                    onNotificationSwitchChange(true)
+                    onExamSwitchChange(true)
+                    onClassSwitchChange(true)
                 },
                 onExactAlarmPermissionRequest = {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
