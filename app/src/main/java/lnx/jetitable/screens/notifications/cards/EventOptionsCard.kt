@@ -61,7 +61,7 @@ fun EventOptionsCard(
         10 to stringResource(R.string.before_event_minutes, 10),
         15 to stringResource(R.string.before_event_minutes, 15),
         30 to stringResource(R.string.before_event_minutes, 30),
-        60 to stringResource(R.string.before_event_minutes, 60)
+        45 to stringResource(R.string.before_event_minutes, 45)
     )
 
     Card(
