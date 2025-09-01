@@ -34,7 +34,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,29 +50,29 @@ import com.google.accompanist.permissions.rememberPermissionState
 import lnx.jetitable.R
 import lnx.jetitable.screens.notifications.cards.EventOptionsCard
 import lnx.jetitable.screens.notifications.dialogs.PermissionRequestDialog
-import lnx.jetitable.screens.notifications.dialogs.PriorityPickerDialog
 import lnx.jetitable.ui.components.AppSnackbar
-import lnx.jetitable.ui.icons.google.CalendarMonth
-import lnx.jetitable.ui.icons.google.ContractEdit
+import lnx.jetitable.viewmodel.SchedulePrefs
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
 fun NotificationsUI(
     onBack: () -> Unit,
-    notificationsEnabled: State<Boolean>,
+    notificationsEnabled: Boolean,
+    schedulePrefs: SchedulePrefs,
     onNotificationSwitchChange: (Boolean) -> Unit,
     onClassSwitchChange: (Boolean) -> Unit,
-    onExamSwitchChange: (Boolean) -> Unit
+    onExamSwitchChange: (Boolean) -> Unit,
+    onClassPrioritySelected: (Int) -> Unit,
+    onExamPrioritySelected: (Int) -> Unit,
+    onClassTimeSelected: (Int) -> Unit,
+    onExamTimeSelected: (Int) -> Unit,
 ) {
     val context = LocalContext.current
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     val snackbarHostState = remember { SnackbarHostState() }
-    val isClassPriorityDialogOpened = remember { mutableStateOf(false) }
     var isPermissionRequestDialogOpened by remember { mutableStateOf(false) }
     val notificationPermissionState = rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS)
     var alarmPermissionState by remember { mutableStateOf(false) }
-    var isClassSettingsEnabled by remember { mutableStateOf(false) }
-    var isExamSettingsEnabled by remember { mutableStateOf(false) }
     val alarmPermissionLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult())
             { alarmPermissionState = hasExactAlarmPermission(context) }
@@ -125,7 +124,8 @@ fun NotificationsUI(
                 colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                )
+                ),
+                shape = MaterialTheme.shapes.extraLarge
             ) {
                 Row(
                     modifier = Modifier.padding(16.dp),
@@ -137,7 +137,7 @@ fun NotificationsUI(
                         text = stringResource(id = R.string.enable_notifications)
                     )
                     Switch(
-                        checked = notificationsEnabled.value && alarmPermissionState && notificationPermissionState.status.isGranted,
+                        checked = notificationsEnabled && alarmPermissionState && notificationPermissionState.status.isGranted,
                         onCheckedChange = {
                             if (!alarmPermissionState || !notificationPermissionState.status.isGranted) {
                                 isPermissionRequestDialogOpened = !isPermissionRequestDialogOpened
@@ -154,8 +154,6 @@ fun NotificationsUI(
                 notificationPermissionState = notificationPermissionState,
                 alarmPermissionState = alarmPermissionState,
                 onConfirmButtonPress = {
-                    isClassSettingsEnabled = !isClassSettingsEnabled
-                    isExamSettingsEnabled = !isExamSettingsEnabled
                     isPermissionRequestDialogOpened = !isPermissionRequestDialogOpened
                 },
                 onExactAlarmPermissionRequest = {
@@ -164,18 +162,25 @@ fun NotificationsUI(
                     }
                 }
             )
-            PriorityPickerDialog(isOpen = isClassPriorityDialogOpened)
             EventOptionsCard(
-                icon = CalendarMonth,
                 title = stringResource(R.string.activity_type_classes),
-                enabled = isClassSettingsEnabled,
-                onSwitchChange = onClassSwitchChange,
+                enabled = notificationsEnabled,
+                checked = schedulePrefs.classPrefs.isEnabled,
+                selectedMinutes = schedulePrefs.classPrefs.minutes,
+                selectedPriority = schedulePrefs.classPrefs.priority,
+                onCheckedChange = onClassSwitchChange,
+                onPrioritySelected = onClassPrioritySelected,
+                onTimeSelected = onClassTimeSelected
             )
             EventOptionsCard(
-                icon = ContractEdit,
-                title = stringResource(id = R.string.activity_type_exams),
-                enabled = isExamSettingsEnabled,
-                onSwitchChange = onExamSwitchChange,
+                title = stringResource(R.string.activity_type_exams),
+                enabled = notificationsEnabled,
+                checked = schedulePrefs.examPrefs.isEnabled,
+                selectedMinutes = schedulePrefs.examPrefs.minutes,
+                selectedPriority = schedulePrefs.examPrefs.priority,
+                onCheckedChange = onExamSwitchChange,
+                onPrioritySelected = onExamPrioritySelected,
+                onTimeSelected = onExamTimeSelected
             )
         }
     }

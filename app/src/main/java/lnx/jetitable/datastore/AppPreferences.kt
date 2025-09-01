@@ -22,18 +22,18 @@ class AppPreferences(private val context: Context) {
     }
 
     fun getNotificationPreference(): Flow<Boolean> = context.dataStore.data
-        .map { it[IS_NOTIFICATIONS_ENABLED] ?: false }
+        .map { it[IS_NOTIFICATIONS_ENABLED] == true }
 
     suspend fun saveClassPreferences(
         minutes: Int? = null,
-        importance: Int? = null,
+        priority: Int? = null,
         isEnabled: Boolean? = null
     ) {
         context.dataStore.edit { dataStore ->
             minutes?.let {
                 dataStore[CLASS_REMINDER_MINUTES] = it
             }
-            importance?.let {
+            priority?.let {
                 dataStore[CLASS_NOTIFICATION_IMPORTANCE] = it
             }
             isEnabled?.let {
@@ -46,20 +46,20 @@ class AppPreferences(private val context: Context) {
         .map { data ->
         val minutes = data[CLASS_REMINDER_MINUTES] ?: 15
         val importance = data[CLASS_NOTIFICATION_IMPORTANCE] ?: NotificationManager.IMPORTANCE_DEFAULT
-        val isEnabled = data[IS_EXAM_REMINDER_ENABLED] == true
+        val isEnabled = data[IS_CLASS_REMINDER_ENABLED] == true
         ReminderPrefs(minutes, importance, isEnabled)
     }
 
     suspend fun saveExamPreferences(
         minutes: Int? = null,
-        importance: Int? = null,
+        priority: Int? = null,
         isEnabled: Boolean? = null
     ) {
         context.dataStore.edit { dataStore ->
             minutes?.let {
                 dataStore[EXAM_REMINDER_MINUTES] = it
             }
-            importance?.let {
+            priority?.let {
                 dataStore[EXAM_NOTIFICATION_IMPORTANCE] = it
             }
             isEnabled?.let {
@@ -76,6 +76,13 @@ class AppPreferences(private val context: Context) {
         ReminderPrefs(minutes, importance, isEnabled)
     }
 
+    suspend fun saveNotificationTipPreference(value: Boolean) = context.dataStore.edit {
+        it[SHOW_NOTIFICATION_TIP] = value
+    }
+
+    fun getNotificationTipPreference(): Flow<Boolean> = context.dataStore.data
+        .map { it[SHOW_NOTIFICATION_TIP] ?: true}
+
     suspend fun clearAll() {
         context.dataStore.edit {
             it.clear()
@@ -83,9 +90,9 @@ class AppPreferences(private val context: Context) {
     }
 
     data class ReminderPrefs(
-        val minutes: Int,
-        val importance: Int,
-        val isEnabled: Boolean
+        val minutes: Int = 15,
+        val priority: Int = NotificationManager.IMPORTANCE_DEFAULT,
+        val isEnabled: Boolean = false
     )
 
     companion object {
@@ -93,9 +100,9 @@ class AppPreferences(private val context: Context) {
         val CLASS_NOTIFICATION_IMPORTANCE = intPreferencesKey("CLASS_NOTIFICATION_IMPORTANCE")
         val EXAM_REMINDER_MINUTES = intPreferencesKey("EXAM_REMINDER_MINUTES")
         val EXAM_NOTIFICATION_IMPORTANCE = intPreferencesKey("EXAM_NOTIFICATION_IMPORTANCE")
-        val IS_CLASS_REMINDER_ENABLED = booleanPreferencesKey("IS_EXAM_REMINDER_ENABLED")
+        val IS_CLASS_REMINDER_ENABLED = booleanPreferencesKey("IS_CLASS_REMINDER_ENABLED")
         val IS_EXAM_REMINDER_ENABLED = booleanPreferencesKey("IS_EXAM_REMINDER_ENABLED")
-
         val IS_NOTIFICATIONS_ENABLED = booleanPreferencesKey("IS_NOTIFICATIONS_ENABLED")
+        val SHOW_NOTIFICATION_TIP = booleanPreferencesKey("SHOW_NOTIFICATION_TIP")
     }
 }

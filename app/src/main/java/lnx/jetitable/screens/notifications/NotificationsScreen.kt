@@ -1,17 +1,18 @@
 package lnx.jetitable.screens.notifications
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import lnx.jetitable.viewmodel.NotifViewModel
+import lnx.jetitable.viewmodel.SchedulePrefs
 
 @Composable
 fun NotificationsScreen(onBack: () -> Unit) {
     val viewModel = viewModel<NotifViewModel>()
-    val notificationPreference = viewModel.notificationPreference.collectAsStateWithLifecycle(false)
+    val notificationPreference by viewModel.notificationPreference.collectAsStateWithLifecycle(false)
+    val schedulePrefs by viewModel.schedulePrefs.collectAsStateWithLifecycle(SchedulePrefs())
 
     NotificationsUI(
         onBack = onBack,
@@ -23,6 +24,7 @@ fun NotificationsScreen(onBack: () -> Unit) {
                 viewModel.disableNotifications()
             }
         },
+        schedulePrefs = schedulePrefs,
         onExamSwitchChange = {
             if (it) {
                 viewModel.enableExamNotifications()
@@ -36,6 +38,18 @@ fun NotificationsScreen(onBack: () -> Unit) {
             } else {
                 viewModel.disableClassNotifications()
             }
+        },
+        onExamPrioritySelected = {
+            viewModel.updateExamPreferences(priority = it)
+        },
+        onClassPrioritySelected = {
+            viewModel.updateClassPreferences(priority = it)
+        },
+        onExamTimeSelected = {
+            viewModel.updateExamPreferences(minutes = it)
+        },
+        onClassTimeSelected = {
+            viewModel.updateClassPreferences(minutes = it)
         }
     )
 }
@@ -43,12 +57,16 @@ fun NotificationsScreen(onBack: () -> Unit) {
 @Preview
 @Composable
 private fun Preview() {
-    val fakeState = remember { mutableStateOf(false) }
     NotificationsUI(
         onBack = {},
+        notificationsEnabled = false,
         onNotificationSwitchChange = {},
-        notificationsEnabled = fakeState,
+        schedulePrefs = SchedulePrefs(),
         onExamSwitchChange = {},
-        onClassSwitchChange = {}
+        onClassSwitchChange = {},
+        onExamPrioritySelected = {},
+        onClassPrioritySelected = {},
+        onClassTimeSelected = {},
+        onExamTimeSelected = {},
     )
 }

@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
-import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -34,7 +33,7 @@ enum class SettingItem(
     val icon: ImageVector,
     val destination: String
 ) {
-    NOTIFICATIONS(R.string.notifications_settings_entry_title, R.string.notifications_settings_entry_description, Icons.Outlined.Notifications, Notifications.route),
+    NOTIFICATIONS(R.string.notifications_settings_entry_title, R.string.notifications_settings_entry_description, lnx.jetitable.ui.icons.google.Notifications, Notifications.route),
     ABOUT(R.string.about_screen_title, R.string.about_screen_description, lnx.jetitable.ui.icons.google.Info, About.route)
 }
 
@@ -72,7 +71,7 @@ fun SettingsUI(
             item {
                 AccountCard(
                     userDataUiState = userDataUiState,
-                    onSignOut = { onSignOut() }
+                    onSignOut = onSignOut
                 )
             }
             item {

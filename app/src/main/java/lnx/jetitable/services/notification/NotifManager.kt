@@ -38,7 +38,7 @@ class NotifManager(private val context: Context) {
             val classPrefs = appPrefs.getClassPreferences().first()
             val examPrefs = appPrefs.getExamPreferences().first()
 
-            createNotificationChannels(classPrefs.importance, examPrefs.importance)
+            createNotificationChannels(classPrefs.priority, examPrefs.priority)
         }
     }
 
@@ -109,24 +109,21 @@ class NotifManager(private val context: Context) {
         }
     }
 
-    fun createNotificationChannels(
-        classImportance: Int = NotificationManager.IMPORTANCE_DEFAULT,
-        examImportance: Int = NotificationManager.IMPORTANCE_HIGH
-    ) {
+    fun createNotificationChannels(classPriority: Int, examPriority: Int) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val classChannel = NotificationChannel(
                 CHANNEL_CLASS_REMINDER,
                 context.getString(R.string.class_reminders_channel),
-                classImportance
+                classPriority
             ).apply { description = context.getString(R.string.class_reminders_channel_description) }
             val examChannel = NotificationChannel(
                 CHANNEL_EXAM_REMINDER,
                 context.getString(R.string.exam_reminders_channel),
-                examImportance
+                examPriority
             ).apply { description = context.getString(R.string.exam_reminders_channel_description) }
 
             notificationManager.createNotificationChannels(
-                listOf<NotificationChannel>(classChannel, examChannel)
+                listOf(classChannel, examChannel)
             )
         }
     }

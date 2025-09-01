@@ -36,7 +36,7 @@
     <string name="autumn_semester">Осенний семестр</string>
     <string name="support">Поддержка</string>
     <string name="exam_schedule">Расписание сессии</string>
-    <string name="no_exams">Расписание сессии недоступно на данный момент</string>
+    <string name="no_exams">Расписание сессии не опубликовано</string>
     <string name="date">Дата: %1$s</string>
     <string name="home_screen">Главный экран</string>
     <string name="settings">Настройки</string>
@@ -75,10 +75,18 @@
     <string name="permissions_required_text_dialog">Чтобы получать уведомления, вам необходимо предоставить следующие разрешения:</string>
     <string name="enable_notifications">Включить уведомления</string>
     <string name="grant_button_title">Предоставить</string>
-    <string name="notifications_screen_description">Уведомления могут помочь вам увеличить посещаемость и не пропустить важное.</string>
+    <string name="notifications_screen_description">Уведомления могут помочь вам увеличить посещаемость и не пропустить важные события.</string>
     <string name="granted_button_title">Предоставлено</string>
     <string name="post_notifications_permission_dialog">Отправка увдомлений</string>
     <string name="alarms_and_reminders_permission_dialog">Оповещения и напоминания</string>
     <string name="activity_type_classes">Занятия</string>
     <string name="activity_type_exams">Экзамены</string>
+    <string name="priority_card_title">Приоритет</string>
+    <string name="time_before_card_title">Время до события</string>
+    <string name="priority_low">Низкий</string>
+    <string name="priority_default">По умолчанию</string>
+    <string name="priority_high">Высокий</string>
+    <string name="before_event_minutes">%1$s минут(-а)</string>
+    <string name="notification_tip_description">"Хотите получать напоминания о предстоящих событиях? "</string>
+    <string name="answer_yes">Да</string>
 </resources>

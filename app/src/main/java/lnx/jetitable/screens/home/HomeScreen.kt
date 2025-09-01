@@ -25,15 +25,22 @@ fun HomeScreen(
     val connectionState by viewModel.connectivityState.collectAsStateWithLifecycle()
     val classList by viewModel.classesFlow.collectAsStateWithLifecycle()
     val examList by viewModel.examsFlow.collectAsStateWithLifecycle()
+    val notificationTipState by viewModel.notificationTipState.collectAsStateWithLifecycle()
 
     HomeUI(
-        dateState, classList, examList, connectionState,
+        dateState, classList, examList, connectionState, notificationTipState,
         onDateUpdate = { viewModel.updateDate(it) },
         onForwardDateShift = { viewModel.shiftDayForward() },
         onBackwardDateShift = { viewModel.shiftDayBackward() },
         onPresenceVerify = { viewModel.verifyPresence(it) },
         onSettingsNavigate = onSettingsNavigate,
-        onNotificationsNavigate = onNotificationsNavigate
+        onNotificationsNavigate = {
+            onNotificationsNavigate()
+            viewModel.disableNotificationTip()
+        },
+        onSnackbarDismiss = {
+            viewModel.disableNotificationTip()
+        }
     )
 }
 
@@ -159,7 +166,9 @@ private fun HomeScreenPreview() {
         onBackwardDateShift = {},
         onPresenceVerify = {},
         onSettingsNavigate = {},
-        onNotificationsNavigate = {}
+        onNotificationsNavigate = {},
+        notificationTipState = true,
+        onSnackbarDismiss = {}
     )
 }
 
@@ -179,6 +188,8 @@ private fun EmptyHomeScreenPreview() {
         onBackwardDateShift = {},
         onPresenceVerify = {},
         onSettingsNavigate = {},
-        onNotificationsNavigate = {}
+        onNotificationsNavigate = {},
+        notificationTipState = false,
+        onSnackbarDismiss = {}
     )
 }
