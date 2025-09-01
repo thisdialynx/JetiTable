@@ -29,7 +29,7 @@ class DateManager {
             datePickerState = DatePickerState(
                 initialSelectedDateMillis = it.timeInMillis,
                 yearRange = currentAcademicYear,
-                locale = Locale("ROOT")
+                locale = Locale.ROOT
             )
         )
     }
