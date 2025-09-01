@@ -14,9 +14,9 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -58,7 +58,7 @@ fun DatePickerView(
                 ) { Text(text = "OK") }
             },
             dismissButton = {
-                TextButton(onClick = { showDialog = false }) {
+                OutlinedButton(onClick = { showDialog = false }) {
                     Text(text = stringResource(id = R.string.dismiss))
                 }
             }
