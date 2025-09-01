@@ -7,12 +7,12 @@ plugins {
 
 android {
     namespace = "lnx.jetitable"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "lnx.jetitable"
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 22
         versionName = "0.1.8"
 
@@ -35,8 +35,8 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = "17"
+    kotlin {
+        jvmToolchain(17)
     }
     buildFeatures {
         compose = true
