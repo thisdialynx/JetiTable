@@ -5,6 +5,7 @@ Some highlight features:
 - Sign in/Sign out
 - Password recover
 - Class (including presence verification) and exam schedule
+- Event reminders
 
 ### Screenshots
 <img src="docs/images/auth_screen.png" width=25% height=25%> <img src="docs/images/home_screen.png" width=25% height=25%> <img src="docs/images/settings_screen.png" width=25% height=25%> <img src="docs/images/about_screen.png" width=25% height=25%>
