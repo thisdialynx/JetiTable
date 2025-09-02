@@ -1,8 +1,8 @@
 package lnx.jetitable.screens.home.elements.schedule
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
-import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalMinimumInteractiveComponentSize
@@ -14,6 +14,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import lnx.jetitable.R
@@ -26,6 +28,9 @@ import lnx.jetitable.ui.icons.google.Warning
 @Composable
 fun ExamScheduleCard(examList: DataState<out List<ExamNetworkData>>) {
     var expanded by remember { mutableStateOf(false) }
+    val arrowRotation by animateFloatAsState(
+        targetValue = if (expanded) 180f else 0f
+    )
 
     ScheduleCard(
         expanded = expanded,
@@ -39,17 +44,11 @@ fun ExamScheduleCard(examList: DataState<out List<ExamNetworkData>>) {
         additionalTitleContent = {
             CompositionLocalProvider(value = LocalMinimumInteractiveComponentSize provides Dp.Unspecified) {
                 IconButton(onClick = { expanded = !expanded }) {
-                    if (expanded) {
-                        Icon(
-                            imageVector = Icons.Rounded.KeyboardArrowUp,
-                            contentDescription = null
-                        )
-                    } else {
-                        Icon(
-                            imageVector = Icons.Rounded.KeyboardArrowDown,
-                            contentDescription = null
-                        )
-                    }
+                    Icon(
+                        imageVector = Icons.Rounded.KeyboardArrowDown,
+                        contentDescription = null,
+                        modifier = Modifier.rotate(arrowRotation)
+                    )
                 }
             }
         }
