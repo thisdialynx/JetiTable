@@ -59,13 +59,11 @@ import lnx.jetitable.viewmodel.SchedulePrefs
 @Composable
 fun NotificationsUI(
     onBack: () -> Unit,
-    notificationsEnabled: Boolean,
+    notificationsEnabled: Boolean?,
     schedulePrefs: SchedulePrefs,
     onNotificationSwitchChange: (Boolean) -> Unit,
     onClassSwitchChange: (Boolean) -> Unit,
     onExamSwitchChange: (Boolean) -> Unit,
-    onClassPrioritySelected: (Int) -> Unit,
-    onExamPrioritySelected: (Int) -> Unit,
     onClassTimeSelected: (Int) -> Unit,
     onExamTimeSelected: (Int) -> Unit,
 ) {
@@ -81,6 +79,15 @@ fun NotificationsUI(
 
     LaunchedEffect(Unit) {
         alarmPermissionState = hasExactAlarmPermission(context)
+    }
+
+    LaunchedEffect(notificationsEnabled) {
+        notificationsEnabled?.let {
+            if (!it) {
+                onExamSwitchChange(false)
+                onClassSwitchChange(false)
+            }
+        }
     }
 
     Scaffold(
@@ -139,7 +146,7 @@ fun NotificationsUI(
                         text = stringResource(id = R.string.enable_notifications)
                     )
                     Switch(
-                        checked = notificationsEnabled && alarmPermissionState && notificationPermissionState.status.isGranted,
+                        checked = notificationsEnabled == true && alarmPermissionState && notificationPermissionState.status.isGranted,
                         onCheckedChange = {
                             if (!alarmPermissionState || !notificationPermissionState.status.isGranted) {
                                 isPermissionRequestDialogOpened = !isPermissionRequestDialogOpened
@@ -169,22 +176,18 @@ fun NotificationsUI(
             )
             EventOptionsCard(
                 title = stringResource(R.string.activity_type_classes),
-                enabled = notificationsEnabled,
+                enabled = notificationsEnabled == true,
                 checked = schedulePrefs.classPrefs.isEnabled,
                 selectedMinutes = schedulePrefs.classPrefs.minutes,
-                selectedPriority = schedulePrefs.classPrefs.priority,
                 onCheckedChange = onClassSwitchChange,
-                onPrioritySelected = onClassPrioritySelected,
                 onTimeSelected = onClassTimeSelected
             )
             EventOptionsCard(
                 title = stringResource(R.string.activity_type_exams),
-                enabled = notificationsEnabled,
+                enabled = notificationsEnabled == true,
                 checked = schedulePrefs.examPrefs.isEnabled,
                 selectedMinutes = schedulePrefs.examPrefs.minutes,
-                selectedPriority = schedulePrefs.examPrefs.priority,
                 onCheckedChange = onExamSwitchChange,
-                onPrioritySelected = onExamPrioritySelected,
                 onTimeSelected = onExamTimeSelected
             )
         }

@@ -1,6 +1,7 @@
 package lnx.jetitable.services.notification
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -24,7 +25,7 @@ import java.util.Calendar
 import java.util.Locale
 
 @Serializable
-enum class ActivityType { CLASS, EXAM }
+enum class EventType { CLASS, EXAM }
 
 class NotifManager(private val context: Context) {
     private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -35,13 +36,11 @@ class NotifManager(private val context: Context) {
 
     init {
         scope.launch {
-            val classPrefs = appPrefs.getClassPreferences().first()
-            val examPrefs = appPrefs.getExamPreferences().first()
-
-            createNotificationChannels(classPrefs.priority, examPrefs.priority)
+            createNotificationChannels()
         }
     }
 
+    @SuppressLint("InlinedApi")
     suspend fun updateNotificationSchedules() {
         val notifPermission =
             (ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
@@ -68,7 +67,7 @@ class NotifManager(private val context: Context) {
                     scheduleNotification(
                         classData.date,
                         classData.start,
-                        ActivityType.CLASS,
+                        EventType.CLASS,
                         classData.name,
                         classPrefs.minutes
                     )
@@ -78,7 +77,7 @@ class NotifManager(private val context: Context) {
                     cancelNotification(
                         classData.date,
                         classData.start,
-                        ActivityType.CLASS,
+                        EventType.CLASS,
                         classData.name,
                         classPrefs.minutes
                     )
@@ -90,7 +89,7 @@ class NotifManager(private val context: Context) {
                     scheduleNotification(
                         examData.date,
                         examData.time,
-                        ActivityType.EXAM,
+                        EventType.EXAM,
                         examData.name,
                         examPrefs.minutes
                     )
@@ -100,7 +99,7 @@ class NotifManager(private val context: Context) {
                     cancelNotification(
                         examData.date,
                         examData.time,
-                        ActivityType.EXAM,
+                        EventType.EXAM,
                         examData.name,
                         examPrefs.minutes
                     )
@@ -109,17 +108,17 @@ class NotifManager(private val context: Context) {
         }
     }
 
-    fun createNotificationChannels(classPriority: Int, examPriority: Int) {
+    fun createNotificationChannels() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val classChannel = NotificationChannel(
                 CHANNEL_CLASS_REMINDER,
                 context.getString(R.string.class_reminders_channel),
-                classPriority
+                NotificationManager.IMPORTANCE_HIGH
             ).apply { description = context.getString(R.string.class_reminders_channel_description) }
             val examChannel = NotificationChannel(
                 CHANNEL_EXAM_REMINDER,
                 context.getString(R.string.exam_reminders_channel),
-                examPriority
+                NotificationManager.IMPORTANCE_HIGH
             ).apply { description = context.getString(R.string.exam_reminders_channel_description) }
 
             notificationManager.createNotificationChannels(
@@ -131,7 +130,7 @@ class NotifManager(private val context: Context) {
     private fun scheduleNotification(
         date: String,
         time: String,
-        type: ActivityType,
+        type: EventType,
         name: String,
         reminderMinutes: Int
     ) {
@@ -148,7 +147,7 @@ class NotifManager(private val context: Context) {
     private fun cancelNotification(
         date: String,
         time: String,
-        type: ActivityType,
+        type: EventType,
         name: String,
         reminderMinutes: Int
     ) {
@@ -178,7 +177,7 @@ class NotifManager(private val context: Context) {
                     triggerAtMillis,
                     pendingIntent
                 )
-                Log.d(MANAGER_NAME, "Alarm scheduled")
+                Log.d(MANAGER_NAME, "Alarm for  scheduled")
             }
         } else {
             alarmManager.setExactAndAllowWhileIdle(
@@ -193,7 +192,7 @@ class NotifManager(private val context: Context) {
     private fun getPendingIntent(
         date: String,
         time: String,
-        type: ActivityType,
+        type: EventType,
         name: String,
         reminderMinutes: Int
     ): Pair<PendingIntent, Calendar>? {

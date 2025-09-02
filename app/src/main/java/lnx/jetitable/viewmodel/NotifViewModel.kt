@@ -6,7 +6,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import lnx.jetitable.datastore.AppPreferences
@@ -23,18 +22,9 @@ class NotifViewModel(application: Application) : AndroidViewModel(application) {
     private val appPrefs = AppPreferences(context)
     private val notifManager = NotifManager(context)
     val notificationPreference = appPrefs.getNotificationPreference()
-        .map {
-            if (!it) {
-                disableExamNotifications()
-                disableClassNotifications()
-            }
-            it
-        }
 
     val schedulePrefs = combine(appPrefs.getClassPreferences(), appPrefs.getExamPreferences()) { classPrefs, examPrefs ->
         notifManager.updateNotificationSchedules()
-        notifManager.createNotificationChannels(classPrefs.priority, examPrefs.priority)
-
         SchedulePrefs(classPrefs, examPrefs)
     }
 
@@ -97,20 +87,18 @@ class NotifViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun updateExamPreferences(minutes: Int? = null, priority: Int? = null) {
+    fun updateExamMinutes(minutes: Int? = null) {
         viewModelScope.launch {
             appPrefs.saveExamPreferences(
-                minutes = minutes,
-                priority = priority
+                minutes = minutes
             )
         }
     }
 
-    fun updateClassPreferences(minutes: Int? = null, priority: Int? = null) {
+    fun updateClassMinutes(minutes: Int? = null) {
         viewModelScope.launch {
             appPrefs.saveClassPreferences(
-                minutes = minutes,
-                priority = priority
+                minutes = minutes
             )
         }
     }
