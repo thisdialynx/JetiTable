@@ -1,6 +1,7 @@
 package lnx.jetitable.screens.home.elements.datepicker
 
 import android.icu.util.Calendar
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
@@ -66,6 +68,10 @@ fun DatePickerView(
     }
 
     CompositionLocalProvider(value = LocalMinimumInteractiveComponentSize provides Dp.Unspecified) {
+        val arrowRotation by animateFloatAsState(
+            targetValue = if (showDialog) 180f else 0f
+        )
+
         Surface(
             onClick = { showDialog = true },
             shape = RoundedCornerShape(8.dp),
@@ -85,6 +91,7 @@ fun DatePickerView(
                     imageVector = Icons.Rounded.KeyboardArrowDown,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.rotate(arrowRotation)
                 )
             }
         }
