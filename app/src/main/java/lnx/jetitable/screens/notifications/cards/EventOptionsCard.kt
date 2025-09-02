@@ -1,6 +1,8 @@
 package lnx.jetitable.screens.notifications.cards
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -9,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
@@ -25,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -118,10 +122,29 @@ fun EventCardSuboptionRow(
             modifier = Modifier.weight(1f),
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
-        TextButton(
-            onClick = onDropdownButtonPressed,
-            enabled = enabled
-        ) {
+        Box {
+            val arrowRotation by animateFloatAsState(
+                targetValue = if (isDropdownMenuOpen) 180f else 0f
+            )
+
+            TextButton(
+                onClick = onDropdownButtonPressed,
+                enabled = enabled,
+                colors = ButtonDefaults.textButtonColors(
+                    disabledContentColor = MaterialTheme.colorScheme.onSurface,
+                    contentColor = MaterialTheme.colorScheme.secondary
+                )
+            ) {
+                Text(
+                    text = dropdownMenuButtonLabel,
+                    modifier = Modifier.padding(start = 6.dp)
+                )
+                Icon(
+                    imageVector = Icons.Rounded.KeyboardArrowDown,
+                    contentDescription = null,
+                    modifier = Modifier.rotate(arrowRotation)
+                )
+            }
             DropdownMenu(
                 expanded = isDropdownMenuOpen,
                 onDismissRequest = onDropdownButtonPressed,
@@ -145,16 +168,6 @@ fun EventCardSuboptionRow(
                     }
                 }
             }
-            Text(
-                text = dropdownMenuButtonLabel,
-                color = MaterialTheme.colorScheme.secondary,
-                modifier = Modifier.padding(start = 6.dp)
-            )
-            Icon(
-                imageVector = Icons.Rounded.KeyboardArrowDown,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.secondary
-            )
         }
     }
 }
