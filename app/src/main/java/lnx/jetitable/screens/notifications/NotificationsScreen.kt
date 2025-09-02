@@ -11,7 +11,7 @@ import lnx.jetitable.viewmodel.SchedulePrefs
 @Composable
 fun NotificationsScreen(onBack: () -> Unit) {
     val viewModel = viewModel<NotifViewModel>()
-    val notificationPreference by viewModel.notificationPreference.collectAsStateWithLifecycle(false)
+    val notificationPreference by viewModel.notificationPreference.collectAsStateWithLifecycle(null)
     val schedulePrefs by viewModel.schedulePrefs.collectAsStateWithLifecycle(SchedulePrefs())
 
     NotificationsUI(
@@ -39,17 +39,11 @@ fun NotificationsScreen(onBack: () -> Unit) {
                 viewModel.disableClassNotifications()
             }
         },
-        onExamPrioritySelected = {
-            viewModel.updateExamPreferences(priority = it)
-        },
-        onClassPrioritySelected = {
-            viewModel.updateClassPreferences(priority = it)
-        },
         onExamTimeSelected = {
-            viewModel.updateExamPreferences(minutes = it)
+            viewModel.updateExamMinutes(minutes = it)
         },
         onClassTimeSelected = {
-            viewModel.updateClassPreferences(minutes = it)
+            viewModel.updateClassMinutes(minutes = it)
         }
     )
 }
@@ -64,8 +58,6 @@ private fun Preview() {
         schedulePrefs = SchedulePrefs(),
         onExamSwitchChange = {},
         onClassSwitchChange = {},
-        onExamPrioritySelected = {},
-        onClassPrioritySelected = {},
         onClassTimeSelected = {},
         onExamTimeSelected = {},
     )

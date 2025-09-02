@@ -1,6 +1,5 @@
 package lnx.jetitable.screens.notifications.cards
 
-import android.app.NotificationManager
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -37,25 +36,11 @@ fun EventOptionsCard(
     title: String,
     enabled: Boolean,
     checked: Boolean,
-    selectedPriority: Int,
     selectedMinutes: Int,
     onCheckedChange: (Boolean) -> Unit,
-    onPrioritySelected: (Int) -> Unit,
     onTimeSelected: (Int) -> Unit
 ) {
-    var isPriorityDropdownOpened by remember { mutableStateOf(false) }
     var isTimePickerDropdownOpened by remember { mutableStateOf(false) }
-    val selectedPriorityString = when (selectedPriority) {
-        NotificationManager.IMPORTANCE_LOW -> stringResource(R.string.priority_low)
-        NotificationManager.IMPORTANCE_DEFAULT -> stringResource(R.string.priority_default)
-        NotificationManager.IMPORTANCE_HIGH -> stringResource(R.string.priority_high)
-        else -> ""
-    }
-    val priorityOptions = listOf(
-        NotificationManager.IMPORTANCE_LOW to stringResource(R.string.priority_low),
-        NotificationManager.IMPORTANCE_DEFAULT to stringResource(R.string.priority_default),
-        NotificationManager.IMPORTANCE_HIGH to stringResource(R.string.priority_high)
-    )
     val timeOptions = listOf(
         5 to stringResource(R.string.before_event_minutes, 5),
         10 to stringResource(R.string.before_event_minutes, 10),
@@ -101,17 +86,6 @@ fun EventOptionsCard(
                 onOptionSelected = onTimeSelected,
                 optionTitle = stringResource(R.string.time_before_card_title),
                 icon = lnx.jetitable.ui.icons.google.Schedule
-            )
-            EventCardSuboptionRow(
-                isDropdownMenuOpen = isPriorityDropdownOpened,
-                onDropdownButtonPressed = { isPriorityDropdownOpened = !isPriorityDropdownOpened },
-                dropdownMenuButtonLabel = selectedPriorityString,
-                enabled = checked,
-                options = priorityOptions,
-                selectedOption = selectedPriority,
-                onOptionSelected = onPrioritySelected,
-                optionTitle = stringResource(R.string.priority_card_title),
-                icon = lnx.jetitable.ui.icons.google.NotificationImportant
             )
         }
     }

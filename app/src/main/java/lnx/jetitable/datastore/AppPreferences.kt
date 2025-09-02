@@ -1,6 +1,5 @@
 package lnx.jetitable.datastore
 
-import android.app.NotificationManager
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -26,15 +25,11 @@ class AppPreferences(private val context: Context) {
 
     suspend fun saveClassPreferences(
         minutes: Int? = null,
-        priority: Int? = null,
         isEnabled: Boolean? = null
     ) {
         context.dataStore.edit { dataStore ->
             minutes?.let {
                 dataStore[CLASS_REMINDER_MINUTES] = it
-            }
-            priority?.let {
-                dataStore[CLASS_NOTIFICATION_IMPORTANCE] = it
             }
             isEnabled?.let {
                 dataStore[IS_CLASS_REMINDER_ENABLED] = it
@@ -45,22 +40,17 @@ class AppPreferences(private val context: Context) {
     fun getClassPreferences(): Flow<ReminderPrefs> = context.dataStore.data
         .map { data ->
         val minutes = data[CLASS_REMINDER_MINUTES] ?: 15
-        val importance = data[CLASS_NOTIFICATION_IMPORTANCE] ?: NotificationManager.IMPORTANCE_DEFAULT
         val isEnabled = data[IS_CLASS_REMINDER_ENABLED] == true
-        ReminderPrefs(minutes, importance, isEnabled)
+        ReminderPrefs(minutes, isEnabled)
     }
 
     suspend fun saveExamPreferences(
         minutes: Int? = null,
-        priority: Int? = null,
         isEnabled: Boolean? = null
     ) {
         context.dataStore.edit { dataStore ->
             minutes?.let {
                 dataStore[EXAM_REMINDER_MINUTES] = it
-            }
-            priority?.let {
-                dataStore[EXAM_NOTIFICATION_IMPORTANCE] = it
             }
             isEnabled?.let {
                 dataStore[IS_EXAM_REMINDER_ENABLED] = it
@@ -71,9 +61,8 @@ class AppPreferences(private val context: Context) {
     fun getExamPreferences(): Flow<ReminderPrefs> = context.dataStore.data
         .map { data ->
         val minutes = data[EXAM_REMINDER_MINUTES] ?: 15
-        val importance = data[EXAM_NOTIFICATION_IMPORTANCE] ?: NotificationManager.IMPORTANCE_HIGH
         val isEnabled = data[IS_EXAM_REMINDER_ENABLED] == true
-        ReminderPrefs(minutes, importance, isEnabled)
+        ReminderPrefs(minutes, isEnabled)
     }
 
     suspend fun saveNotificationTipPreference(value: Boolean) = context.dataStore.edit {
@@ -91,15 +80,12 @@ class AppPreferences(private val context: Context) {
 
     data class ReminderPrefs(
         val minutes: Int = 15,
-        val priority: Int = NotificationManager.IMPORTANCE_DEFAULT,
         val isEnabled: Boolean = false
     )
 
     companion object {
         val CLASS_REMINDER_MINUTES = intPreferencesKey("CLASS_REMINDER_MINUTES")
-        val CLASS_NOTIFICATION_IMPORTANCE = intPreferencesKey("CLASS_NOTIFICATION_IMPORTANCE")
         val EXAM_REMINDER_MINUTES = intPreferencesKey("EXAM_REMINDER_MINUTES")
-        val EXAM_NOTIFICATION_IMPORTANCE = intPreferencesKey("EXAM_NOTIFICATION_IMPORTANCE")
         val IS_CLASS_REMINDER_ENABLED = booleanPreferencesKey("IS_CLASS_REMINDER_ENABLED")
         val IS_EXAM_REMINDER_ENABLED = booleanPreferencesKey("IS_EXAM_REMINDER_ENABLED")
         val IS_NOTIFICATIONS_ENABLED = booleanPreferencesKey("IS_NOTIFICATIONS_ENABLED")
