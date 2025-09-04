@@ -141,7 +141,7 @@ class NotifManager(private val context: Context) {
 
             scheduleAlarm(pendingIntent.second.timeInMillis, pendingIntent.first)
         } catch (e: Exception) {
-            Log.d(MANAGER_NAME, "Error scheduling $type notification", e)
+            Log.e(MANAGER_NAME, "Error scheduling $type notification", e)
         }
     }
 
