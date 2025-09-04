@@ -45,14 +45,15 @@ class NotifManager(private val context: Context) {
         val notifPermission =
             (ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
                 == PackageManager.PERMISSION_GRANTED)
-        val exactAlarmPermission =
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && alarmManager.canScheduleExactAlarms()
+        val exactAlarmPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            alarmManager.canScheduleExactAlarms()
+        } else true
         val isPermissionsGranted = notifPermission && exactAlarmPermission
         val isNotifsEnabled = appPrefs.getNotificationPreference().first()
 
         if (!isPermissionsGranted) {
             appPrefs.saveNotificationPreference(false)
-            Log.d(MANAGER_NAME, "Permissions are not granted, disabling notifications...")
+            Log.d(MANAGER_NAME, "Permissions are not granted, disabling notifications... $isNotifsEnabled, $exactAlarmPermission, $notifPermission")
             return
         }
 
