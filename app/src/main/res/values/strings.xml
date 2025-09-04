@@ -77,7 +77,7 @@
     <string name="permissions_required_text_dialog">In order to receive notifications, you need to grant the following permissions:</string>
     <string name="enable_notifications">Enable notifications</string>
     <string name="grant_button_title">Grant</string>
-    <string name="notifications_screen_description">Notifications can help you increase your traffic and ensure you don\'t miss anything important. Here you can set the priority and time of notifications before the event starts.</string>
+    <string name="notifications_screen_description">Notifications can help you increase your traffic and ensure you don\'t miss anything important.</string>
     <string name="granted_button_title">Granted</string>
     <string name="post_notifications_permission_dialog">Post notifications</string>
     <string name="alarms_and_reminders_permission_dialog">Alarms and reminders</string>
