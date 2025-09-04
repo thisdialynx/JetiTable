@@ -63,8 +63,8 @@ class NotifManager(private val context: Context) {
             val examPrefs = appPrefs.getExamPreferences().first()
             val examList = scheduleDataStore.getExamList().first()
 
-            if (classPrefs.isEnabled) {
-                classList.forEach { classData ->
+            classList.forEach { classData ->
+                if (classPrefs.isEnabled) {
                     scheduleNotification(
                         classData.date,
                         classData.start,
@@ -72,9 +72,7 @@ class NotifManager(private val context: Context) {
                         classData.name,
                         classPrefs.minutes
                     )
-                }
-            } else {
-                classList.forEach { classData ->
+                } else {
                     cancelNotification(
                         classData.date,
                         classData.start,
@@ -85,8 +83,8 @@ class NotifManager(private val context: Context) {
                 }
             }
 
-            if (examPrefs.isEnabled) {
-                examList.forEach { examData ->
+            examList.forEach { examData ->
+                if (examPrefs.isEnabled) {
                     scheduleNotification(
                         examData.date,
                         examData.time,
@@ -94,9 +92,7 @@ class NotifManager(private val context: Context) {
                         examData.name,
                         examPrefs.minutes
                     )
-                }
-            } else {
-                examList.forEach { examData ->
+                } else {
                     cancelNotification(
                         examData.date,
                         examData.time,
@@ -172,22 +168,23 @@ class NotifManager(private val context: Context) {
 
     private fun scheduleAlarm(triggerAtMillis: Long, pendingIntent: PendingIntent) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            if (alarmManager.canScheduleExactAlarms()) {
-                alarmManager.setExactAndAllowWhileIdle(
-                    AlarmManager.RTC_WAKEUP,
-                    triggerAtMillis,
-                    pendingIntent
-                )
-                Log.d(MANAGER_NAME, "Alarm for  scheduled")
+            if (!alarmManager.canScheduleExactAlarms()) {
+                Log.e(MANAGER_NAME, "Permission for scheduling exact alarms and reminders are not granted")
+
+                scope.launch {
+                    appPrefs.saveNotificationPreference(false)
+                }
+
+                return
             }
-        } else {
-            alarmManager.setExactAndAllowWhileIdle(
-                AlarmManager.RTC_WAKEUP,
-                triggerAtMillis,
-                pendingIntent
-            )
-            Log.d(MANAGER_NAME, "Alarm scheduled")
         }
+
+        alarmManager.setExactAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            triggerAtMillis,
+            pendingIntent
+        )
+        Log.d(MANAGER_NAME, "Alarm scheduled")
     }
 
     private fun getPendingIntent(
