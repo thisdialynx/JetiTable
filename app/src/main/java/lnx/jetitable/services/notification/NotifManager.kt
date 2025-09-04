@@ -209,7 +209,7 @@ class NotifManager(private val context: Context) {
         }
         val reqCode = (date + time + type + name + reminderMinutes).hashCode()
         val pendingIntentAndTime =
-            PendingIntent.getBroadcast(context, reqCode, intent, PendingIntent.FLAG_MUTABLE) to calendar
+            PendingIntent.getBroadcast(context, reqCode, intent, PendingIntent.FLAG_IMMUTABLE) to calendar
         return pendingIntentAndTime
     }
 
