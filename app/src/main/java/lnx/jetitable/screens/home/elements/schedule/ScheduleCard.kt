@@ -1,11 +1,8 @@
 package lnx.jetitable.screens.home.elements.schedule
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -50,12 +47,11 @@ fun ScheduleCard(
         AnimatedVisibility(
             visible = expanded
         ) {
-            Column(
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 12.dp)
                     .padding(horizontal = 12.dp)
-                    .animateContentSize(animationSpec = spring(stiffness = Spring.StiffnessMedium))
             ) {
                 table()
             }
