@@ -47,7 +47,7 @@ fun AuthScreen(onAuthComplete: () -> Unit) {
     val connectionState by viewModel.isConnected.collectAsStateWithLifecycle()
 
     AuthUI(
-        onAuthComplete = { onAuthComplete() },
+        onAuthComplete = onAuthComplete,
         onErrorMessageClear = { viewModel.clearErrorMessage() },
         onPasswordUpdate = { viewModel.updatePassword(it) },
         onEmailUpdate = { viewModel.updateEmail(it) },
@@ -71,6 +71,6 @@ private fun AuthScreenPreview() {
         onEmailSend = {},
         passwordState = "",
         emailState = "",
-        authState = DataState.Loading
+        authState = DataState.Empty
     )
 }
