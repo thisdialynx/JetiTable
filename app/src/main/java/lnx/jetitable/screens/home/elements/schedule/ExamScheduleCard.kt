@@ -1,5 +1,6 @@
 package lnx.jetitable.screens.home.elements.schedule
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
@@ -53,38 +54,43 @@ fun ExamScheduleCard(examList: DataState<out List<ExamNetworkData>>) {
             }
         }
     ) {
-        when (examList) {
-            is DataState.Empty -> {
-                ScheduleStatus(
-                    icon = Mood,
-                    text = R.string.no_exams
-                )
-            }
-            is DataState.Loading -> {
-                ScheduleStatus(text = R.string.getting_list)
-            }
-            is DataState.Error -> {
-                ScheduleStatus(
-                    icon = Warning,
-                    text = examList.messageResId
-                )
-            }
-            is DataState.Success -> {
-                examList.data.forEachIndexed { index, item ->
-                    ScheduleRow(
-                        time = item.time,
-                        title = item.name,
-                        meetingUrl = item.url,
-                        onClick = {},
-                        backgroundColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                        expandedText = "${stringResource(id = R.string.class_number, item.number)}\n" +
-                                "${stringResource(id = R.string.date, item.date)}\n" +
-                                stringResource(id = R.string.educator, item.educator),
-                        elementIndex = index,
-                        isLastElement = index == examList.data.size - 1
+        AnimatedContent(
+            targetState = examList
+        ) {
+            when (it) {
+                is DataState.Empty -> {
+                    ScheduleStatus(
+                        icon = Mood,
+                        text = R.string.no_exams
                     )
+                }
+                is DataState.Loading -> {
+                    ScheduleStatus(text = R.string.getting_list)
+                }
+                is DataState.Error -> {
+                    ScheduleStatus(
+                        icon = Warning,
+                        text = it.messageResId
+                    )
+                }
+                is DataState.Success -> {
+                    it.data.forEachIndexed { index, item ->
+                        ScheduleRow(
+                            time = item.time,
+                            title = item.name,
+                            meetingUrl = item.url,
+                            onClick = {},
+                            backgroundColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                            expandedText = "${stringResource(id = R.string.class_number, item.number)}\n" +
+                                    "${stringResource(id = R.string.date, item.date)}\n" +
+                                    stringResource(id = R.string.educator, item.educator),
+                            elementIndex = index,
+                            isLastElement = index == it.data.size - 1
+                        )
+                    }
                 }
             }
         }
+
     }
 }

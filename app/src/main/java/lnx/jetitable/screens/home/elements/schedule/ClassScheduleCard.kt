@@ -1,6 +1,8 @@
 package lnx.jetitable.screens.home.elements.schedule
 
 import android.icu.util.Calendar
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowLeft
@@ -70,50 +72,56 @@ fun ClassScheduleCard(
             }
         }
     ) {
-        when (classList) {
-            is DataState.Empty -> {
-                ScheduleStatus(
-                    icon = Mood,
-                    text = R.string.no_classes
-                )
-            }
-            is DataState.Loading -> {
-                ScheduleStatus(text = R.string.getting_list)
-            }
-            is DataState.Success -> {
-                classList.data.forEachIndexed { index, item ->
-                    val bgColor = if (item.isNow) {
-                        MaterialTheme.colorScheme.primaryContainer
-                    } else {
-                        MaterialTheme.colorScheme.surfaceContainerHigh
+        AnimatedContent(
+            targetState = classList
+        ) {
+            Column {
+                when (it) {
+                    is DataState.Empty -> {
+                        ScheduleStatus(
+                            icon = Mood,
+                            text = R.string.no_classes
+                        )
                     }
-                    val time = "${item.start}\n${item.end}"
-                    val room = if (item.room.isNotBlank()) {
-                        "${stringResource(id = R.string.class_room, item.room)}\n"
-                    } else ""
-                    val classNumber = "${stringResource(R.string.class_number, item.number)}\n"
-                    val classGroup = "${stringResource(id = R.string.class_group, item.group)}\n"
-                    val educator = stringResource(id = R.string.educator, item.educator)
+                    is DataState.Loading -> {
+                        ScheduleStatus(text = R.string.getting_list)
+                    }
+                    is DataState.Success -> {
+                        it.data.forEachIndexed { index, item ->
+                            val bgColor = if (item.isNow) {
+                                MaterialTheme.colorScheme.primaryContainer
+                            } else {
+                                MaterialTheme.colorScheme.surfaceContainerHigh
+                            }
+                            val time = "${item.start}\n${item.end}"
+                            val room = if (item.room.isNotBlank()) {
+                                "${stringResource(id = R.string.class_room, item.room)}\n"
+                            } else ""
+                            val classNumber = "${stringResource(R.string.class_number, item.number)}\n"
+                            val classGroup = "${stringResource(id = R.string.class_group, item.group)}\n"
+                            val educator = stringResource(id = R.string.educator, item.educator)
 
-                    ScheduleRow(
-                        time = time,
-                        title = item.name,
-                        type = item.type,
-                        meetingUrl = item.meetingLink,
-                        moodleUrl = item.moodleLink,
-                        onClick = { onPresenceVerify(item) },
-                        backgroundColor = bgColor,
-                        expandedText = classNumber + room + classGroup + educator,
-                        elementIndex = index,
-                        isLastElement = index == classList.data.size - 1
-                    )
+                            ScheduleRow(
+                                time = time,
+                                title = item.name,
+                                type = item.type,
+                                meetingUrl = item.meetingLink,
+                                moodleUrl = item.moodleLink,
+                                onClick = { onPresenceVerify(item) },
+                                backgroundColor = bgColor,
+                                expandedText = classNumber + room + classGroup + educator,
+                                elementIndex = index,
+                                isLastElement = index == it.data.size - 1
+                            )
+                        }
+                    }
+                    is DataState.Error -> {
+                        ScheduleStatus(
+                            icon = Warning,
+                            text = it.messageResId
+                        )
+                    }
                 }
-            }
-            is DataState.Error -> {
-                ScheduleStatus(
-                    icon = Warning,
-                    text = classList.messageResId
-                )
             }
         }
     }
