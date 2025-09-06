@@ -89,4 +89,6 @@
     <string name="before_event_minutes">%1$s минут(-а)</string>
     <string name="notification_tip_description">"Хотите получать напоминания о предстоящих событиях? "</string>
     <string name="answer_yes">Да</string>
+    <string name="something_went_wrong">Что-то пошло не так</string>
+    <string name="internet_connection_check_fail">Не удалось проверить подключение к интернету</string>
 </resources>

@@ -12,14 +12,14 @@ import kotlinx.coroutines.launch
 import lnx.jetitable.BuildConfig
 import lnx.jetitable.R
 import lnx.jetitable.api.RetrofitHolder
-import lnx.jetitable.datastore.CookieDataStore
 import lnx.jetitable.datastore.AppPreferences
+import lnx.jetitable.datastore.CookieDataStore
 import lnx.jetitable.datastore.ScheduleDataStore
 import lnx.jetitable.datastore.UserDataStore
-import lnx.jetitable.misc.ConnectionState
+import lnx.jetitable.misc.AndroidConnectivityObserver
 import lnx.jetitable.misc.DataState
+import lnx.jetitable.misc.DataState.Error
 import lnx.jetitable.screens.home.elements.datepicker.DateManager
-import lnx.jetitable.misc.NetworkConnectivityObserver
 
 data class UserDataUiState(
     val fullName: Pair<String, Int>,
@@ -37,7 +37,7 @@ class SettingsViewModel(application: Application): AndroidViewModel(application)
     private val cookieDataStore = CookieDataStore(context)
     private val scheduleDataStore = ScheduleDataStore(context)
     private val dateManager = DateManager()
-    private val connectivityObserver = NetworkConnectivityObserver(context)
+    private val connectivityObserver = AndroidConnectivityObserver(context)
     private val githubService = RetrofitHolder.getGitHubApiInstance()
     private val appPreferences = AppPreferences(context)
 
@@ -62,12 +62,13 @@ class SettingsViewModel(application: Application): AndroidViewModel(application)
             initialValue = null
         )
 
-    val updateInfo = connectivityObserver.observe()
+    val updateInfo = connectivityObserver
+        .isConnected
         .map {
             when (it) {
-                is ConnectionState.Idle -> DataState.Loading
-                is ConnectionState.Unavailable -> DataState.Error(R.string.no_internet_connection)
-                is ConnectionState.Available -> {
+                DataState.Loading -> DataState.Loading
+                DataState.Success(false) -> Error(R.string.no_internet_connection)
+                DataState.Success(true) -> {
                     try {
                         val currentVersion = BuildConfig.VERSION_NAME
                         val isDebug = BuildConfig.DEBUG
@@ -84,9 +85,11 @@ class SettingsViewModel(application: Application): AndroidViewModel(application)
                             DataState.Empty
                         }
                     } catch (e: Exception) {
-                        DataState.Error(R.string.could_not_check_for_updates, e)
+                        Error(R.string.could_not_check_for_updates, e)
                     }
                 }
+                is Error -> Error(R.string.internet_connection_check_fail)
+                else -> Error(R.string.something_went_wrong)
             }
         }
         .flowOn(Dispatchers.IO)

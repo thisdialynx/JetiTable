@@ -17,11 +17,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import lnx.jetitable.R
-import lnx.jetitable.misc.ConnectionState
 import lnx.jetitable.misc.DataState
-import lnx.jetitable.screens.home.elements.datepicker.DateState
-import lnx.jetitable.screens.home.elements.datepicker.DatePickerView
 import lnx.jetitable.screens.home.data.ClassUiData
+import lnx.jetitable.screens.home.elements.datepicker.DatePickerView
+import lnx.jetitable.screens.home.elements.datepicker.DateState
 import lnx.jetitable.ui.icons.google.CalendarMonth
 import lnx.jetitable.ui.icons.google.Mood
 import lnx.jetitable.ui.icons.google.Warning
@@ -35,7 +34,7 @@ fun ClassScheduleCard(
     onDateUpdate: (Calendar) -> Unit,
     onBackwardDateShift: () -> Unit,
     onForwardDateShift: () -> Unit,
-    connectionState: ConnectionState
+    connectionState: DataState<out Boolean>
 ) {
     ScheduleCard(
         icon = CalendarMonth,
@@ -52,7 +51,7 @@ fun ClassScheduleCard(
                 IconButton(
                     onClick = onBackwardDateShift,
                     modifier = Modifier.padding(end = 4.dp),
-                    enabled = connectionState == ConnectionState.Available
+                    enabled = connectionState == DataState.Success(true)
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowLeft,
@@ -61,7 +60,7 @@ fun ClassScheduleCard(
                 }
                 IconButton(
                     onClick = onForwardDateShift,
-                    enabled = connectionState == ConnectionState.Available
+                    enabled = connectionState == DataState.Success(true)
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowRight,

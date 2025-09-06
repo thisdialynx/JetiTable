@@ -91,4 +91,6 @@
     <string name="before_event_minutes">%1$s minutes</string>
     <string name="notification_tip_description">Would you like to receive reminders about upcoming events?</string>
     <string name="answer_yes">Yes</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="internet_connection_check_fail">Failed to check the internet connection</string>
 </resources>
