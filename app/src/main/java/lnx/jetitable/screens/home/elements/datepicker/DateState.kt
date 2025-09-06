@@ -12,6 +12,6 @@ data class DateState(
     val datePickerState: DatePickerState = DatePickerState(
         initialSelectedDateMillis = Calendar.getInstance().timeInMillis,
         yearRange = DatePickerDefaults.YearRange,
-        locale = Locale("ROOT")
+        locale = Locale.ROOT
     )
 )
