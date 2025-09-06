@@ -2,6 +2,7 @@ package lnx.jetitable.screens.home.elements.schedule
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material3.Icon
@@ -19,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import lnx.jetitable.R
 import lnx.jetitable.api.timetable.data.query.ExamNetworkData
 import lnx.jetitable.misc.DataState
@@ -39,7 +41,8 @@ fun ExamScheduleCard(examList: DataState<out List<ExamNetworkData>>) {
         title = {
             Text(
                 text = stringResource(id = R.string.exam_schedule),
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(start = 8.dp)
             )
         },
         additionalTitleContent = {
