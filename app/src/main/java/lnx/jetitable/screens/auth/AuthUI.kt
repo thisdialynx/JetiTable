@@ -123,7 +123,8 @@ fun AuthUI(
                                 CircularProgressIndicator(
                                     modifier = Modifier.size(ButtonDefaults.IconSize),
                                     strokeCap = StrokeCap.Round,
-                                    color = MaterialTheme.colorScheme.onPrimary
+                                    color = MaterialTheme.colorScheme.onPrimary,
+                                    strokeWidth = 3.dp
                                 )
                             }
                             DataState.Success(true) -> {
