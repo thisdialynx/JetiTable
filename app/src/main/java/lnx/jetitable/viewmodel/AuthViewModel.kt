@@ -21,12 +21,6 @@ import lnx.jetitable.misc.AndroidConnectivityObserver
 import lnx.jetitable.misc.DataState
 import okhttp3.Credentials
 
-sealed class AuthState {
-    object Authorized : AuthState()
-    data class Error(val messageResIs: Int) : AuthState()
-    object Idle : AuthState()
-}
-
 class AuthViewModel(application: Application) : AndroidViewModel(application) {
     private val context
         get() = getApplication<Application>().applicationContext
@@ -40,7 +34,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
             initialValue = DataState.Loading
         )
 
-    var authState by mutableStateOf<AuthState>(AuthState.Idle)
+    var authState by mutableStateOf<DataState<out Boolean>>(DataState.Loading)
         private set
     var password by mutableStateOf("")
         private set
@@ -49,11 +43,11 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
     fun updatePassword(value: String) { password = value }
     fun updateEmail(value: String) { email = value }
-    fun clearErrorMessage() { authState = AuthState.Idle }
+    fun clearErrorMessage() { authState = DataState.Empty }
 
     private fun checkEmail(login: String): Boolean {
         return if (!login.endsWith("@snu.edu.ua")) {
-            authState = AuthState.Error(R.string.corporate_email_error)
+            authState = DataState.Error(R.string.corporate_email_error)
             true
         } else false
     }
@@ -61,7 +55,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     fun checkCredentials() {
         viewModelScope.launch {
             if (isConnected.value == DataState.Success(false)) {
-                authState = AuthState.Error(R.string.no_internet_connection)
+                authState = DataState.Error(R.string.no_internet_connection)
                 return@launch
             }
 
@@ -74,9 +68,9 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                     LoginRequest(CHECK_PASSWORD, email, password)
                 )
                 authState = if (response.status == "ok") {
-                    AuthState.Authorized
+                    DataState.Success(true)
                 } else {
-                    AuthState.Error(R.string.wrong_credentials)
+                    DataState.Error(R.string.wrong_credentials)
                 }
 
             } catch (e: Exception) {
@@ -88,7 +82,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     fun sendEmail() {
         viewModelScope.launch {
             if (isConnected.value == DataState.Success(false)) {
-                authState = AuthState.Error(R.string.no_internet_connection)
+                authState = DataState.Error(R.string.no_internet_connection)
                 return@launch
             }
 

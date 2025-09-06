@@ -22,9 +22,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import lnx.jetitable.R
+import lnx.jetitable.misc.DataState
 import lnx.jetitable.screens.auth.dialogs.PasswordRecoverDialog
 import lnx.jetitable.screens.auth.dialogs.UnofficialAlertDialog
-import lnx.jetitable.viewmodel.AuthState
 
 @Composable
 fun AuthUI(
@@ -36,7 +36,7 @@ fun AuthUI(
     onEmailSend: () -> Unit,
     passwordState: String,
     emailState: String,
-    authState: AuthState
+    authState: DataState<out Boolean>
 ) {
     val context = LocalContext.current
     val openPasswordRecover = remember { mutableStateOf(false) }
@@ -44,12 +44,12 @@ fun AuthUI(
 
     LaunchedEffect(authState) {
         when (val state = authState) {
-            is AuthState.Authorized -> {
+            is DataState.Success -> {
                 Toast.makeText(context, R.string.authorized, Toast.LENGTH_SHORT).show()
                 onAuthComplete()
             }
-            is AuthState.Error -> {
-                Toast.makeText(context, state.messageResIs, Toast.LENGTH_SHORT).show()
+            is DataState.Error -> {
+                Toast.makeText(context, state.messageResId, Toast.LENGTH_SHORT).show()
                 onErrorMessageClear()
             }
             else -> {}
