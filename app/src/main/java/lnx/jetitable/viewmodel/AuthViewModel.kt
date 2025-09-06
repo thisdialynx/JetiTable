@@ -34,7 +34,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
             initialValue = DataState.Loading
         )
 
-    var authState by mutableStateOf<DataState<out Boolean>>(DataState.Loading)
+    var authState by mutableStateOf<DataState<out Boolean>>(DataState.Empty)
         private set
     var password by mutableStateOf("")
         private set
@@ -54,6 +54,8 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
     fun checkCredentials() {
         viewModelScope.launch {
+            authState = DataState.Loading
+
             if (isConnected.value == DataState.Success(false)) {
                 authState = DataState.Error(R.string.no_internet_connection)
                 return@launch
