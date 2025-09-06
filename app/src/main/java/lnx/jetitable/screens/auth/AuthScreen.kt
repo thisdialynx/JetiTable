@@ -7,7 +7,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import lnx.jetitable.R
-import lnx.jetitable.viewmodel.AuthState
+import lnx.jetitable.misc.DataState
 import lnx.jetitable.viewmodel.AuthViewModel
 
 enum class UrlIconItem(val icon: ImageVector, val description: Int, val shortUri: String) {
@@ -71,6 +71,6 @@ private fun AuthScreenPreview() {
         onEmailSend = {},
         passwordState = "",
         emailState = "",
-        authState = AuthState.Idle
+        authState = DataState.Loading
     )
 }
