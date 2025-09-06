@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -97,7 +98,8 @@ fun AccountCard(
                         Icon(
                             imageVector = Logout,
                             contentDescription = stringResource(id = R.string.sign_out),
-                            tint = MaterialTheme.colorScheme.onSecondaryContainer
+                            tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                            modifier = Modifier.size(ButtonDefaults.IconSize)
                         )
                         Text(
                             text = stringResource(id = R.string.sign_out), modifier = Modifier.padding(start = 4.dp),
