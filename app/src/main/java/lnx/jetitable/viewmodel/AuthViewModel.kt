@@ -2,7 +2,6 @@ package lnx.jetitable.viewmodel
 
 import android.app.Application
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -36,6 +35,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
     var authState by mutableStateOf<DataState<out Boolean>>(DataState.Empty)
         private set
+    var emailRequestState by mutableStateOf<DataState<out Int>>(DataState.Empty)
     var password by mutableStateOf("")
         private set
     var email by mutableStateOf("")
@@ -43,7 +43,6 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
     fun updatePassword(value: String) { password = value }
     fun updateEmail(value: String) { email = value }
-    fun clearErrorMessage() { authState = DataState.Empty }
 
     private fun checkEmail(login: String): Boolean {
         return if (!login.endsWith("@snu.edu.ua")) {
@@ -92,10 +91,10 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                 if (checkEmail(email)) return@launch
 
                 val response = service.sendMail(MailRequest(SEND_MAIL, email))
-                if (response.status == "ok") {
-                    Toast.makeText(context, R.string.password_sent, Toast.LENGTH_SHORT).show()
+                emailRequestState = if (response.status == "ok") {
+                    DataState.Success(R.string.password_sent)
                 } else {
-                    Toast.makeText(context, R.string.invalid_email, Toast.LENGTH_SHORT).show()
+                    DataState.Error(R.string.invalid_email)
                 }
             } catch (e: Exception) {
                 Log.e("Password recovery", "Email sending error", e)
