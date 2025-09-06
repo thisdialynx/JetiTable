@@ -8,7 +8,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import lnx.jetitable.api.timetable.data.query.ExamNetworkData
-import lnx.jetitable.misc.ConnectionState
 import lnx.jetitable.misc.DataState
 import lnx.jetitable.screens.home.data.ClassUiData
 import lnx.jetitable.screens.home.elements.datepicker.DateState
@@ -22,7 +21,7 @@ fun HomeScreen(
 ) {
     val viewModel = viewModel<HomeViewModel>()
     val dateState by viewModel.dateState.collectAsStateWithLifecycle(DateState())
-    val connectionState by viewModel.connectivityState.collectAsStateWithLifecycle()
+    val connectionState by viewModel.isConnected.collectAsStateWithLifecycle()
     val classList by viewModel.classesFlow.collectAsStateWithLifecycle()
     val examList by viewModel.examsFlow.collectAsStateWithLifecycle()
     val notificationTipState by viewModel.notificationTipState.collectAsStateWithLifecycle()
@@ -160,7 +159,7 @@ private fun HomeScreenPreview() {
                 )
             )
         ),
-        connectionState = ConnectionState.Available,
+        connectionState = DataState.Success(true),
         onDateUpdate = {},
         onForwardDateShift = {},
         onBackwardDateShift = {},
@@ -182,7 +181,7 @@ private fun EmptyHomeScreenPreview() {
         ),
         classList = DataState.Empty,
         examList = DataState.Empty,
-        connectionState = ConnectionState.Available,
+        connectionState = DataState.Success(true),
         onDateUpdate = {},
         onForwardDateShift = {},
         onBackwardDateShift = {},

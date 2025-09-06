@@ -33,9 +33,11 @@ import lnx.jetitable.api.timetable.data.query.VerifyPresenceRequest
 import lnx.jetitable.datastore.AppPreferences
 import lnx.jetitable.datastore.ScheduleDataStore
 import lnx.jetitable.datastore.UserDataStore
-import lnx.jetitable.misc.ConnectionState
-import lnx.jetitable.misc.DataState
-import lnx.jetitable.misc.NetworkConnectivityObserver
+import lnx.jetitable.misc.AndroidConnectivityObserver
+import lnx.jetitable.misc.DataState.Empty
+import lnx.jetitable.misc.DataState.Error
+import lnx.jetitable.misc.DataState.Loading
+import lnx.jetitable.misc.DataState.Success
 import lnx.jetitable.screens.home.data.ClassUiData
 import lnx.jetitable.screens.home.elements.datepicker.DateManager
 import lnx.jetitable.services.data.DataSyncService.Companion.DATA_SYNC_SERVICE_NAME
@@ -44,7 +46,8 @@ import lnx.jetitable.services.data.UserDataWorker
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private val context
         get() = getApplication<Application>().applicationContext
-    private val connectivityObserver = NetworkConnectivityObserver(context)
+
+    private val connectivityObserver = AndroidConnectivityObserver(context)
     private val dateManager = DateManager()
     val dateState = dateManager.dateStateFlow
     private val userDataStore = UserDataStore(context)
@@ -67,11 +70,12 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     }
         .flowOn(Dispatchers.IO)
 
-    val connectivityState = connectivityObserver.observe()
+    val isConnected = connectivityObserver
+        .isConnected
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = ConnectionState.Idle
+            initialValue = Loading
         )
 
     val userData = userDataStore.getApiUserData()
@@ -92,75 +96,72 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         userData,
         dateManager.selectedDate,
         currentTime,
-        connectivityState
-    ) { userData, date, time, connectivity ->
+        isConnected
+    ) { userData, date, time, isConnected ->
         val currentDate = Calendar.getInstance()
         val formattedTime = dateManager.timeFormat.format(currentDate.time)
         val formattedDate = dateManager.dateFormat.format(currentDate.time)
 
-        when (connectivity) {
-            ConnectionState.Unavailable -> {
+        when (isConnected) {
+            Success(false) -> {
                 val storedSchedule = scheduleDataStore.getClassList().first()
                     .map { it.toUiData(formattedDate, formattedTime) }
 
-                if (storedSchedule.isEmpty())
-                    DataState.Error(R.string.no_internet_connection)
-                else
-                    DataState.Success(storedSchedule)
+                if (storedSchedule.isEmpty()) Error(R.string.no_internet_connection)
+                    else Success(storedSchedule)
             }
-            ConnectionState.Available -> {
+            Success(true) -> {
                 try {
                     val classes = getClasses(userData.group to userData.groupId)
                         .map { it.toUiData(formattedDate, formattedTime)}
 
-                    if (classes.isEmpty())
-                        DataState.Empty
-                    else
-                        DataState.Success(classes)
+                    if (classes.isEmpty()) Empty else Success(classes)
                 } catch (e: Exception) {
                     val storedSchedule = scheduleDataStore.getClassList().first()
                         .map { it.toUiData(formattedDate, formattedTime) }
 
-                    if (storedSchedule.isNotEmpty()) {
-                        DataState.Success(storedSchedule)
-                    } else {
-                        DataState.Error(R.string.schedule_load_fail, e)
-                    }
+                    if (storedSchedule.isNotEmpty()) Success(storedSchedule)
+                        else Error(R.string.schedule_load_fail, e)
                 }
             }
-            ConnectionState.Idle -> DataState.Loading
+            is Error -> Error(R.string.internet_connection_check_fail)
+            is Loading -> Loading
+            else -> Error(R.string.something_went_wrong)
         }
     }
         .flowOn(Dispatchers.IO)
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = DataState.Loading
+            initialValue = Loading
         )
 
-    val examsFlow = combine(userData, connectivityState) { userData, connectivity ->
-        when (connectivity) {
-            ConnectionState.Unavailable -> {
-                val storedSchedule = scheduleDataStore.getExamList().first()
-                if (storedSchedule.isEmpty()) DataState.Error(R.string.no_internet_connection) else DataState.Success(storedSchedule)
-            }
-            ConnectionState.Available -> {
+    val examsFlow = combine(userData, isConnected) { userData, isConnected ->
+        when (isConnected) {
+            Success(true) -> {
                 try {
                     val exams = getExams(userData.group to userData.groupId)
-                    if (exams.isEmpty()) DataState.Empty else DataState.Success(exams)
-
+                    if (exams.isEmpty()) Empty else Success(exams)
                 } catch (e: Exception) {
-                    DataState.Error(R.string.schedule_load_fail, e)
+                    Error(R.string.schedule_load_fail, e)
                 }
             }
-            ConnectionState.Idle -> DataState.Loading
+            Success(false) -> {
+                val storedSchedule = scheduleDataStore.getExamList().first()
+
+                if (storedSchedule.isEmpty()) Error(R.string.no_internet_connection)
+                    else Success(storedSchedule)
+            }
+            is Error -> Error(R.string.internet_connection_check_fail)
+            is Loading -> Loading
+            else -> Error(R.string.something_went_wrong)
         }
     }
         .flowOn(Dispatchers.IO)
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = DataState.Loading
+            initialValue = Loading
         )
 
     fun disableNotificationTip() {

@@ -17,8 +17,8 @@ import lnx.jetitable.api.timetable.TimeTableApiService.Companion.CHECK_PASSWORD
 import lnx.jetitable.api.timetable.TimeTableApiService.Companion.SEND_MAIL
 import lnx.jetitable.api.timetable.data.login.LoginRequest
 import lnx.jetitable.api.timetable.data.login.MailRequest
-import lnx.jetitable.misc.ConnectionState
-import lnx.jetitable.misc.NetworkConnectivityObserver
+import lnx.jetitable.misc.AndroidConnectivityObserver
+import lnx.jetitable.misc.DataState
 import okhttp3.Credentials
 
 sealed class AuthState {
@@ -31,12 +31,13 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     private val context
         get() = getApplication<Application>().applicationContext
     private val service = RetrofitHolder.getTimeTableApiInstance(context)
-    val connectivityObserver = NetworkConnectivityObserver(context)
-    val connectivityState = connectivityObserver.observe()
+    val connectivityObserver = AndroidConnectivityObserver(context)
+    val isConnected = connectivityObserver
+        .isConnected
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = ConnectionState.Unavailable
+            initialValue = DataState.Loading
         )
 
     var authState by mutableStateOf<AuthState>(AuthState.Idle)
@@ -59,7 +60,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
     fun checkCredentials() {
         viewModelScope.launch {
-            if (connectivityState.value != ConnectionState.Available) {
+            if (isConnected.value == DataState.Success(false)) {
                 authState = AuthState.Error(R.string.no_internet_connection)
                 return@launch
             }
@@ -86,7 +87,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
     fun sendEmail() {
         viewModelScope.launch {
-            if (connectivityState.value != ConnectionState.Available) {
+            if (isConnected.value == DataState.Success(false)) {
                 authState = AuthState.Error(R.string.no_internet_connection)
                 return@launch
             }

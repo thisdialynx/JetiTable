@@ -34,7 +34,6 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import kotlinx.coroutines.delay
 import lnx.jetitable.R
 import lnx.jetitable.api.timetable.data.query.ExamNetworkData
-import lnx.jetitable.misc.ConnectionState
 import lnx.jetitable.misc.DataState
 import lnx.jetitable.screens.home.data.ClassUiData
 import lnx.jetitable.screens.home.elements.datepicker.DateState
@@ -49,7 +48,7 @@ fun HomeUI(
     dateState: DateState,
     classList: DataState<out List<ClassUiData>>,
     examList: DataState<out List<ExamNetworkData>>,
-    connectionState: ConnectionState,
+    connectionState: DataState<out Boolean>,
     notificationTipState: Boolean,
     onDateUpdate: (Calendar) -> Unit,
     onForwardDateShift: () -> Unit,
