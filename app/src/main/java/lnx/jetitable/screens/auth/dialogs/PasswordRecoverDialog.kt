@@ -7,9 +7,9 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.res.stringResource
@@ -66,7 +66,7 @@ fun PasswordRecoverDialog(
                 }
             },
             dismissButton = {
-                TextButton(onClick = { isOpen.value = false }) { Text(text = stringResource(id = R.string.dismiss)) }
+                OutlinedButton(onClick = { isOpen.value = false }) { Text(text = stringResource(id = R.string.dismiss)) }
             },
             icon = { Icon(imageVector = Password, contentDescription = null) }
         )
