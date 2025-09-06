@@ -32,7 +32,8 @@ fun LogoAppTitle() {
             )
             Text(
                 text = stringResource(id = R.string.app_name_description),
-                style = MaterialTheme.typography.bodyLarge
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }
