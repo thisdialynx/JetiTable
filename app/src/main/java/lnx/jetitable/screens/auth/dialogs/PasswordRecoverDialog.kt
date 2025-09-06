@@ -46,7 +46,7 @@ fun PasswordRecoverDialog(
                     Text(text = stringResource(id = R.string.forgot_password_dialog_description))
                     OutlinedTextField(
                         value = email,
-                        onValueChange = { onEmailUpdate(it) },
+                        onValueChange = onEmailUpdate,
                         label = {
                             Text(
                                 text = stringResource(id = R.string.corporate_email_label),

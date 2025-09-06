@@ -48,14 +48,14 @@ fun AuthScreen(onAuthComplete: () -> Unit) {
 
     AuthUI(
         onAuthComplete = onAuthComplete,
-        onErrorMessageClear = { viewModel.clearErrorMessage() },
         onPasswordUpdate = { viewModel.updatePassword(it) },
         onEmailUpdate = { viewModel.updateEmail(it) },
         onCredentialsCheck = { viewModel.checkCredentials() },
         onEmailSend = { viewModel.sendEmail() },
         passwordState = viewModel.password,
         emailState = viewModel.email,
-        authState = viewModel.authState
+        authState = viewModel.authState,
+        emailRequestState = viewModel.emailRequestState
     )
 }
 
@@ -64,13 +64,13 @@ fun AuthScreen(onAuthComplete: () -> Unit) {
 private fun AuthScreenPreview() {
     AuthUI(
         onAuthComplete = {},
-        onErrorMessageClear = {},
         onPasswordUpdate = {},
         onEmailUpdate = {},
         onCredentialsCheck = {},
         onEmailSend = {},
         passwordState = "",
         emailState = "",
-        authState = DataState.Empty
+        authState = DataState.Empty,
+        emailRequestState = DataState.Empty
     )
 }

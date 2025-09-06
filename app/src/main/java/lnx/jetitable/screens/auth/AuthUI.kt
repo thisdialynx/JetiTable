@@ -1,6 +1,5 @@
 package lnx.jetitable.screens.auth
 
-import android.widget.Toast
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,6 +18,9 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -35,22 +37,24 @@ import lnx.jetitable.R
 import lnx.jetitable.misc.DataState
 import lnx.jetitable.screens.auth.dialogs.PasswordRecoverDialog
 import lnx.jetitable.screens.auth.dialogs.UnofficialAlertDialog
+import lnx.jetitable.ui.components.AppSnackbar
 
 @Composable
 fun AuthUI(
     onAuthComplete: () -> Unit,
-    onErrorMessageClear: () -> Unit,
     onPasswordUpdate: (String) -> Unit,
     onEmailUpdate: (String) -> Unit,
     onCredentialsCheck: () -> Unit,
     onEmailSend: () -> Unit,
     passwordState: String,
     emailState: String,
-    authState: DataState<out Boolean>
+    authState: DataState<out Boolean>,
+    emailRequestState: DataState<out Int>
 ) {
     val context = LocalContext.current
     val openPasswordRecover = remember { mutableStateOf(false) }
     val openNoticeDialog = remember { mutableStateOf(true) }
+    val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(authState) {
         when (val state = authState) {
@@ -59,14 +63,33 @@ fun AuthUI(
                 onAuthComplete()
             }
             is DataState.Error -> {
-                Toast.makeText(context, state.messageResId, Toast.LENGTH_SHORT).show()
-                onErrorMessageClear()
+                showSnackbar( context.getString(state.messageResId), snackbarHostState)
             }
             else -> {}
         }
     }
 
-    Scaffold { innerPadding ->
+    LaunchedEffect(emailRequestState) {
+        when (val state = emailRequestState) {
+            is DataState.Success -> {
+                showSnackbar( context.getString(state.data), snackbarHostState)
+            }
+            is DataState.Error -> {
+                showSnackbar( context.getString(state.messageResId), snackbarHostState)
+            }
+            else -> {}
+        }
+    }
+
+    Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState) {
+                AppSnackbar(
+                    snackbarData = it
+                )
+            }
+        }
+    ) { innerPadding ->
         Column(
             verticalArrangement = Arrangement.Center,
             modifier = Modifier
@@ -95,7 +118,7 @@ fun AuthUI(
                     AnimatedContent(
                         targetState = authState
                     ) {
-                        when (authState) {
+                        when (it) {
                             DataState.Loading -> {
                                 CircularProgressIndicator(
                                     modifier = Modifier.size(ButtonDefaults.IconSize),
@@ -131,4 +154,14 @@ fun AuthUI(
         )
         UnofficialAlertDialog(isOpen = openNoticeDialog)
     }
+}
+
+suspend fun showSnackbar(
+    message: String,
+    snackbarHostState: SnackbarHostState
+) {
+    snackbarHostState.showSnackbar(
+        message = message,
+        duration = SnackbarDuration.Short
+    )
 }
