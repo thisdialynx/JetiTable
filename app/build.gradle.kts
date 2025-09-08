@@ -13,8 +13,8 @@ android {
         applicationId = "lnx.jetitable"
         minSdk = 24
         targetSdk = 36
-        versionCode = 22
-        versionName = "0.1.8"
+        versionCode = 32
+        versionName = "0.2.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
