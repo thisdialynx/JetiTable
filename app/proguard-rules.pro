@@ -19,3 +19,7 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-keep class lnx.jetitable.api.timetable.data.** { *; }
+-keep class lnx.jetitable.api.github.GitHubRelease { *; }
+-keep class lnx.jetitable.api.github.GitHubAsset { *; }
