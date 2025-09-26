@@ -6,12 +6,12 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
-val Visiblity: ImageVector
+val Visibility: ImageVector
     get() {
-        if (_Visiblity != null) {
-            return _Visiblity!!
+        if (_Visibility != null) {
+            return _Visibility!!
         }
-        _Visiblity = ImageVector.Builder(
+        _Visibility = ImageVector.Builder(
             name = "Visiblity",
             defaultWidth = 24.dp,
             defaultHeight = 24.dp,
@@ -72,8 +72,8 @@ val Visiblity: ImageVector
             }
         }.build()
 
-        return _Visiblity!!
+        return _Visibility!!
     }
 
 @Suppress("ObjectPropertyName")
-private var _Visiblity: ImageVector? = null
+private var _Visibility: ImageVector? = null
