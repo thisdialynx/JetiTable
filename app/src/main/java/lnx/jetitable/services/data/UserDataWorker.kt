@@ -49,6 +49,9 @@ class UserDataWorker(
         } catch (e: ConnectException) {
             Log.e(DATA_SYNC_WORKER_NAME, "No connection", e)
             Result.failure()
+        } catch (e: Exception) {
+            Log.e(DATA_SYNC_WORKER_NAME, "Unable to sync data", e)
+            Result.failure()
         }
     }
 
