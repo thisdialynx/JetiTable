@@ -41,9 +41,10 @@ class NotificationReceiver : BroadcastReceiver() {
         val notificationId = if (isClass) CLASS_NOTIFICATION_ID else EXAM_NOTIFICATION_ID
         val title = if (isClass) context.getString(R.string.class_notification_title)
             else context.getString(R.string.exam_notification_title)
+        val icon = if (isClass) R.drawable.ic_calendar_month else R.drawable.ic_contract_edit
 
         val notification = NotificationCompat.Builder(context, channel)
-            .setSmallIcon(R.drawable.ic_notification)
+            .setSmallIcon(icon)
             .setContentTitle(title)
             .setContentText(context.getString(R.string.reminder_notification_description_minutes, name, time))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
