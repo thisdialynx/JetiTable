@@ -87,7 +87,7 @@ fun SignInFields(
                 )
             },
             trailingIcon = {
-                val visibilityIcon: Pair<ImageVector, Int> = if (passwordVisible) lnx.jetitable.ui.icons.google.Visiblity to R.string.show_password
+                val visibilityIcon: Pair<ImageVector, Int> = if (passwordVisible) lnx.jetitable.ui.icons.google.Visibility to R.string.show_password
                 else lnx.jetitable.ui.icons.google.VisibilityOff to R.string.hide_password
                 IconButton(onClick = {passwordVisible = !passwordVisible}) {
                     Icon(
