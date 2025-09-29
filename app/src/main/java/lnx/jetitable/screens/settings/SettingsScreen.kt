@@ -17,7 +17,7 @@ fun SettingsScreen(onBack: () -> Unit, onDestinationNavigate: (String) -> Unit) 
     val updateInfo by viewModel.updateInfo.collectAsStateWithLifecycle()
 
     SettingsUI(
-        onBack = { onBack() },
+        onBack = onBack,
         userDataUiState = userDataUiState,
         onDestinationNavigate = onDestinationNavigate,
         updateInfo = updateInfo,
@@ -30,7 +30,7 @@ fun SettingsScreen(onBack: () -> Unit, onDestinationNavigate: (String) -> Unit) 
 private fun NoAccountPreview() {
     SettingsUI(
         onBack = {},
-        userDataUiState = null,
+        userDataUiState = DataState.Loading,
         onDestinationNavigate = {},
         updateInfo = DataState.Empty,
         onSignOut = {}
@@ -42,13 +42,15 @@ private fun NoAccountPreview() {
 private fun AboutScreenPreview() {
     SettingsUI(
         onBack = {},
-        userDataUiState = UserDataUiState(
-            fullName = "Jane Doe" to 0,
-            group = "IPZ-23d" to "1122",
-            formOfEducationResId = R.string.full_time,
-            academicYears = "2001/2002",
-            semesterResId = R.string.spring_semester,
-            status = "student"
+        userDataUiState = DataState.Success(
+            UserDataUiState(
+                fullName = "Jane Doe" to 0,
+                group = "IPZ-23d" to "1122",
+                formOfEducationResId = R.string.full_time,
+                academicYears = "2001/2002",
+                semesterResId = R.string.spring_semester,
+                status = "student"
+            )
         ),
         onDestinationNavigate = {},
         updateInfo = DataState.Success(

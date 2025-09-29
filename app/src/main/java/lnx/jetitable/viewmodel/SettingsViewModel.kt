@@ -42,11 +42,19 @@ class SettingsViewModel(application: Application): AndroidViewModel(application)
     private val appPreferences = AppPreferences(context)
 
     val userDataUiState = userDataStore.getApiUserData().map {
-        val formOfEducation = if (it.isFullTime == 1) R.string.full_time else R.string.part_time
-        val semester = if (dateManager.getSemester() == 1) R.string.autumn_semester else R.string.spring_semester
+        val formOfEducation = when (it.isFullTime) {
+            0 -> R.string.part_time
+            1 -> R.string.full_time
+            else -> 0
+        }
+        val semester = when (dateManager.getSemester()) {
+            1 -> R.string.autumn_semester
+            2 -> R.string.spring_semester
+            else -> 0
+        }
         val academicYears = dateManager.getAcademicYears()
 
-        UserDataUiState(
+        val userUiData = UserDataUiState(
             fullName = it.fullName to it.fullNameId,
             group = it.group to it.groupId,
             formOfEducationResId = formOfEducation,
@@ -54,12 +62,18 @@ class SettingsViewModel(application: Application): AndroidViewModel(application)
             semesterResId = semester,
             status = it.status
         )
+
+        if (userUiData.fullName.first == "") {
+            Error(R.string.account_data_fetch_failure)
+        } else {
+            DataState.Success(userUiData)
+        }
     }
         .flowOn(Dispatchers.IO)
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.Eagerly,
-            initialValue = null
+            initialValue = DataState.Loading
         )
 
     val updateInfo = connectivityObserver
