@@ -1,6 +1,7 @@
 package lnx.jetitable.screens.auth.dialogs
 
 import androidx.activity.compose.LocalActivity
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -13,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import lnx.jetitable.R
 import lnx.jetitable.ui.icons.google.Warning
 
@@ -37,7 +39,10 @@ fun UnofficialAlertDialog(isOpen: MutableState<Boolean>) {
                 }
             },
             dismissButton = {
-                OutlinedButton(onClick = { activityContext?.finishAffinity() }) {
+                OutlinedButton(
+                    onClick = { activityContext?.finishAffinity() },
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.onErrorContainer)
+                ) {
                     Text(
                         text = stringResource(id = R.string.quit),
                         color = MaterialTheme.colorScheme.onErrorContainer
