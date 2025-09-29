@@ -11,11 +11,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
+import lnx.jetitable.BuildConfig
 
 @Composable
 fun AboutScreen(onBack: () -> Unit) {
     val packageManager = LocalContext.current.packageManager
-    val drawable = packageManager.getApplicationIcon("lnx.jetitable")
+    val drawable = packageManager.getApplicationIcon(BuildConfig.APPLICATION_ID)
     val appIcon = drawable.toBitmap(config = Bitmap.Config.ARGB_8888).asImageBitmap()
 
     AboutUI(onBack = { onBack() }) {
