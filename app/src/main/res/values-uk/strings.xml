@@ -91,4 +91,6 @@
     <string name="answer_yes">Так</string>
     <string name="something_went_wrong">Щось пішло не так</string>
     <string name="internet_connection_check_fail">Не вдалося перевірити підключення до интернету</string>
+    <string name="account_data_fetch_failure">Не вдалося отримати дані акаунта</string>
+    <string name="loading">Завантаження…</string>
 </resources>

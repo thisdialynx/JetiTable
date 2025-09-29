@@ -93,4 +93,6 @@
     <string name="answer_yes">Yes</string>
     <string name="something_went_wrong">Something went wrong</string>
     <string name="internet_connection_check_fail">Failed to check the internet connection</string>
+    <string name="account_data_fetch_failure">Couldn\'t fetch account data</string>
+    <string name="loading">Loading…</string>
 </resources>

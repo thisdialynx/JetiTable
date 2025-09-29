@@ -44,7 +44,7 @@ fun SettingsUI(
     onDestinationNavigate: (String) -> Unit,
     onSignOut: () -> Unit,
     updateInfo: DataState<out SettingsViewModel.AppUpdateInfo>,
-    userDataUiState: UserDataUiState?
+    userDataUiState: DataState<out UserDataUiState>
 ) {
     Scaffold(
         topBar = {
