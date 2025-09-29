@@ -21,6 +21,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
@@ -29,8 +30,8 @@ import lnx.jetitable.R
 import lnx.jetitable.misc.DataState
 import lnx.jetitable.ui.icons.google.Check
 import lnx.jetitable.ui.icons.google.Download
+import lnx.jetitable.ui.icons.google.Info
 import lnx.jetitable.ui.icons.google.Upgrade
-import lnx.jetitable.ui.icons.google.Warning
 import lnx.jetitable.viewmodel.SettingsViewModel
 
 @Composable
@@ -59,8 +60,9 @@ fun UpdateCard(updateInfo: DataState<out SettingsViewModel.AppUpdateInfo>) {
             when (val info = updateInfo) {
                 is DataState.Error -> {
                     Icon(
-                        imageVector = Warning,
-                        contentDescription = null
+                        imageVector = Info,
+                        contentDescription = null,
+                        modifier = Modifier.rotate(180f)
                     )
                     Text(
                         text = stringResource(info.messageResId),
