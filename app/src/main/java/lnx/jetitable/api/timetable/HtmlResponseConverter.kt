@@ -75,12 +75,12 @@ fun parseExamsHtml(html: String): List<ExamNetworkData> {
                 url = url
             )
 
-            if (BuildConfig.DEBUG) Log.d("Session html parser", "Extracted data: $examNetworkData")
+            if (BuildConfig.DEBUG) Log.d("Exam html parser", "Extracted data: $examNetworkData")
 
             exams.add(examNetworkData)
         }
     } catch (e: Exception) {
-        Log.e("Session html parser", "Failed to parse html data", e)
+        Log.e("Exam html parser", "Failed to parse html data", e)
     }
     return exams
 }
@@ -115,6 +115,8 @@ fun parseLessonHtml(html: String): List<ClassNetworkData> {
             val type = element.selectFirst("td.tabPSC[style*=text-align:center; font-weight:bold;]")?.text() ?: ""
             val room = element.select("td.tabPSC").last()?.text() ?: ""
 
+            val weeks = element.selectFirst("td.tabPS[style*=padding-left: 10px;]")?.text()?.split(",")?.map { it.trim() } ?: emptyList()
+
             val classNetworkData = ClassNetworkData(
                 id = element.attr("data-id_lesson"),
                 group = element.attr("data-group"),
@@ -126,18 +128,19 @@ fun parseLessonHtml(html: String): List<ClassNetworkData> {
                 start = element.attr("data-timebeg").substring(0, 5),
                 end = element.attr("data-timeend").substring(0, 5),
                 items = element.attr("data-items"),
+                weeks = weeks,
                 meetingLink = meetingLink,
                 moodleLink = moodleLink,
                 type = type,
                 room = room
             )
 
-            if (BuildConfig.DEBUG) Log.d("Lession html parser", "Extracted data: $classNetworkData")
+            if (BuildConfig.DEBUG) Log.d("Class html parser", "Extracted data: $classNetworkData")
 
             classes.add(classNetworkData)
         }
     } catch (e: Exception) {
-        Log.e("Lesson html parser", "Failed to parse html response", e)
+        Log.e("Class html parser", "Failed to parse html response", e)
     }
 
     return classes

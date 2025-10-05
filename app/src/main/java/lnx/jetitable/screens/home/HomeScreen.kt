@@ -64,6 +64,11 @@ private fun HomeScreenPreview() {
                     start = "9:30",
                     end = "10:30",
                     items = "",
+                    weeks = listOf(
+                        "1",
+                        "3",
+                        "5"
+                    ),
                     meetingLink = "zoom.us",
                     moodleLink = "moodle",
                     type = "LC",
@@ -81,6 +86,11 @@ private fun HomeScreenPreview() {
                     start = "10:40",
                     end = "11:40",
                     items = "",
+                    weeks = listOf(
+                        "2",
+                        "4",
+                        "6"
+                    ),
                     meetingLink = "teams.microsoft.com",
                     moodleLink = "",
                     type = "PT",
@@ -98,6 +108,11 @@ private fun HomeScreenPreview() {
                     start = "12:00",
                     end = "13:00",
                     items = "",
+                    weeks = listOf(
+                        "1",
+                        "3",
+                        "5"
+                    ),
                     meetingLink = "meet.google.com",
                     moodleLink = "",
                     type = "LB",
@@ -115,6 +130,11 @@ private fun HomeScreenPreview() {
                     start = "13:10",
                     end = "14:10",
                     items = "",
+                    weeks = listOf(
+                        "2",
+                        "4",
+                        "6"
+                    ),
                     meetingLink = "unknown.link",
                     moodleLink = "",
                     type = "PT",
