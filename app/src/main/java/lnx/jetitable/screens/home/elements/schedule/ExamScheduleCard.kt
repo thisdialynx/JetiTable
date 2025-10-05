@@ -82,8 +82,7 @@ fun ExamScheduleCard(examList: DataState<out List<ExamNetworkData>>) {
                             time = item.time,
                             title = item.name,
                             meetingUrl = item.url,
-                            onClick = {},
-                            backgroundColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                            cardColors = MaterialTheme.colorScheme.surfaceContainerHigh to MaterialTheme.colorScheme.onSurface,
                             expandedText = "${stringResource(id = R.string.class_number, item.number)}\n" +
                                     "${stringResource(id = R.string.date, item.date)}\n" +
                                     stringResource(id = R.string.educator, item.educator),

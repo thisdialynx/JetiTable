@@ -88,10 +88,10 @@ fun ClassScheduleCard(
                     }
                     is DataState.Success -> {
                         it.data.forEachIndexed { index, item ->
-                            val bgColor = if (item.isNow) {
-                                MaterialTheme.colorScheme.primaryContainer
+                            val cardColors = if (item.isNow) {
+                                MaterialTheme.colorScheme.primaryContainer to MaterialTheme.colorScheme.onPrimaryContainer
                             } else {
-                                MaterialTheme.colorScheme.surfaceContainerHigh
+                                MaterialTheme.colorScheme.surfaceContainerHigh to MaterialTheme.colorScheme.onSurface
                             }
                             val time = "${item.start}\n${item.end}"
                             val room = if (item.room.isNotBlank()) {
@@ -106,9 +106,9 @@ fun ClassScheduleCard(
                                 title = item.name,
                                 type = item.type,
                                 meetingUrl = item.meetingLink,
+                                onMeetingUrlClick = { onPresenceVerify(item) },
                                 moodleUrl = item.moodleLink,
-                                onClick = { onPresenceVerify(item) },
-                                backgroundColor = bgColor,
+                                cardColors = cardColors,
                                 expandedText = classNumber + room + classGroup + educator,
                                 elementIndex = index,
                                 isLastElement = index == it.data.size - 1

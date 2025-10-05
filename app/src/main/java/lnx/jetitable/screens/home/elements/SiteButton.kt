@@ -23,7 +23,15 @@ import androidx.compose.ui.unit.dp
 import lnx.jetitable.R
 
 @Composable
-fun SiteButton(url: String, icon: ImageVector, color: Color, uriHandler: UriHandler, clipboardManager: Clipboard, onClick: () -> Unit) {
+fun SiteButton(
+    modifier: Modifier = Modifier,
+    url: String,
+    icon: ImageVector,
+    color: Color,
+    uriHandler: UriHandler,
+    onButtonClick: () -> Unit = {},
+    clipboardManager: Clipboard
+) {
     val label = stringResource(R.string.meeting_url_label)
 
     CompositionLocalProvider(value = LocalMinimumInteractiveComponentSize provides Dp.Unspecified) {
@@ -31,13 +39,13 @@ fun SiteButton(url: String, icon: ImageVector, color: Color, uriHandler: UriHand
             colors = CardDefaults.cardColors(
                 containerColor = color
             ),
-            modifier = Modifier
+            modifier = modifier
                 .size(40.dp)
                 .combinedClickable(
                     onClick = {
                         try {
                             uriHandler.openUri(url)
-                            onClick()
+                            onButtonClick()
                         } catch (e: Exception) {
                             Log.d("Site Button", "Failed to open url", e)
                         }
