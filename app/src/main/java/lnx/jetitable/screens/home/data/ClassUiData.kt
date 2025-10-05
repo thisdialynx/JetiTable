@@ -11,6 +11,7 @@ data class ClassUiData(
     val start: String,
     val end: String,
     val items: String,
+    val weeks: List<String>,
     val meetingLink: String,
     val moodleLink: String,
     val type: String,

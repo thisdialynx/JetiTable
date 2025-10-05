@@ -222,6 +222,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             start = start,
             end = end,
             items = items,
+            weeks = weeks,
             meetingLink = meetingLink,
             moodleLink = moodleLink,
             type = type,
