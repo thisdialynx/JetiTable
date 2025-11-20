@@ -1,15 +1,15 @@
 [versions]
 # compose
 accompanistPermissions = "0.37.3"
-activityCompose = "1.11.0"
+activityCompose = "1.12.0"
 composeMaterial3 = "1.4.0"
-composeBom = "2025.09.01"
+composeBom = "2025.11.01"
 coilComposeVersion = "3.3.0"
 materialIconsCore = "1.7.8"
-navigationCompose = "2.9.5"
+navigationCompose = "2.9.6"
 
 # kotlin
-kotlin = "2.2.20"
+kotlin = "2.2.21"
 
 # kotlinx
 kotlinxSerializationJson = "1.9.0"
@@ -22,22 +22,22 @@ retrofit = "3.0.0"
 jsoupJsoup = "1.21.2"
 
 # android
-agp = "8.13.0"
-coreSplashscreen = "1.0.1"
+agp = "8.13.1"
+coreSplashscreen = "1.2.0"
 coreKtx = "1.17.0"
-datastorePreferences = "1.1.7"
-lifecycleRuntimeKtx = "2.9.4"
-workRuntimeKtx = "2.10.5"
+datastorePreferences = "1.2.0"
+lifecycleRuntimeKtx = "2.10.0"
+workRuntimeKtx = "2.11.0"
 
 # android tests
-uiTests = "1.9.2"
+uiTests = "1.9.5"
 espressoCore = "3.7.0"
 junit = "4.13.2"
 junitVersion = "1.3.0"
 
 # okhttp
-loggingInterceptor = "5.1.0"
-okhttp = "5.1.0"
+loggingInterceptor = "5.3.2"
+okhttp = "5.3.2"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
