@@ -38,8 +38,8 @@ import lnx.jetitable.misc.DataState.Empty
 import lnx.jetitable.misc.DataState.Error
 import lnx.jetitable.misc.DataState.Loading
 import lnx.jetitable.misc.DataState.Success
+import lnx.jetitable.misc.DateManager
 import lnx.jetitable.screens.home.data.ClassUiData
-import lnx.jetitable.screens.home.elements.datepicker.DateManager
 import lnx.jetitable.services.data.DataSyncService.Companion.DATA_SYNC_SERVICE_NAME
 import lnx.jetitable.services.data.UserDataWorker
 

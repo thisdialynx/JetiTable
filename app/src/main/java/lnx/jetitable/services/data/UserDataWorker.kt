@@ -15,7 +15,7 @@ import lnx.jetitable.api.timetable.data.query.ExamListRequest
 import lnx.jetitable.datastore.CookieDataStore
 import lnx.jetitable.datastore.ScheduleDataStore
 import lnx.jetitable.datastore.UserDataStore
-import lnx.jetitable.screens.home.elements.datepicker.DateManager
+import lnx.jetitable.misc.DateManager
 import lnx.jetitable.services.notification.NotifManager
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import java.net.ConnectException

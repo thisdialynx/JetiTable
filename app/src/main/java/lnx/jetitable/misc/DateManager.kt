@@ -1,4 +1,4 @@
-package lnx.jetitable.screens.home.elements.datepicker
+package lnx.jetitable.misc
 
 import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
+import lnx.jetitable.screens.home.elements.datepicker.DateState
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -61,6 +62,19 @@ class DateManager {
     fun getFormattedDate(): String {
         val date = dateFormat.format(selectedDate.value.time)
         return date
+    }
+
+    fun getCurrentSemesterWeek(): Int {
+        val currentDate = Calendar.getInstance()
+        val semesterStartMonth = if (getSemester() == 1) 8 else 1
+        val semesterStart = Calendar.getInstance().apply {
+            set(Calendar.MONTH, semesterStartMonth)
+            set(Calendar.DAY_OF_MONTH, 1)
+        }
+
+        val diffInMillis = currentDate.timeInMillis - semesterStart.timeInMillis
+        val diffInDays = diffInMillis / (1000 * 60 * 60 * 24)
+        return (diffInDays / 7 + 1).toInt()
     }
 
     companion object {

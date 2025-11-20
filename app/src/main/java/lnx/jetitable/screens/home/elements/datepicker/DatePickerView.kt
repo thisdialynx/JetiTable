@@ -13,13 +13,11 @@ import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,7 +27,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import lnx.jetitable.R
 import lnx.jetitable.misc.DataState
@@ -67,33 +64,31 @@ fun DatePickerView(
         ) { DatePicker(state = datePickerState) }
     }
 
-    CompositionLocalProvider(value = LocalMinimumInteractiveComponentSize provides Dp.Unspecified) {
-        val arrowRotation by animateFloatAsState(
-            targetValue = if (showDialog) 180f else 0f
-        )
+    val arrowRotation by animateFloatAsState(
+        targetValue = if (showDialog) 180f else 0f
+    )
 
-        Surface(
-            onClick = { showDialog = true },
-            shape = RoundedCornerShape(8.dp),
-            color = Color.Transparent,
-            enabled = connectionState == DataState.Success(true)
+    Surface(
+        onClick = { showDialog = true },
+        shape = RoundedCornerShape(8.dp),
+        color = Color.Transparent,
+        enabled = connectionState == DataState.Success(true)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-            ) {
-                Text(
-                    text = formattedDate,
-                    color = MaterialTheme.colorScheme.primary,
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Icon(
-                    imageVector = Icons.Rounded.KeyboardArrowDown,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.rotate(arrowRotation)
-                )
-            }
+            Text(
+                text = formattedDate,
+                color = MaterialTheme.colorScheme.primary,
+                style = MaterialTheme.typography.titleMedium
+            )
+            Icon(
+                imageVector = Icons.Rounded.KeyboardArrowDown,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.rotate(arrowRotation)
+            )
         }
     }
 }
