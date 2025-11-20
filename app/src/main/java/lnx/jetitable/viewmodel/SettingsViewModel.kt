@@ -19,7 +19,7 @@ import lnx.jetitable.datastore.UserDataStore
 import lnx.jetitable.misc.AndroidConnectivityObserver
 import lnx.jetitable.misc.DataState
 import lnx.jetitable.misc.DataState.Error
-import lnx.jetitable.screens.home.elements.datepicker.DateManager
+import lnx.jetitable.misc.DateManager
 
 data class UserDataUiState(
     val fullName: Pair<String, Int>,
