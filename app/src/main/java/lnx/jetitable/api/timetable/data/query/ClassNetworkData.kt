@@ -14,7 +14,7 @@ data class ClassNetworkData(
     val start: String,
     val end: String,
     val items: String,
-    val weeks: List<String>,
+    val weeks: List<String> = emptyList(),
     val meetingLink: String,
     val moodleLink: String,
     val type: String,
