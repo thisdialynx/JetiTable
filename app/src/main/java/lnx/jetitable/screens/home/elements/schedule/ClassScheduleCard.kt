@@ -28,6 +28,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -72,7 +73,7 @@ fun ClassScheduleCard(
 
     Card(
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainer
+            containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp)
         )
     ) {
         Column(
@@ -140,8 +141,8 @@ private fun Content(
     onPresenceVerify: (ClassUiData) -> Unit
 ) {
     val targetColor = if (classList is DataState.Success)
-        MaterialTheme.colorScheme.surfaceContainer else
-        MaterialTheme.colorScheme.surfaceContainerHigh
+        MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp) else
+        MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)
 
     Card(
         colors = CardDefaults.cardColors(
@@ -173,7 +174,7 @@ private fun Content(
                             val cardColors = if (classItem.isNow) {
                                 MaterialTheme.colorScheme.primaryContainer to MaterialTheme.colorScheme.onPrimaryContainer
                             } else {
-                                MaterialTheme.colorScheme.surfaceContainerHigh to MaterialTheme.colorScheme.onSurface
+                                MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp) to MaterialTheme.colorScheme.onSurface
                             }
 
                             ContentRow(
@@ -423,8 +424,8 @@ private fun DetailsContent(
 
                         Surface(
                             shape = CircleShape,
-                            color = if (isCurrentWeek) MaterialTheme.colorScheme.tertiary else
-                                MaterialTheme.colorScheme.surfaceContainerHighest
+                            color = if (isCurrentWeek) MaterialTheme.colorScheme.surfaceColorAtElevation(12.dp) else
+                                MaterialTheme.colorScheme.surfaceColorAtElevation(4.dp)
                         ) {
                             Box(
                                 contentAlignment = Alignment.Center,
