@@ -5,9 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
@@ -35,7 +33,10 @@ import lnx.jetitable.screens.settings.SettingItem
 
 @Composable
 fun ContributorsCard(localUriHandler: UriHandler) {
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(2.dp)
+    ) {
         ContributorItem.entries.forEachIndexed { index, item ->
             val isLastItem = index == SettingItem.entries.size - 1
             
@@ -50,8 +51,6 @@ fun ContributorsCard(localUriHandler: UriHandler) {
                 bottomStart = bottomStart,
                 bottomEnd = bottomEnd
             )
-
-            if (index > 0) Spacer(modifier = Modifier.height(2.dp))
 
             Surface(
                 color = MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp),
