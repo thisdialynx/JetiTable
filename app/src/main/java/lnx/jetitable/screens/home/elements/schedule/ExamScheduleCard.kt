@@ -25,6 +25,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -59,7 +60,7 @@ fun ExamScheduleCard(
 
     Card(
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainer
+            containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp)
         )
     ) {
         Column(
@@ -120,8 +121,8 @@ private fun Content(
     examList: DataState<out List<ExamNetworkData>>
 ) {
     val targetColor = if (examList is DataState.Success)
-        MaterialTheme.colorScheme.surfaceContainer else
-        MaterialTheme.colorScheme.surfaceContainerHigh
+        MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp) else
+        MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)
 
     Card(
         colors = CardDefaults.cardColors(
@@ -226,7 +227,7 @@ private fun MainContent(
 ) {
     with(sharedTransitionScope) {
         Surface(
-            color = MaterialTheme.colorScheme.surfaceContainerHigh,
+            color = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp),
             onClick = onClick,
             shape = shape,
             modifier = Modifier.sharedElement(
@@ -302,7 +303,7 @@ private fun DetailsContent(
                     animatedVisibilityScope = animatedVisibilityScope
                 ),
             shape = shape,
-            color = MaterialTheme.colorScheme.surfaceContainerHigh,
+            color = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp),
             onClick = onClick
         ) {
             Column(

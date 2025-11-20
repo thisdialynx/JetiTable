@@ -12,6 +12,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,7 +40,7 @@ fun SettingsCard(onDestinationNavigate: (String) -> Unit) {
         if (index > 0) Spacer(modifier = Modifier.height(2.dp))
 
         Surface(
-            color = MaterialTheme.colorScheme.surfaceContainer,
+            color = MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp),
             onClick = { onDestinationNavigate(item.destination) },
             modifier = Modifier.fillMaxWidth(),
             shape = shape

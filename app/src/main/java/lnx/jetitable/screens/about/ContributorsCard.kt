@@ -20,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,7 +54,7 @@ fun ContributorsCard(localUriHandler: UriHandler) {
             if (index > 0) Spacer(modifier = Modifier.height(2.dp))
 
             Surface(
-                color = MaterialTheme.colorScheme.surfaceContainer,
+                color = MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp),
                 modifier = Modifier.fillMaxWidth(),
                 shape = shape
             ) {
@@ -66,7 +67,7 @@ fun ContributorsCard(localUriHandler: UriHandler) {
                             .wrapContentSize()
                             .size(48.dp)
                             .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.surfaceContainerHigh),
+                            .background(MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
@@ -97,7 +98,7 @@ fun ContributorsCard(localUriHandler: UriHandler) {
                     }
                     Card(
                         modifier = Modifier.wrapContentWidth(),
-                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)),
                         onClick = { localUriHandler.openUri("https://${item.shortUrl}") }
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {

@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package lnx.jetitable.screens.settings
 
 import androidx.compose.foundation.layout.Arrangement
@@ -37,7 +39,6 @@ enum class SettingItem(
     ABOUT(R.string.about_screen_title, R.string.about_screen_description, lnx.jetitable.ui.icons.google.Info, About.route)
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsUI(
     onBack: () -> Unit,
