@@ -96,7 +96,7 @@ private fun CardTitle(
         Icon(
             imageVector = ContractEdit,
             contentDescription = null,
-            modifier = Modifier.padding(end = 4.dp)
+            modifier = Modifier.padding(start = 4.dp, end = 8.dp)
         )
         Text(
             text = stringResource(R.string.exam_schedule),
