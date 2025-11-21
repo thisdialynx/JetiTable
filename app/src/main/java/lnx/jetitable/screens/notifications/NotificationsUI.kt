@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
+
 package lnx.jetitable.screens.notifications
 
 import android.Manifest
@@ -52,10 +54,11 @@ import lnx.jetitable.R
 import lnx.jetitable.screens.notifications.cards.EventOptionsCard
 import lnx.jetitable.screens.notifications.dialogs.PermissionRequestDialog
 import lnx.jetitable.ui.components.AppSnackbar
+import lnx.jetitable.ui.icons.google.CalendarMonth
+import lnx.jetitable.ui.icons.google.ContractEdit
 import lnx.jetitable.viewmodel.SchedulePrefs
 
 @SuppressLint("InlinedApi")
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
 fun NotificationsUI(
     onBack: () -> Unit,
@@ -175,6 +178,7 @@ fun NotificationsUI(
                 }
             )
             EventOptionsCard(
+                icon = CalendarMonth,
                 title = stringResource(R.string.activity_type_classes),
                 enabled = notificationsEnabled == true,
                 checked = schedulePrefs.classPrefs.isEnabled,
@@ -183,6 +187,7 @@ fun NotificationsUI(
                 onTimeSelected = onClassTimeSelected
             )
             EventOptionsCard(
+                icon = ContractEdit,
                 title = stringResource(R.string.activity_type_exams),
                 enabled = notificationsEnabled == true,
                 checked = schedulePrefs.examPrefs.isEnabled,
