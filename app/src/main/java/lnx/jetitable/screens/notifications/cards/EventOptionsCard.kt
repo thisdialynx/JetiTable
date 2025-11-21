@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material3.ButtonDefaults
@@ -38,6 +39,7 @@ import lnx.jetitable.R
 
 @Composable
 fun EventOptionsCard(
+    icon: ImageVector,
     title: String,
     enabled: Boolean,
     checked: Boolean,
@@ -53,45 +55,58 @@ fun EventOptionsCard(
         30 to stringResource(R.string.before_event_minutes, 30),
         45 to stringResource(R.string.before_event_minutes, 45)
     )
+    val titleColor = if (checked) MaterialTheme.colorScheme.primary else
+        MaterialTheme.colorScheme.onSurface
 
-    Card(
-        shape = MaterialTheme.shapes.medium,
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp)
-        )
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
+    Column {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = titleColor,
+                modifier = Modifier.padding(end = 4.dp)
+            )
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleMedium,
+                color = titleColor,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.weight(1f)
+            )
+            Switch(
+                checked = checked,
+                onCheckedChange = onCheckedChange,
+                enabled = enabled
+            )
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        Card(
+            shape = MaterialTheme.shapes.medium,
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp)
+            )
+        ) {
+            Column(
+                modifier = Modifier.padding(8.dp)
             ) {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.weight(1f)
-                )
-                Switch(
-                    checked = checked,
-                    onCheckedChange = onCheckedChange,
-                    enabled = enabled
+                EventCardSuboptionRow(
+                    isDropdownMenuOpen = isTimePickerDropdownOpened,
+                    onDropdownButtonPressed = { isTimePickerDropdownOpened = !isTimePickerDropdownOpened },
+                    dropdownMenuButtonLabel = stringResource(R.string.before_event_minutes, selectedMinutes.toString()),
+                    enabled = checked,
+                    options = timeOptions,
+                    selectedOption = selectedMinutes,
+                    onOptionSelected = onTimeSelected,
+                    optionTitle = stringResource(R.string.time_before_card_title),
+                    icon = lnx.jetitable.ui.icons.google.Schedule
                 )
             }
-            Spacer(modifier = Modifier.height(8.dp))
-            EventCardSuboptionRow(
-                isDropdownMenuOpen = isTimePickerDropdownOpened,
-                onDropdownButtonPressed = { isTimePickerDropdownOpened = !isTimePickerDropdownOpened },
-                dropdownMenuButtonLabel = stringResource(R.string.before_event_minutes, selectedMinutes.toString()),
-                enabled = checked,
-                options = timeOptions,
-                selectedOption = selectedMinutes,
-                onOptionSelected = onTimeSelected,
-                optionTitle = stringResource(R.string.time_before_card_title),
-                icon = lnx.jetitable.ui.icons.google.Schedule
-            )
         }
     }
 }
@@ -115,7 +130,9 @@ fun EventCardSuboptionRow(
         Icon(
             imageVector = icon,
             contentDescription = optionTitle,
-            modifier = Modifier.padding(start = 8.dp)
+            modifier = Modifier
+                .padding(start = 8.dp)
+                .size(20.dp)
         )
         Text(
             text = optionTitle,
