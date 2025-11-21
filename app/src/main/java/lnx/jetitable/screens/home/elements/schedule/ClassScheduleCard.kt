@@ -101,7 +101,7 @@ private fun CardTitle(
         Icon(
             imageVector = CalendarMonth,
             contentDescription = null,
-            modifier = Modifier.padding(end = 4.dp)
+            modifier = Modifier.padding(start = 4.dp)
         )
         Row(modifier = Modifier.weight(1f)) {
             DatePickerView(
