@@ -96,4 +96,5 @@
     <string name="joins">Приєднання: %1$s</string>
     <string name="empty_list">Список порожній</string>
     <string name="attendance_log">Журнал відвідуваності</string>
+    <string name="debug_update_unavailable">Перевірка оновлень у debug версії вимкнена</string>
 </resources>
