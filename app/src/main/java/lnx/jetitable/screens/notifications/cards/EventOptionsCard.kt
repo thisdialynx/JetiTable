@@ -112,7 +112,7 @@ fun EventOptionsCard(
 }
 
 @Composable
-fun EventCardSuboptionRow(
+private fun EventCardSuboptionRow(
     isDropdownMenuOpen: Boolean,
     onDropdownButtonPressed: () -> Unit,
     dropdownMenuButtonLabel: String,
