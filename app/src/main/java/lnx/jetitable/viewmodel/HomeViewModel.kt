@@ -9,7 +9,9 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
@@ -20,11 +22,14 @@ import kotlinx.coroutines.withContext
 import lnx.jetitable.BuildConfig
 import lnx.jetitable.R
 import lnx.jetitable.api.RetrofitHolder
+import lnx.jetitable.api.timetable.TimeTableApiService.Companion.ATTENDANCE_LIST
 import lnx.jetitable.api.timetable.TimeTableApiService.Companion.CHECK_ZOOM
 import lnx.jetitable.api.timetable.TimeTableApiService.Companion.DAILY_CLASS_LIST
 import lnx.jetitable.api.timetable.TimeTableApiService.Companion.EXAM_LIST
 import lnx.jetitable.api.timetable.TimeTableApiService.Companion.STATE
 import lnx.jetitable.api.timetable.data.login.User
+import lnx.jetitable.api.timetable.data.query.AttendanceListData
+import lnx.jetitable.api.timetable.data.query.AttendanceListRequest
 import lnx.jetitable.api.timetable.data.query.ClassListRequest
 import lnx.jetitable.api.timetable.data.query.ClassNetworkData
 import lnx.jetitable.api.timetable.data.query.ExamListRequest
@@ -34,6 +39,7 @@ import lnx.jetitable.datastore.AppPreferences
 import lnx.jetitable.datastore.ScheduleDataStore
 import lnx.jetitable.datastore.UserDataStore
 import lnx.jetitable.misc.AndroidConnectivityObserver
+import lnx.jetitable.misc.DataState
 import lnx.jetitable.misc.DataState.Empty
 import lnx.jetitable.misc.DataState.Error
 import lnx.jetitable.misc.DataState.Loading
@@ -91,6 +97,9 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = false
         )
+
+    private val _attendanceListState = MutableStateFlow<DataState<out List<AttendanceListData>>>(Loading)
+    val attendanceListState = _attendanceListState.asStateFlow()
 
     val classesFlow = combine(
         userData,
@@ -250,6 +259,34 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
         return examList
+    }
+
+    fun getAttendanceList(uiClass: ClassUiData) {
+        val studentsAcademyGroup = "1" // temp
+
+        viewModelScope.launch(Dispatchers.IO) {
+            _attendanceListState.value = Loading
+            try {
+                val list = service.get_listStudent(
+                    AttendanceListRequest(
+                        ATTENDANCE_LIST,
+                        uiClass.group,
+                        uiClass.number,
+                        uiClass.name,
+                        uiClass.id,
+                        uiClass.type,
+                        studentsAcademyGroup,
+                        uiClass.date,
+                        uiClass.educatorId
+                    )
+                )
+
+                _attendanceListState.value = if (list.isEmpty()) Empty else Success(list)
+            } catch (e: Exception) {
+                Log.e("Attendance", "Failed to load", e)
+                _attendanceListState.value = Error(R.string.something_went_wrong, e)
+            }
+        }
     }
 
     fun verifyPresence(uiClass: ClassUiData) {

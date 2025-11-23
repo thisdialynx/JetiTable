@@ -1,19 +1,16 @@
 package lnx.jetitable.screens.home
 
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import lnx.jetitable.api.timetable.data.query.ExamNetworkData
 import lnx.jetitable.misc.DataState
 import lnx.jetitable.screens.home.data.ClassUiData
 import lnx.jetitable.screens.home.elements.datepicker.DateState
 import lnx.jetitable.viewmodel.HomeViewModel
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
 fun HomeScreen(
     onSettingsNavigate: () -> Unit,
@@ -24,10 +21,14 @@ fun HomeScreen(
     val connectionState by viewModel.isConnected.collectAsStateWithLifecycle()
     val classList by viewModel.classesFlow.collectAsStateWithLifecycle()
     val examList by viewModel.examsFlow.collectAsStateWithLifecycle()
+    val attendanceList by viewModel.attendanceListState.collectAsStateWithLifecycle()
     val notificationTipState by viewModel.notificationTipState.collectAsStateWithLifecycle()
+    val userData by viewModel.userData.collectAsStateWithLifecycle()
 
     HomeUI(
-        dateState, classList, examList, connectionState, notificationTipState,
+        dateState, classList, examList, attendanceList,userData.fullName, connectionState, notificationTipState,
+
+        onAttendanceListRequest = { viewModel.getAttendanceList(it) },
         onDateUpdate = { viewModel.updateDate(it) },
         onForwardDateShift = { viewModel.shiftDayForward() },
         onBackwardDateShift = { viewModel.shiftDayBackward() },
@@ -43,7 +44,6 @@ fun HomeScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Preview
 @Composable
 private fun HomeScreenPreview() {
@@ -179,7 +179,10 @@ private fun HomeScreenPreview() {
                 )
             )
         ),
+        attendanceList = DataState.Empty,
+        studentFullName = "Hondar Oleksii Vitaliiovych",
         connectionState = DataState.Success(true),
+        onAttendanceListRequest = {},
         onDateUpdate = {},
         onForwardDateShift = {},
         onBackwardDateShift = {},
@@ -191,9 +194,8 @@ private fun HomeScreenPreview() {
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Preview
-@Composable()
+@Composable
 private fun EmptyHomeScreenPreview() {
     HomeUI(
         dateState = DateState(
@@ -201,7 +203,10 @@ private fun EmptyHomeScreenPreview() {
         ),
         classList = DataState.Empty,
         examList = DataState.Empty,
+        attendanceList = DataState.Empty,
+        studentFullName = "",
         connectionState = DataState.Success(true),
+        onAttendanceListRequest = {},
         onDateUpdate = {},
         onForwardDateShift = {},
         onBackwardDateShift = {},

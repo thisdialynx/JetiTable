@@ -24,7 +24,7 @@
     <string name="no_classes">No classes for this day!</string>
     <string name="educator">Educator: %1$s</string>
     <string name="class_number">Class number: %1$s</string>
-    <string name="class_group">Group: %1$s</string>
+    <string name="group">Group: %1$s</string>
     <string name="about_screen_title">About</string>
     <string name="university">University</string>
     <string name="developer">Developer</string>
@@ -47,7 +47,7 @@
     <string name="getting_list">Getting list…</string>
     <string name="hide_password">Hide password</string>
     <string name="show_password">Show password</string>
-    <string name="status">Status</string>
+    <string name="status">Status: %1$s</string>
     <string name="about_screen_description">App version, links and contributors</string>
     <string name="no_internet_connection">No internet connection</string>
     <string name="class_room">Room: %1$s</string>
@@ -95,4 +95,7 @@
     <string name="internet_connection_check_fail">Failed to check the internet connection</string>
     <string name="account_data_fetch_failure">Couldn\'t fetch account data</string>
     <string name="loading">Loading…</string>
+    <string name="joins">Joins: %1$s</string>
+    <string name="empty_list">The list is empty</string>
+    <string name="attendance_log">Attendance log</string>
 </resources>

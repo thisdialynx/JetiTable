@@ -6,6 +6,8 @@ import lnx.jetitable.api.timetable.data.login.LoginRequest
 import lnx.jetitable.api.timetable.data.login.LoginResponse
 import lnx.jetitable.api.timetable.data.login.MailRequest
 import lnx.jetitable.api.timetable.data.login.MailResponse
+import lnx.jetitable.api.timetable.data.query.AttendanceListData
+import lnx.jetitable.api.timetable.data.query.AttendanceListRequest
 import lnx.jetitable.api.timetable.data.query.ClassListRequest
 import lnx.jetitable.api.timetable.data.query.ClassNetworkData
 import lnx.jetitable.api.timetable.data.query.ExamListRequest
@@ -48,6 +50,11 @@ interface TimeTableApiService {
         @Body request: ExamListRequest
     ): List<ExamNetworkData>
 
+    @POST(QUERY_PHP)
+    suspend fun get_listStudent(
+        @Body request: AttendanceListRequest
+    ): List<AttendanceListData>
+
     companion object {
         const val BASE_URL = "https://placeholder.com"
 
@@ -65,5 +72,6 @@ interface TimeTableApiService {
         const val STATE = "placeholder"
         const val CHECK_ZOOM = "placeholder"
         const val EXAM_LIST = "placeholder"
+        const val ATTENDANCE_LIST = "placeholder"
     }
 }

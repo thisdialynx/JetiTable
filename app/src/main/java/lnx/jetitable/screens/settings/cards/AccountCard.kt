@@ -73,7 +73,7 @@ fun AccountCard(
                     is DataState.Success -> {
                         val title = stringResource(R.string.timetable_account, stringResource(R.string.timetable))
                         val description = "${state.data.fullName.first} (${state.data.group.first}).\n" +
-                                "${stringResource(R.string.status)}: ${state.data.status}. ${state.data.academicYears}. " +
+                                "${stringResource(R.string.status, state.data.status)}. ${state.data.academicYears}. " +
                                 "${stringResource(state.data.semesterResId)}. ${stringResource(state.data.formOfEducationResId)}."
 
                         AccountContent(title, description) {
