@@ -20,7 +20,7 @@ import lnx.jetitable.R
 
 @Composable
 fun AppInfo(localUriHandler: UriHandler, appIcon: @Composable () -> Unit) {
-    val version = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
+    val version = "${BuildConfig.VERSION_NAME} ${BuildConfig.BUILD_TYPE} (${BuildConfig.VERSION_CODE})"
 
     Spacer(modifier = Modifier.height(8.dp))
     Column(
