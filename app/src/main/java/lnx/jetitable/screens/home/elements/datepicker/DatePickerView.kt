@@ -24,8 +24,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import lnx.jetitable.R
@@ -64,7 +64,7 @@ fun DatePickerView(
         ) { DatePicker(state = datePickerState) }
     }
 
-    val arrowRotation by animateFloatAsState(
+    val arrowRotation = animateFloatAsState(
         targetValue = if (showDialog) 180f else 0f
     )
 
@@ -87,7 +87,9 @@ fun DatePickerView(
                 imageVector = Icons.Rounded.KeyboardArrowDown,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.rotate(arrowRotation)
+                modifier = Modifier.graphicsLayer {
+                    this.rotationZ = arrowRotation.value
+                }
             )
         }
     }

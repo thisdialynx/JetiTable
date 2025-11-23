@@ -30,7 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -123,6 +123,10 @@ fun EventCardSuboptionRow(
     optionTitle: String,
     icon: ImageVector
     ) {
+    val arrowRotation = animateFloatAsState(
+        targetValue = if (isDropdownMenuOpen) 180f else 0f
+    )
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -141,10 +145,6 @@ fun EventCardSuboptionRow(
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Box {
-            val arrowRotation by animateFloatAsState(
-                targetValue = if (isDropdownMenuOpen) 180f else 0f
-            )
-
             TextButton(
                 onClick = onDropdownButtonPressed,
                 enabled = enabled,
@@ -160,7 +160,9 @@ fun EventCardSuboptionRow(
                 Icon(
                     imageVector = Icons.Rounded.KeyboardArrowDown,
                     contentDescription = null,
-                    modifier = Modifier.rotate(arrowRotation)
+                    modifier = Modifier.graphicsLayer {
+                        this.rotationZ = arrowRotation.value
+                    }
                 )
             }
             DropdownMenu(
