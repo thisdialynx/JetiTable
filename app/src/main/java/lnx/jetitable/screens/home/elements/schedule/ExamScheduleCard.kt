@@ -33,7 +33,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.Clipboard
 import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalUriHandler
@@ -85,7 +85,7 @@ private fun CardTitle(
     expanded: Boolean,
     onCardExpanded: () -> Unit,
 ) {
-    val arrowRotation by animateFloatAsState(
+    val arrowRotation = animateFloatAsState(
         targetValue = if (expanded) 180f else 0f
     )
 
@@ -107,7 +107,9 @@ private fun CardTitle(
         ) {
             Icon(
                 imageVector = Icons.Rounded.KeyboardArrowDown,
-                modifier = Modifier.rotate(arrowRotation),
+                modifier = Modifier.graphicsLayer {
+                    this.rotationZ = arrowRotation.value
+                },
                 contentDescription = null
             )
         }
