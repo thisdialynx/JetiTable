@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package lnx.jetitable.screens.home
 
 import android.icu.util.Calendar
@@ -30,9 +32,9 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import kotlinx.coroutines.delay
 import lnx.jetitable.R
+import lnx.jetitable.api.timetable.data.query.AttendanceListData
 import lnx.jetitable.api.timetable.data.query.ExamNetworkData
 import lnx.jetitable.misc.DataState
 import lnx.jetitable.screens.home.data.ClassUiData
@@ -42,18 +44,20 @@ import lnx.jetitable.screens.home.elements.schedule.ExamScheduleCard
 import lnx.jetitable.ui.components.AppSnackbar
 import lnx.jetitable.ui.icons.google.Settings as SettingsIcon
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
 fun HomeUI(
     dateState: DateState,
     classList: DataState<out List<ClassUiData>>,
     examList: DataState<out List<ExamNetworkData>>,
+    attendanceList: DataState<out List<AttendanceListData>>,
+    studentFullName: String,
     connectionState: DataState<out Boolean>,
     notificationTipState: Boolean,
     onDateUpdate: (Calendar) -> Unit,
     onForwardDateShift: () -> Unit,
     onBackwardDateShift: () -> Unit,
     onPresenceVerify: (ClassUiData) -> Unit,
+    onAttendanceListRequest: (ClassUiData) -> Unit,
     onSettingsNavigate: () -> Unit,
     onNotificationsNavigate: () -> Unit,
     onSnackbarDismiss: () -> Unit
@@ -126,7 +130,10 @@ fun HomeUI(
             item {
                 ClassScheduleCard(
                     classList = classList,
+                    attendanceList = attendanceList,
+                    studentFullName = studentFullName,
                     dateState = dateState,
+                    onAttendanceListRequest = onAttendanceListRequest,
                     onPresenceVerify = onPresenceVerify,
                     onDateUpdate = onDateUpdate,
                     onBackwardDateShift = onBackwardDateShift,

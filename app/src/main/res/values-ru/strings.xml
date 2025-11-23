@@ -24,7 +24,7 @@
     <string name="no_classes">Занятия на указанную дату отсувствуют</string>
     <string name="educator">Преподаватель: %1$s</string>
     <string name="class_number">Номер п/п: %1$s</string>
-    <string name="class_group">Группа: %1$s</string>
+    <string name="group">Группа: %1$s</string>
     <string name="about_screen_title">О приложении</string>
     <string name="university">Университет</string>
     <string name="developer">Разработчик</string>
@@ -45,7 +45,7 @@
     <string name="getting_list">Загрузка расписания…</string>
     <string name="hide_password">Скрыть пароль</string>
     <string name="show_password">Показать пароль</string>
-    <string name="status">Статус</string>
+    <string name="status">Статус: %1$s</string>
     <string name="about_screen_description">Версия приложения, ссылки и участники проекта</string>
     <string name="no_internet_connection">Интернет подключение отсутствует</string>
     <string name="class_room">Аудитория: %1$s</string>
@@ -93,4 +93,7 @@
     <string name="internet_connection_check_fail">Не удалось проверить подключение к интернету</string>
     <string name="account_data_fetch_failure">Не удалось получить данные аккаунта</string>
     <string name="loading">Загрузка…</string>
+    <string name="joins">Присоеденения: %1$s</string>
+    <string name="empty_list">Список пуст</string>
+    <string name="attendance_log">Журнал посещаемости</string>
 </resources>

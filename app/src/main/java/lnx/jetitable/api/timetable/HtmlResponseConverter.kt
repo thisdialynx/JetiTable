@@ -4,6 +4,7 @@ import android.util.Log
 import lnx.jetitable.BuildConfig
 import lnx.jetitable.api.timetable.data.login.AccessResponse
 import lnx.jetitable.api.timetable.data.login.User
+import lnx.jetitable.api.timetable.data.query.AttendanceListData
 import lnx.jetitable.api.timetable.data.query.ClassNetworkData
 import lnx.jetitable.api.timetable.data.query.ExamNetworkData
 import okhttp3.ResponseBody
@@ -44,6 +45,11 @@ class HtmlConverterFactory : Converter.Factory() {
                         parseLessonHtml(it.string())
                     }
                 }
+                AttendanceListData::class.java -> {
+                    return Converter<ResponseBody, List<AttendanceListData>> {
+                        parseAttendanceListHtml(it.string())
+                    }
+                }
             }
         }
 
@@ -51,12 +57,12 @@ class HtmlConverterFactory : Converter.Factory() {
     }
 }
 
-fun parseExamsHtml(html: String): List<ExamNetworkData> {
+private fun parseExamsHtml(html: String): List<ExamNetworkData> {
     val document: Document = Jsoup.parse("<html><body><table>$html</table></body></html>")
     val exams = mutableListOf<ExamNetworkData>()
 
     try {
-        document.select("tr").forEach { row: Element ->
+        document.select("tr").forEach { row ->
             val date = row.attr("data-date")
             val classNumber = row.attr("data-numlesson")
             val time = row.attr("data-time")
@@ -66,14 +72,7 @@ fun parseExamsHtml(html: String): List<ExamNetworkData> {
             val url = row.select("span[onclick]").attr("onclick")
                 .substringAfter("('").substringBefore("')")
 
-            val examNetworkData = ExamNetworkData(
-                date = date,
-                time = time,
-                number = classNumber,
-                name = className,
-                educator = educator,
-                url = url
-            )
+            val examNetworkData = ExamNetworkData(date, time, classNumber, className, educator, url)
 
             if (BuildConfig.DEBUG) Log.d("Exam html parser", "Extracted data: $examNetworkData")
 
@@ -85,7 +84,7 @@ fun parseExamsHtml(html: String): List<ExamNetworkData> {
     return exams
 }
 
-fun parseLessonHtml(html: String): List<ClassNetworkData> {
+private fun parseLessonHtml(html: String): List<ClassNetworkData> {
     val classes = mutableListOf<ClassNetworkData>()
 
     if (html.contains("відсутні", ignoreCase = true)) {
@@ -112,27 +111,24 @@ fun parseLessonHtml(html: String): List<ClassNetworkData> {
             val meetingLink = if (meetingMatcher.find()) meetingMatcher.group(1) else ""
             val moodleLink = if (moodleMatcher.find()) moodleMatcher.group(1) else ""
 
+            val id = element.attr("data-id_lesson")
+            val group = element.attr("data-group")
+            val number = element.attr("data-numlesson")
+            val educator = element.attr("data-fio")
+            val name = element.attr("data-lesson")
+            val educatorId = element.attr("data-id_fio")
+            val date = element.attr("data-dateles")
+            val start = element.attr("data-timebeg").substring(0, 5)
+            val end = element.attr("data-timeend").substring(0, 5)
+            val items = element.attr("data-items")
             val type = element.selectFirst("td.tabPSC[style*=text-align:center; font-weight:bold;]")?.text() ?: ""
             val room = element.select("td.tabPSC").last()?.text() ?: ""
-
-            val weeks = element.selectFirst("td.tabPS[style*=padding-left: 10px;]")?.text()?.split(",")?.map { it.trim() } ?: emptyList()
+            val weeks = element.selectFirst("td.tabPS[style*=padding-left: 10px;]")?.text()?.split(",")?.map {
+                it.trim()
+            } ?: emptyList()
 
             val classNetworkData = ClassNetworkData(
-                id = element.attr("data-id_lesson"),
-                group = element.attr("data-group"),
-                number = element.attr("data-numlesson"),
-                educator = element.attr("data-fio"),
-                name = element.attr("data-lesson"),
-                educatorId = element.attr("data-id_fio"),
-                date = element.attr("data-dateles"),
-                start = element.attr("data-timebeg").substring(0, 5),
-                end = element.attr("data-timeend").substring(0, 5),
-                items = element.attr("data-items"),
-                weeks = weeks,
-                meetingLink = meetingLink,
-                moodleLink = moodleLink,
-                type = type,
-                room = room
+                id, group, number, educator, name, educatorId, date, start, end, items, weeks, meetingLink, moodleLink, type, room
             )
 
             if (BuildConfig.DEBUG) Log.d("Class html parser", "Extracted data: $classNetworkData")
@@ -146,7 +142,7 @@ fun parseLessonHtml(html: String): List<ClassNetworkData> {
     return classes
 }
 
-fun parseAccessResponse(jsonString: String): AccessResponse {
+private fun parseAccessResponse(jsonString: String): AccessResponse {
     val jsonObject = JSONObject(jsonString)
 
     val access = jsonObject.getJSONArray("access").let { array ->
@@ -170,10 +166,36 @@ fun parseAccessResponse(jsonString: String): AccessResponse {
         facultyCode = userJsonObject.getInt("kod_faculty")
     )
 
-    return AccessResponse(
-        access = access,
-        accessToken = accessToken,
-        status = status,
-        user = user
-    )
+    return AccessResponse(access, accessToken, status, user)
+}
+
+private fun parseAttendanceListHtml(html: String): List<AttendanceListData> {
+    val document: Document = Jsoup.parse("<html><body><table>$html</table></body></html>")
+    val attendanceList = mutableListOf<AttendanceListData>()
+
+    try {
+        document.select("tr").forEach { row ->
+            val cells = row.select("td.tabPS")
+
+            if (cells.size >= 6) {
+                val fullName = cells[1].text()
+                val role = cells[2].text()
+                val group = cells[3].text()
+                val time = cells[4].text()
+                val joins = cells[5].text()
+
+                val attendanceData = AttendanceListData(fullName, role, group, time, joins)
+
+                if (BuildConfig.DEBUG) Log.d("Attendance list parser", "Extracted data: $attendanceData")
+
+                attendanceList.add(attendanceData)
+            } else {
+                return emptyList()
+            }
+        }
+    } catch (e: Exception) {
+        Log.e("Attendance list parser", "Failed to parse attendance html", e)
+    }
+
+    return attendanceList
 }

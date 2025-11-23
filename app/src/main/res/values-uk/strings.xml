@@ -24,7 +24,7 @@
     <string name="no_classes">Заняття на вказану дату відсутні</string>
     <string name="educator">Викладач: %1$s</string>
     <string name="class_number">Номер з/п: %1$s</string>
-    <string name="class_group">Група: %1$s</string>
+    <string name="group">Група: %1$s</string>
     <string name="about_screen_title">Про застосунок</string>
     <string name="university">Університет</string>
     <string name="developer">Розробник</string>
@@ -45,7 +45,7 @@
     <string name="getting_list">Завантаження розкладу…</string>
     <string name="hide_password">Приховати пароль</string>
     <string name="show_password">Показати пароль</string>
-    <string name="status">Статус</string>
+    <string name="status">Статус: %1$s</string>
     <string name="about_screen_description">Версія застосунку, посилання та дописувачі</string>
     <string name="no_internet_connection">Немає інтернет з\'єднання</string>
     <string name="class_room">Аудиторія: %1$s</string>
@@ -93,4 +93,7 @@
     <string name="internet_connection_check_fail">Не вдалося перевірити підключення до интернету</string>
     <string name="account_data_fetch_failure">Не вдалося отримати дані акаунта</string>
     <string name="loading">Завантаження…</string>
+    <string name="joins">Приєднання: %1$s</string>
+    <string name="empty_list">Список порожній</string>
+    <string name="attendance_log">Журнал відвідуваності</string>
 </resources>

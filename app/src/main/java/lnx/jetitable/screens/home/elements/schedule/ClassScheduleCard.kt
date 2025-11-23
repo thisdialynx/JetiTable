@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
+import androidx.compose.material.icons.automirrored.rounded.List
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -45,6 +46,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import lnx.jetitable.R
+import lnx.jetitable.api.timetable.data.query.AttendanceListData
 import lnx.jetitable.misc.DataState
 import lnx.jetitable.misc.DateManager
 import lnx.jetitable.screens.home.data.ClassUiData
@@ -61,8 +63,11 @@ import lnx.jetitable.ui.icons.google.Mood
 @Composable
 fun ClassScheduleCard(
     classList: DataState<out List<ClassUiData>>,
+    attendanceList: DataState<out List<AttendanceListData>>,
+    studentFullName: String,
     dateState: DateState,
     connectionState: DataState<out Boolean>,
+    onAttendanceListRequest: (ClassUiData) -> Unit,
     onPresenceVerify: (ClassUiData) -> Unit,
     onDateUpdate: (Calendar) -> Unit,
     onBackwardDateShift: () -> Unit,
@@ -81,7 +86,7 @@ fun ClassScheduleCard(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             CardTitle(dateState, connectionState, onDateUpdate, onForwardDateShift, onBackwardDateShift)
-            Content(localUriHandler, clipboardManager, classList, onPresenceVerify)
+            Content(localUriHandler, clipboardManager, classList, attendanceList, studentFullName, onAttendanceListRequest, onPresenceVerify)
         }
     }
 }
@@ -138,6 +143,9 @@ private fun Content(
     localUriHandler: UriHandler,
     clipboardManager: Clipboard,
     classList: DataState<out List<ClassUiData>>,
+    attendanceList: DataState<out List<AttendanceListData>>,
+    studentFullName: String,
+    onAttendanceListRequest: (ClassUiData) -> Unit,
     onPresenceVerify: (ClassUiData) -> Unit
 ) {
     val targetColor = if (classList is DataState.Success)
@@ -182,6 +190,9 @@ private fun Content(
                                 isLastElement = index == classList.data.size - 1,
                                 contentColors = cardColors,
                                 classUiData = classItem,
+                                attendanceList = attendanceList,
+                                studentFullName = studentFullName,
+                                onAttendanceListRequest = onAttendanceListRequest,
                                 localUriHandler = localUriHandler,
                                 clipboardManager = clipboardManager,
                                 onMeetingUrlClick = { onPresenceVerify(classItem) },
@@ -207,8 +218,11 @@ private fun ContentRow(
     isLastElement: Boolean,
     contentColors: Pair<Color, Color>,
     classUiData: ClassUiData,
+    attendanceList: DataState<out List<AttendanceListData>>,
+    studentFullName: String,
     localUriHandler: UriHandler,
     clipboardManager: Clipboard,
+    onAttendanceListRequest: (ClassUiData) -> Unit,
     onMeetingUrlClick: () -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -234,6 +248,9 @@ private fun ContentRow(
             } else {
                 DetailsContent(
                     data = classUiData,
+                    attendanceList = attendanceList,
+                    studentFullName = studentFullName,
+                    onAttendanceListRequest = onAttendanceListRequest,
                     cardColors = contentColors,
                     shape = shape,
                     localUriHandler = localUriHandler,
@@ -350,15 +367,29 @@ private fun MainContent(
 @Composable
 private fun DetailsContent(
     data: ClassUiData,
+    attendanceList: DataState<out List<AttendanceListData>>,
+    studentFullName: String,
     cardColors: Pair<Color, Color>,
     shape: RoundedCornerShape,
     localUriHandler: UriHandler,
     clipboardManager: Clipboard,
     animatedVisibilityScope: AnimatedContentScope,
     sharedTransitionScope: SharedTransitionScope,
+    onAttendanceListRequest: (ClassUiData) -> Unit,
     onClick: () -> Unit,
     onMeetingUrlClick: () -> Unit,
 ) {
+    var isAttendanceListOpen by remember { mutableStateOf(false) }
+
+    AttendanceDialog(
+        isOpen = isAttendanceListOpen,
+        list = attendanceList,
+        studentFullName = studentFullName,
+        onDismissRequest = {
+            isAttendanceListOpen = false
+        }
+    )
+
     with(sharedTransitionScope) {
         Surface(
             modifier = Modifier
@@ -452,6 +483,24 @@ private fun DetailsContent(
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
+                    Card(
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.primary
+                        ),
+                        modifier = Modifier
+                            .size(40.dp),
+                        onClick = {
+                            onAttendanceListRequest(data)
+                            isAttendanceListOpen = true
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Rounded.List,
+                            contentDescription = null,
+                            modifier = Modifier.padding(8.dp)
+                        )
+                    }
+
                     if (data.meetingLink.isNotEmpty()) {
                         SiteButton(
                             url = data.meetingLink,
