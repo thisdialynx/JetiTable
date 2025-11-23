@@ -6,8 +6,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,9 +25,6 @@ import lnx.jetitable.R
 
 @Composable
 fun AppInfo(localUriHandler: UriHandler, appIcon: @Composable () -> Unit) {
-    val version = "${BuildConfig.VERSION_NAME} ${BuildConfig.BUILD_TYPE} (${BuildConfig.VERSION_CODE})"
-
-    Spacer(modifier = Modifier.height(8.dp))
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxWidth()
@@ -35,13 +37,46 @@ fun AppInfo(localUriHandler: UriHandler, appIcon: @Composable () -> Unit) {
             style = MaterialTheme.typography.labelMedium,
             fontSize = 20.sp
         )
-        Text(
-            text = version,
-            color = MaterialTheme.colorScheme.secondary,
-            style = MaterialTheme.typography.bodyMedium
-        )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(4.dp))
+
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Card(
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp)
+                ),
+                shape = CircleShape
+            ) {
+                Text(
+                    text = "${BuildConfig.VERSION_NAME}-${BuildConfig.BUILD_TYPE}",
+                    color = MaterialTheme.colorScheme.secondary,
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .padding(horizontal = 4.dp)
+                )
+            }
+            Card(
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp)
+                ),
+                shape = CircleShape
+            ) {
+                Text(
+                    text = BuildConfig.VERSION_CODE.toString(),
+                    color = MaterialTheme.colorScheme.secondary,
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .padding(horizontal = 4.dp)
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
         Row(horizontalArrangement = Arrangement.spacedBy(2.dp)) {
             UrlIconTiles(
                 localUriHandler = localUriHandler,
