@@ -98,4 +98,5 @@
     <string name="joins">Joins: %1$s</string>
     <string name="empty_list">The list is empty</string>
     <string name="attendance_log">Attendance log</string>
+    <string name="debug_update_unavailable">Check for updates is disabled in debug builds</string>
 </resources>

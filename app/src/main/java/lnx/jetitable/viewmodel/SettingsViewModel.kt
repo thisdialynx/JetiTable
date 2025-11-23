@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -76,42 +77,51 @@ class SettingsViewModel(application: Application): AndroidViewModel(application)
             initialValue = DataState.Loading
         )
 
-    val updateInfo = connectivityObserver
-        .isConnected
-        .map {
-            when (it) {
-                DataState.Loading -> DataState.Loading
-                DataState.Success(false) -> Error(R.string.no_internet_connection)
-                DataState.Success(true) -> {
-                    try {
-                        val currentVersion = BuildConfig.VERSION_NAME
-                        val isDebug = BuildConfig.DEBUG
-                        val release = githubService.getLatestRelease()
-                        val latestVersion = release.tag_name.removePrefix("v")
-                        val updateAvailable = isNewerVersion(latestVersion, currentVersion)
-                        val downloadUrl = if (isDebug) release.assets[0].browser_download_url else release.assets[1].browser_download_url
+    val updateInfo = if (BuildConfig.DEBUG) {
+        flowOf(Error(R.string.debug_update_unavailable))
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.Eagerly,
+                initialValue = DataState.Loading
+            )
+    } else {
+        connectivityObserver
+            .isConnected
+            .map {
+                when (it) {
+                    DataState.Loading -> DataState.Loading
+                    DataState.Success(false) -> Error(R.string.no_internet_connection)
+                    DataState.Success(true) -> {
+                        try {
+                            val currentVersion = BuildConfig.VERSION_NAME
+                            val release = githubService.getLatestRelease()
+                            val latestVersion = release.tag_name.removePrefix("v")
+                            val updateAvailable = isNewerVersion(latestVersion, currentVersion)
+                            val downloadUrl = release.assets[1].browser_download_url
 
-                        if (updateAvailable) {
-                            DataState.Success(
-                                AppUpdateInfo(currentVersion, latestVersion, updateAvailable, downloadUrl, release.body)
-                            )
-                        } else {
-                            DataState.Empty
+                            if (updateAvailable) {
+                                DataState.Success(
+                                    AppUpdateInfo(currentVersion, latestVersion, updateAvailable, downloadUrl, release.body)
+                                )
+                            } else {
+                                DataState.Empty
+                            }
+                        } catch (e: Exception) {
+                            Error(R.string.could_not_check_for_updates, e)
                         }
-                    } catch (e: Exception) {
-                        Error(R.string.could_not_check_for_updates, e)
                     }
+                    is Error -> Error(R.string.internet_connection_check_fail)
+                    else -> Error(R.string.something_went_wrong)
                 }
-                is Error -> Error(R.string.internet_connection_check_fail)
-                else -> Error(R.string.something_went_wrong)
             }
-        }
-        .flowOn(Dispatchers.IO)
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = DataState.Loading
-        )
+            .flowOn(Dispatchers.IO)
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = DataState.Loading
+            )
+    }
+
 
     fun signOut() {
         viewModelScope.launch {
