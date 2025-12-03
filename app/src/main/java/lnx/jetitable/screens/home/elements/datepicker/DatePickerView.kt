@@ -40,6 +40,14 @@ fun DatePickerView(
     connectionState: DataState<out Boolean>
 ) {
     var showDialog by remember { mutableStateOf(false) }
+    val arrowRotation = animateFloatAsState(
+        targetValue = if (showDialog) 180f else 0f
+    )
+    val buttonTextColor = if (connectionState == DataState.Success(true)) {
+        MaterialTheme.colorScheme.primary
+    } else {
+        MaterialTheme.colorScheme.onSurfaceVariant
+    }
 
     if (showDialog) {
         DatePickerDialog(
@@ -64,10 +72,6 @@ fun DatePickerView(
         ) { DatePicker(state = datePickerState) }
     }
 
-    val arrowRotation = animateFloatAsState(
-        targetValue = if (showDialog) 180f else 0f
-    )
-
     Surface(
         onClick = { showDialog = true },
         shape = RoundedCornerShape(8.dp),
@@ -80,13 +84,13 @@ fun DatePickerView(
         ) {
             Text(
                 text = formattedDate,
-                color = MaterialTheme.colorScheme.primary,
+                color = buttonTextColor,
                 style = MaterialTheme.typography.titleMedium
             )
             Icon(
                 imageVector = Icons.Rounded.KeyboardArrowDown,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
+                tint = buttonTextColor,
                 modifier = Modifier.graphicsLayer {
                     this.rotationZ = arrowRotation.value
                 }
