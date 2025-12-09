@@ -14,7 +14,9 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.Clipboard
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -33,6 +35,7 @@ fun SiteButton(
     clipboardManager: Clipboard
 ) {
     val label = stringResource(R.string.meeting_url_label)
+    val haptic = LocalHapticFeedback.current
 
     CompositionLocalProvider(value = LocalMinimumInteractiveComponentSize provides Dp.Unspecified) {
         Card(
@@ -44,6 +47,7 @@ fun SiteButton(
                 .combinedClickable(
                     onClick = {
                         try {
+                            haptic.performHapticFeedback(HapticFeedbackType.KeyboardTap)
                             uriHandler.openUri(url)
                             onButtonClick()
                         } catch (e: Exception) {
@@ -51,6 +55,7 @@ fun SiteButton(
                         }
                     },
                     onLongClick = {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                         clipboardManager.nativeClipboard.setPrimaryClip(
                             ClipData.newPlainText(AnnotatedString(label), AnnotatedString(url))
                         )
