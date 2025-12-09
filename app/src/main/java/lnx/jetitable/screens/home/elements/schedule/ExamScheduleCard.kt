@@ -331,13 +331,17 @@ private fun DetailsContent(
                     ),
                 )
                 Text(
-                    text = data.time,
+                    text = "${data.time} (${data.number})",
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.sharedBounds(
                         rememberSharedContentState("time"),
                         animatedVisibilityScope = animatedVisibilityScope,
                         resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds
                     )
+                )
+                Text(
+                    text = data.educator,
+                    style = MaterialTheme.typography.bodyMedium
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 if (data.url.isNotBlank()) {
