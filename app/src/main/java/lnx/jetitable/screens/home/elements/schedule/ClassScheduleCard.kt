@@ -6,6 +6,7 @@ import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -488,11 +489,16 @@ private fun DetailsContent(
                             containerColor = MaterialTheme.colorScheme.primary
                         ),
                         modifier = Modifier
-                            .size(40.dp),
-                        onClick = {
-                            onAttendanceListRequest(data)
-                            isAttendanceListOpen = true
-                        }
+                            .size(40.dp)
+                            .combinedClickable(
+                                onClick = {
+                                    onAttendanceListRequest(data)
+                                    isAttendanceListOpen = true
+                                },
+                                onLongClick = {
+                                    onMeetingUrlClick()
+                                }
+                            )
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Rounded.List,
