@@ -321,6 +321,7 @@ private fun DetailsContent(
                             resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds
                         ),
                 )
+                Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = data.date,
                     style = MaterialTheme.typography.bodyMedium,
