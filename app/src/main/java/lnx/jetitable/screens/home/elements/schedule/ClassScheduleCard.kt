@@ -423,7 +423,7 @@ private fun DetailsContent(
                     )
                     Text(
                         text = data.type,
-                        style = MaterialTheme.typography.titleMedium,
+                        style = MaterialTheme.typography.bodyLarge,
                         modifier = Modifier.sharedBounds(
                             rememberSharedContentState("type"),
                             animatedVisibilityScope = animatedVisibilityScope,
