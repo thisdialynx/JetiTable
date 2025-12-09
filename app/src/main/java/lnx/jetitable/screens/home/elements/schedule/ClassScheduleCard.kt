@@ -302,7 +302,7 @@ private fun MainContent(
                         modifier = Modifier.sharedBounds(
                             rememberSharedContentState("time"),
                             animatedVisibilityScope = animatedVisibilityScope,
-                            resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds()
+                            resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds
                         ),
                         color = cardColors.second
                     )
@@ -314,7 +314,7 @@ private fun MainContent(
                             .sharedBounds(
                                 rememberSharedContentState("title"),
                                 animatedVisibilityScope = animatedVisibilityScope,
-                                resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds()
+                                resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds
                             ),
                         color = cardColors.second
                     )
@@ -324,7 +324,7 @@ private fun MainContent(
                         modifier = Modifier.sharedBounds(
                             rememberSharedContentState("type"),
                             animatedVisibilityScope = animatedVisibilityScope,
-                            resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds()
+                            resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds
                         ),
                         color = cardColors.second
                     )
@@ -417,7 +417,7 @@ private fun DetailsContent(
                             .sharedBounds(
                                 rememberSharedContentState("title"),
                                 animatedVisibilityScope = animatedVisibilityScope,
-                                resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds()
+                                resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds
                             ),
                         color = cardColors.second
                     )
@@ -427,7 +427,7 @@ private fun DetailsContent(
                         modifier = Modifier.sharedBounds(
                             rememberSharedContentState("type"),
                             animatedVisibilityScope = animatedVisibilityScope,
-                            resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds()
+                            resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds
                         ),
                         color = cardColors.second
                     )
@@ -439,7 +439,7 @@ private fun DetailsContent(
                     modifier = Modifier.sharedBounds(
                         rememberSharedContentState("time"),
                         animatedVisibilityScope = animatedVisibilityScope,
-                        resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds()
+                        resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds
                     ),
                     color = cardColors.second
                 )

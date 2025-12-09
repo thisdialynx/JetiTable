@@ -251,7 +251,7 @@ private fun MainContent(
                         modifier = Modifier.sharedBounds(
                             rememberSharedContentState("date"),
                             animatedVisibilityScope = animatedVisibilityScope,
-                            resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds()
+                            resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds
                         ),
                     )
                     Text(
@@ -262,7 +262,7 @@ private fun MainContent(
                             .sharedBounds(
                                 rememberSharedContentState("title"),
                                 animatedVisibilityScope = animatedVisibilityScope,
-                                resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds()
+                                resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds
                             ),
                     )
 
@@ -318,7 +318,7 @@ private fun DetailsContent(
                         .sharedBounds(
                             rememberSharedContentState("title"),
                             animatedVisibilityScope = animatedVisibilityScope,
-                            resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds()
+                            resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds
                         ),
                 )
                 Text(
@@ -327,7 +327,7 @@ private fun DetailsContent(
                     modifier = Modifier.sharedBounds(
                         rememberSharedContentState("date"),
                         animatedVisibilityScope = animatedVisibilityScope,
-                        resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds()
+                        resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds
                     ),
                 )
                 Text(
@@ -336,7 +336,7 @@ private fun DetailsContent(
                     modifier = Modifier.sharedBounds(
                         rememberSharedContentState("time"),
                         animatedVisibilityScope = animatedVisibilityScope,
-                        resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds()
+                        resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds
                     )
                 )
                 Spacer(modifier = Modifier.height(8.dp))
