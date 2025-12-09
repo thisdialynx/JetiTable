@@ -39,8 +39,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.Clipboard
 import androidx.compose.ui.platform.LocalClipboard
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.res.stringResource
@@ -381,6 +383,7 @@ private fun DetailsContent(
     onMeetingUrlClick: () -> Unit,
 ) {
     var isAttendanceListOpen by remember { mutableStateOf(false) }
+    val haptic = LocalHapticFeedback.current
 
     AttendanceDialog(
         isOpen = isAttendanceListOpen,
@@ -492,10 +495,12 @@ private fun DetailsContent(
                             .size(40.dp)
                             .combinedClickable(
                                 onClick = {
+                                    haptic.performHapticFeedback(HapticFeedbackType.KeyboardTap)
                                     onAttendanceListRequest(data)
                                     isAttendanceListOpen = true
                                 },
                                 onLongClick = {
+                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                     onMeetingUrlClick()
                                 }
                             )
