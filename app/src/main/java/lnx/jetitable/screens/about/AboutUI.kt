@@ -30,24 +30,18 @@ enum class ContributorItem(
     val profilePictureUrl: String? = null,
     val title: String,
     val description: Int,
-    val icon: ImageVector,
-    val iconDescription: String,
-    val shortUrl: String
+    val icon: ImageVector
 ) {
     DIALYNX(
         profilePictureUrl = "https://github.com/thisdialynx.png",
         title = "Dialynx",
         description = R.string.developer,
-        icon = lnx.jetitable.ui.icons.Telegram,
-        iconDescription = "Telegram",
-        shortUrl = "t.me/placeholder"
+        icon = lnx.jetitable.ui.icons.Telegram
     ),
     DENYSRATOV(
         title = "Denys Ratov",
         description = R.string.timetable_developer,
-        icon = lnx.jetitable.ui.icons.Telegram,
-        iconDescription = "Telegram",
-        shortUrl = "t.me/placeholder",
+        icon = lnx.jetitable.ui.icons.Telegram
     )
 }
 
@@ -97,7 +91,7 @@ fun AboutUI(onBack: () -> Unit, appIcon: @Composable () -> Unit) {
                     color = MaterialTheme.colorScheme.primary
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                ContributorsCard(localUriHandler)
+                ContributorsCard()
             }
         }
     }
