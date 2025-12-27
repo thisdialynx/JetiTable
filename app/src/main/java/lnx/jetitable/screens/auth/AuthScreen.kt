@@ -2,19 +2,11 @@ package lnx.jetitable.screens.auth
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import lnx.jetitable.R
 import lnx.jetitable.misc.DataState
 import lnx.jetitable.viewmodel.AuthViewModel
-
-enum class UrlIconItem(val icon: ImageVector, val description: Int, val shortUri: String) {
-    GITHUB(lnx.jetitable.ui.icons.Github, R.string.github, "github.com/thisdialynx/JetiTable"),
-    UNIVERSITY(lnx.jetitable.ui.icons.Snu, R.string.university, "snu.edu.ua"),
-    TIMETABLE(lnx.jetitable.ui.icons.google.CalendarMonth, R.string.timetable, "timetable.lond.lg.ua"),
-}
 
 @Composable
 fun AuthScreen(onAuthComplete: () -> Unit) {
