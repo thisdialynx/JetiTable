@@ -28,7 +28,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import lnx.jetitable.screens.auth.ContributorItem
 import lnx.jetitable.screens.settings.SettingItem
 
 @Composable
