@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import lnx.jetitable.screens.auth.UrlIconItem
 
 @Composable
 fun UrlIconTiles(localUriHandler: UriHandler) {

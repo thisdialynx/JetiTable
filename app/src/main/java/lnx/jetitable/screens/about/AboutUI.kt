@@ -45,6 +45,12 @@ enum class ContributorItem(
     )
 }
 
+enum class UrlIconItem(val icon: ImageVector, val description: Int, val shortUri: String) {
+    GITHUB(lnx.jetitable.ui.icons.Github, R.string.github, "github.com/thisdialynx/JetiTable"),
+    UNIVERSITY(lnx.jetitable.ui.icons.Snu, R.string.university, "snu.edu.ua"),
+    TIMETABLE(lnx.jetitable.ui.icons.google.CalendarMonth, R.string.timetable, "timetable.lond.lg.ua"),
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AboutUI(onBack: () -> Unit, appIcon: @Composable () -> Unit) {
