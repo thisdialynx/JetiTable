@@ -19,11 +19,37 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import lnx.jetitable.R
+
+enum class ContributorItem(
+    val profilePictureUrl: String? = null,
+    val title: String,
+    val description: Int,
+    val icon: ImageVector,
+    val iconDescription: String,
+    val shortUrl: String
+) {
+    DIALYNX(
+        profilePictureUrl = "https://github.com/thisdialynx.png",
+        title = "Dialynx",
+        description = R.string.developer,
+        icon = lnx.jetitable.ui.icons.Telegram,
+        iconDescription = "Telegram",
+        shortUrl = "t.me/placeholder"
+    ),
+    DENYSRATOV(
+        title = "Denys Ratov",
+        description = R.string.timetable_developer,
+        icon = lnx.jetitable.ui.icons.Telegram,
+        iconDescription = "Telegram",
+        shortUrl = "t.me/placeholder",
+    )
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

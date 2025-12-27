@@ -16,31 +16,6 @@ enum class UrlIconItem(val icon: ImageVector, val description: Int, val shortUri
     TIMETABLE(lnx.jetitable.ui.icons.google.CalendarMonth, R.string.timetable, "timetable.lond.lg.ua"),
 }
 
-enum class ContributorItem(
-    val profilePictureUrl: String? = null,
-    val title: String,
-    val description: Int,
-    val icon: ImageVector,
-    val iconDescription: String,
-    val shortUrl: String
-) {
-    DIALYNX(
-        profilePictureUrl = "https://github.com/thisdialynx.png",
-        title = "Dialynx",
-        description = R.string.developer,
-        icon = lnx.jetitable.ui.icons.Telegram,
-        iconDescription = "Telegram",
-        shortUrl = "t.me/placeholder"
-    ),
-    DENYSRATOV(
-        title = "Denys Ratov",
-        description = R.string.timetable_developer,
-        icon = lnx.jetitable.ui.icons.Telegram,
-        iconDescription = "Telegram",
-        shortUrl = "t.me/placeholder",
-    )
-}
-
 @Composable
 fun AuthScreen(onAuthComplete: () -> Unit) {
     val viewModel = viewModel<AuthViewModel>()
