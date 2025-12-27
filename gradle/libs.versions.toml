@@ -9,7 +9,7 @@ materialIconsCore = "1.7.8"
 navigationCompose = "2.9.6"
 
 # kotlin
-kotlin = "2.2.21"
+kotlin = "2.3.0"
 
 # kotlinx
 kotlinxSerializationJson = "1.9.0"
