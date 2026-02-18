@@ -1,4 +1,4 @@
-package lnx.jetitable.activity
+package lnx.jetitable
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -16,6 +16,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import dagger.hilt.android.AndroidEntryPoint
 import lnx.jetitable.navigation.About
 import lnx.jetitable.navigation.Auth
 import lnx.jetitable.navigation.Home
@@ -32,6 +33,7 @@ import lnx.jetitable.ui.theme.JetiTableTheme
 
 const val SCREEN_TRANSITION_MILLIS = 200
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()

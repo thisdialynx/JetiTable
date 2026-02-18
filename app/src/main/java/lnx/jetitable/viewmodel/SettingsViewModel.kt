@@ -1,28 +1,28 @@
 package lnx.jetitable.viewmodel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import lnx.jetitable.BuildConfig
 import lnx.jetitable.R
-import lnx.jetitable.api.RetrofitHolder
+import lnx.jetitable.api.github.GithubApiService
 import lnx.jetitable.datastore.AppPreferences
 import lnx.jetitable.datastore.CookieDataStore
 import lnx.jetitable.datastore.ScheduleDataStore
-import lnx.jetitable.datastore.UserDataStore
+import lnx.jetitable.datastore.UserInfoStore
 import lnx.jetitable.misc.AndroidConnectivityObserver
-import lnx.jetitable.misc.DataState
-import lnx.jetitable.misc.DataState.Error
+import lnx.jetitable.misc.ConnectionState
 import lnx.jetitable.misc.DateManager
+import javax.inject.Inject
 
-data class UserDataUiState(
+data class UserInfoData(
     val fullName: Pair<String, Int>,
     val group: Pair<String, String>,
     val formOfEducationResId: Int,
@@ -31,18 +31,39 @@ data class UserDataUiState(
     val status: String
 )
 
-class SettingsViewModel(application: Application): AndroidViewModel(application) {
-    private val context
-        get() = getApplication<Application>().applicationContext
-    private val userDataStore = UserDataStore(context)
-    private val cookieDataStore = CookieDataStore(context)
-    private val scheduleDataStore = ScheduleDataStore(context)
-    private val dateManager = DateManager()
-    private val connectivityObserver = AndroidConnectivityObserver(context)
-    private val githubService = RetrofitHolder.getGitHubApiInstance()
-    private val appPreferences = AppPreferences(context)
+data class AppUpdateInfo(
+    val currentVersion: String,
+    val latestVersion: String = "",
+    val updateAvailable: Boolean = false,
+    val downloadUrl: String = "",
+    val releaseNotes: String = "",
+    val error: Int? = null
+)
 
-    val userDataUiState = userDataStore.getApiUserData().map {
+sealed class UpdateState {
+    data object Loading : UpdateState()
+    data class Available(val data: AppUpdateInfo) : UpdateState()
+    data object Latest : UpdateState()
+    data class Failure(val reasonResId: Int, val exception: Throwable? = null) : UpdateState()
+}
+
+sealed class UserInfoState {
+    data object Loading : UserInfoState()
+    data class Success(val data: UserInfoData) : UserInfoState()
+    data class Failure(val reasonResId: Int, val exception: Throwable? = null) : UserInfoState()
+}
+
+@HiltViewModel
+class SettingsViewModel @Inject constructor(
+    private val userInfoStore: UserInfoStore,
+    private val cookieDataStore: CookieDataStore,
+    private val scheduleDataStore: ScheduleDataStore,
+    private val appPrefs: AppPreferences,
+    private val dateManager: DateManager,
+    private val connectivityObserver: AndroidConnectivityObserver,
+    private val api: GithubApiService
+): ViewModel() {
+    val userInfoState = userInfoStore.getApiUserData().map {
         val formOfEducation = when (it.isFullTime) {
             0 -> R.string.part_time
             1 -> R.string.full_time
@@ -54,8 +75,7 @@ class SettingsViewModel(application: Application): AndroidViewModel(application)
             else -> 0
         }
         val academicYears = dateManager.getAcademicYears()
-
-        val userUiData = UserDataUiState(
+        val data = UserInfoData(
             fullName = it.fullName to it.fullNameId,
             group = it.group to it.groupId,
             formOfEducationResId = formOfEducation,
@@ -64,71 +84,72 @@ class SettingsViewModel(application: Application): AndroidViewModel(application)
             status = it.status
         )
 
-        if (userUiData.fullName.first == "") {
-            Error(R.string.account_data_fetch_failure)
+        if (data.fullName.first.isEmpty()) {
+            UserInfoState.Failure(R.string.failed_to_fetch_data)
         } else {
-            DataState.Success(userUiData)
+            UserInfoState.Success(data)
         }
     }
         .flowOn(Dispatchers.IO)
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.Eagerly,
-            initialValue = DataState.Loading
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = UserInfoState.Loading
         )
 
-    val updateInfo = if (BuildConfig.DEBUG) {
-        flowOf(Error(R.string.debug_update_unavailable))
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.Eagerly,
-                initialValue = DataState.Loading
-            )
-    } else {
-        connectivityObserver
-            .isConnected
-            .map {
-                when (it) {
-                    DataState.Loading -> DataState.Loading
-                    DataState.Success(false) -> Error(R.string.no_internet_connection)
-                    DataState.Success(true) -> {
-                        try {
-                            val currentVersion = BuildConfig.VERSION_NAME
-                            val release = githubService.getLatestRelease()
-                            val latestVersion = release.tag_name.removePrefix("v")
-                            val updateAvailable = isNewerVersion(latestVersion, currentVersion)
-                            val downloadUrl = release.assets[1].browser_download_url
+    val updateInfo = flow {
+        emit(UpdateState.Loading)
 
-                            if (updateAvailable) {
-                                DataState.Success(
-                                    AppUpdateInfo(currentVersion, latestVersion, updateAvailable, downloadUrl, release.body)
-                                )
-                            } else {
-                                DataState.Empty
-                            }
-                        } catch (e: Exception) {
-                            Error(R.string.could_not_check_for_updates, e)
-                        }
-                    }
-                    is Error -> Error(R.string.internet_connection_check_fail)
-                    else -> Error(R.string.something_went_wrong)
-                }
-            }
-            .flowOn(Dispatchers.IO)
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5000),
-                initialValue = DataState.Loading
-            )
+        if (BuildConfig.DEBUG) {
+            emit(UpdateState.Failure(R.string.debug_update_unavailable))
+            return@flow
+        }
+
+        try {
+            val currentVersion = BuildConfig.VERSION_NAME
+            val release = api.getLatestRelease()
+            val latestVersion = release.tag_name.removePrefix("v")
+            val updateAvailable = isNewerVersion(latestVersion, currentVersion)
+            val downloadUrl = release.assets[1].browser_download_url
+
+            if (updateAvailable) {
+                emit(
+                    UpdateState.Available(
+                        AppUpdateInfo(
+                            currentVersion,
+                            latestVersion,
+                            updateAvailable,
+                            downloadUrl,
+                            release.body
+                        )
+                    )
+                )
+            } else UpdateState.Latest
+        } catch (e: Exception) {
+            UpdateState.Failure(R.string.could_not_check_for_updates, e)
+        }
     }
+        .flowOn(Dispatchers.IO)
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = UpdateState.Loading
+        )
 
+    val isConnected = connectivityObserver
+        .isConnected
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = ConnectionState.Loading
+        )
 
     fun signOut() {
         viewModelScope.launch {
-            userDataStore.clearAll()
+            userInfoStore.clearAll()
             cookieDataStore.clearCookies()
             scheduleDataStore.clearAll()
-            appPreferences.clearAll()
+            appPrefs.clearAll()
         }
     }
 
@@ -142,13 +163,4 @@ class SettingsViewModel(application: Application): AndroidViewModel(application)
         }
         return latest.size > current.size
     }
-
-    data class AppUpdateInfo(
-        val currentVersion: String,
-        val latestVersion: String = "",
-        val updateAvailable: Boolean = false,
-        val downloadUrl: String = "",
-        val releaseNotes: String = "",
-        val error: Int? = null
-    )
 }

@@ -20,14 +20,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import lnx.jetitable.R
-import lnx.jetitable.misc.DataState
 import lnx.jetitable.navigation.About
 import lnx.jetitable.navigation.Notifications
 import lnx.jetitable.screens.settings.cards.AccountCard
 import lnx.jetitable.screens.settings.cards.SettingsCard
 import lnx.jetitable.screens.settings.cards.UpdateCard
-import lnx.jetitable.viewmodel.SettingsViewModel
-import lnx.jetitable.viewmodel.UserDataUiState
+import lnx.jetitable.viewmodel.UpdateState
+import lnx.jetitable.viewmodel.UserInfoState
 
 enum class SettingItem(
     val titleResId: Int,
@@ -44,8 +43,8 @@ fun SettingsUI(
     onBack: () -> Unit,
     onDestinationNavigate: (String) -> Unit,
     onSignOut: () -> Unit,
-    updateInfo: DataState<out SettingsViewModel.AppUpdateInfo>,
-    userDataUiState: DataState<out UserDataUiState>
+    updateState: UpdateState,
+    userInfoState: UserInfoState
 ) {
     Scaffold(
         topBar = {
@@ -70,16 +69,13 @@ fun SettingsUI(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             item {
-                AccountCard(
-                    userDataUiState = userDataUiState,
-                    onSignOut = onSignOut
-                )
+                AccountCard(userInfoState, onSignOut)
             }
             item {
-                UpdateCard(updateInfo)
+                UpdateCard(updateState)
             }
             item {
-                SettingsCard(onDestinationNavigate = onDestinationNavigate)
+                SettingsCard(onDestinationNavigate)
             }
         }
     }

@@ -7,8 +7,9 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-class DataSyncService : Service() {
+class DataSyncService @Inject constructor() : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         scheduleDataSync()
         return START_STICKY
@@ -21,7 +22,7 @@ class DataSyncService : Service() {
             .addTag(DATA_SYNC_SERVICE_NAME)
             .build()
 
-        WorkManager.Companion.getInstance(this).enqueueUniquePeriodicWork(
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
             DATA_SYNC_SERVICE_NAME,
             ExistingPeriodicWorkPolicy.UPDATE,
             syncRequest

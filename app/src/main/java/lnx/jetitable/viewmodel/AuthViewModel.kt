@@ -1,30 +1,32 @@
 package lnx.jetitable.viewmodel
 
-import android.app.Application
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import lnx.jetitable.R
-import lnx.jetitable.api.RetrofitHolder
+import lnx.jetitable.api.timetable.TimeTableApiService
 import lnx.jetitable.api.timetable.TimeTableApiService.Companion.CHECK_PASSWORD
 import lnx.jetitable.api.timetable.TimeTableApiService.Companion.SEND_MAIL
 import lnx.jetitable.api.timetable.data.login.LoginRequest
 import lnx.jetitable.api.timetable.data.login.MailRequest
 import lnx.jetitable.misc.AndroidConnectivityObserver
+import lnx.jetitable.misc.ConnectionState
 import lnx.jetitable.misc.DataState
 import okhttp3.Credentials
+import javax.inject.Inject
 
-class AuthViewModel(application: Application) : AndroidViewModel(application) {
-    private val context
-        get() = getApplication<Application>().applicationContext
-    private val service = RetrofitHolder.getTimeTableApiInstance(context)
-    val connectivityObserver = AndroidConnectivityObserver(context)
+@HiltViewModel
+class AuthViewModel @Inject constructor(
+    private val apiService: TimeTableApiService,
+    private val connectivityObserver: AndroidConnectivityObserver,
+) : ViewModel() {
     val isConnected = connectivityObserver
         .isConnected
         .stateIn(
@@ -33,9 +35,9 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
             initialValue = DataState.Loading
         )
 
-    var authState by mutableStateOf<DataState<out Boolean>>(DataState.Empty)
+    var authState by mutableStateOf<DataState<Boolean>>(DataState.Empty)
         private set
-    var emailRequestState by mutableStateOf<DataState<out Int>>(DataState.Empty)
+    var emailRequestState by mutableStateOf<DataState<Int>>(DataState.Empty)
     var password by mutableStateOf("")
         private set
     var email by mutableStateOf("")
@@ -64,7 +66,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                 if (checkEmail(email)) return@launch
 
                 val basicAuth = Credentials.basic(email, password)
-                val response = service.checkPassword(
+                val response = apiService.checkPassword(
                     basicAuth,
                     LoginRequest(CHECK_PASSWORD, email, password)
                 )
@@ -90,7 +92,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
             try {
                 if (checkEmail(email)) return@launch
 
-                val response = service.sendMail(MailRequest(SEND_MAIL, email))
+                val response = apiService.sendMail(MailRequest(SEND_MAIL, email))
                 emailRequestState = if (response.status == "ok") {
                     DataState.Success(R.string.password_sent)
                 } else {

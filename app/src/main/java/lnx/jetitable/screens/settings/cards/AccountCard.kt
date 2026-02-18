@@ -26,14 +26,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import lnx.jetitable.R
 import lnx.jetitable.misc.DataState
+import lnx.jetitable.ui.components.StateStatus
 import lnx.jetitable.ui.icons.Snu
 import lnx.jetitable.ui.icons.google.Info
 import lnx.jetitable.ui.icons.google.Logout
-import lnx.jetitable.viewmodel.UserDataUiState
+import lnx.jetitable.viewmodel.UserInfoState
 
 @Composable
 fun AccountCard(
-    userDataUiState: DataState<out UserDataUiState>,
+    userInfoState: UserInfoState,
     onSignOut: () -> Unit
 ) {
     val activityContext = LocalActivity.current
@@ -45,61 +46,33 @@ fun AccountCard(
         )
     ) {
         AnimatedContent(
-            targetState = userDataUiState
+            targetState = userInfoState
         ) { state ->
-            Column(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth()
-            ) {
-                when (state) {
-                    is DataState.Loading -> {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(16.dp)
-                        ) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(ButtonDefaults.IconSize),
-                                strokeCap = StrokeCap.Round,
-                                strokeWidth = 2.dp
-                            )
-                            Text(
-                                text = stringResource(R.string.loading),
-                                color = MaterialTheme.colorScheme.onSecondaryContainer
-                            )
-                        }
-                    }
-                    is DataState.Success -> {
-                        val title = stringResource(R.string.timetable_account, stringResource(R.string.timetable))
-                        val description = "${state.data.fullName.first} (${state.data.group.first}).\n" +
-                                "${stringResource(R.string.status, state.data.status)}. ${state.data.academicYears}. " +
-                                "${stringResource(state.data.semesterResId)}. ${stringResource(state.data.formOfEducationResId)}."
+            when (state) {
+                is UserInfoState.Loading -> {
+                    StateStatus(
+                        description = stringResource(R.string.loading),
+                        color = MaterialTheme.colorScheme.onSecondaryContainer
+                    )
+                }
+                is UserInfoState.Success -> {
+                    val title = stringResource(R.string.timetable_account, stringResource(R.string.timetable))
+                    val description = "${state.data.fullName.first} (${state.data.group.first}).\n" +
+                            "${stringResource(R.string.status, state.data.status)}. ${state.data.academicYears}. " +
+                            "${stringResource(state.data.semesterResId)}. ${stringResource(state.data.formOfEducationResId)}."
 
-                        AccountContent(title, description) {
-                            onSignOut()
-                            activityContext?.finish()
-                        }
+                    AccountContent(title, description) {
+                        onSignOut()
+                        activityContext?.finish()
                     }
-                    is DataState.Error -> {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(16.dp)
-                        ) {
-                            Icon(
-                                imageVector = Info,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onSecondaryContainer,
-                                modifier = Modifier.rotate(180f)
-                            )
-                            Text(
-                                text = stringResource(R.string.account_data_fetch_failure),
-                                color = MaterialTheme.colorScheme.onSecondaryContainer
-                            )
-                        }
-                    }
-                    else -> ""
+                }
+                is UserInfoState.Failure -> {
+                    StateStatus(
+                        icon = Info,
+                        modifier = Modifier.rotate(180f),
+                        description = stringResource(state.reasonResId),
+                        color = MaterialTheme.colorScheme.onSecondaryContainer
+                    )
                 }
             }
         }
@@ -113,7 +86,8 @@ fun AccountContent(
     onSignOut: () -> Unit
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = Modifier.padding(16.dp)
     ) {
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             Icon(

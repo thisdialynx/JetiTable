@@ -20,7 +20,7 @@
     <string name="unofficial_app">Неофициальное приложение!</string>
     <string name="unofficial_app_description">Это приложение не является официальным продуктом Восточноукраинского национального университета имени Владимира Даля. Университет не несет ответственности за его содержание и использование. Пользователь берет на себя все риски, связанные с использованием этого приложения. При необходимости, обращайтесь к официальным источникам для получения точной информации.</string>
     <string name="welcome_title">Добро пожаловать!</string>
-    <string name="failed_to_fetch_data">не удалось получить данные</string>
+    <string name="failed_to_fetch_data">Не удалось получить данные</string>
     <string name="no_classes">Занятия на указанную дату отсувствуют</string>
     <string name="educator">Преподаватель: %1$s</string>
     <string name="class_number">Номер п/п: %1$s</string>
@@ -49,7 +49,6 @@
     <string name="about_screen_description">Версия приложения, ссылки и участники проекта</string>
     <string name="no_internet_connection">Интернет подключение отсутствует</string>
     <string name="class_room">Аудитория: %1$s</string>
-    <string name="schedule_load_fail">Не удалось загрузить расписание</string>
     <string name="could_not_check_for_updates">Не удалось проверить наличие обновлений</string>
     <string name="update_available_card">Обновление %1$s доступно! Нажмите для подробностей</string>
     <string name="no_updates">Установлена последняя версия приложения</string>
@@ -58,7 +57,6 @@
     <string name="update_available_dialog_title">Доступно обновление!</string>
     <string name="current_version">Установленная версия:</string>
     <string name="latest_version">Последняя версия:</string>
-    <string name="fetching_updates">Получение обновлений…</string>
     <string name="meeting_url_label">Ссылка на конференцию</string>
     <string name="notifications_settings_entry_title">Уведомления</string>
     <string name="notifications_settings_entry_description">Напоминания об экзаменах и занятиях</string>
@@ -91,10 +89,11 @@
     <string name="answer_yes">Да</string>
     <string name="something_went_wrong">Что-то пошло не так</string>
     <string name="internet_connection_check_fail">Не удалось проверить подключение к интернету</string>
-    <string name="account_data_fetch_failure">Не удалось получить данные аккаунта</string>
     <string name="loading">Загрузка…</string>
     <string name="joins">Присоеденения: %1$s</string>
     <string name="empty_list">Список пуст</string>
     <string name="attendance_log">Журнал посещаемости</string>
     <string name="debug_update_unavailable">Проверка обновлений в debug версии отключена</string>
+    <string name="no_cached_schedule">Сохранённое расписание нет</string>
+    <string name="no_schedule_available_for_today">Расписание на текущий день отсутствует</string>
 </resources>

@@ -3,20 +3,22 @@ package lnx.jetitable.screens.home
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import lnx.jetitable.api.timetable.data.query.ExamNetworkData
+import lnx.jetitable.misc.ConnectionState
 import lnx.jetitable.misc.DataState
 import lnx.jetitable.screens.home.data.ClassUiData
 import lnx.jetitable.screens.home.elements.datepicker.DateState
 import lnx.jetitable.viewmodel.HomeViewModel
+import lnx.jetitable.repos.ScheduleState
 
 @Composable
 fun HomeScreen(
+    viewModel: HomeViewModel = hiltViewModel(),
     onSettingsNavigate: () -> Unit,
     onNotificationsNavigate: () -> Unit
 ) {
-    val viewModel = viewModel<HomeViewModel>()
     val dateState by viewModel.dateState.collectAsStateWithLifecycle(DateState())
     val connectionState by viewModel.isConnected.collectAsStateWithLifecycle()
     val classList by viewModel.classesFlow.collectAsStateWithLifecycle()
@@ -28,11 +30,11 @@ fun HomeScreen(
     HomeUI(
         dateState, classList, examList, attendanceList,userData.fullName, connectionState, notificationTipState,
 
-        onAttendanceListRequest = { viewModel.getAttendanceList(it) },
+        onAttendanceListRequest = { viewModel.loadAttendanceLog(it) },
         onDateUpdate = { viewModel.updateDate(it) },
         onForwardDateShift = { viewModel.shiftDayForward() },
         onBackwardDateShift = { viewModel.shiftDayBackward() },
-        onPresenceVerify = { viewModel.verifyPresence(it) },
+        onPresenceVerify = { viewModel.verifyAttendance(it) },
         onSettingsNavigate = onSettingsNavigate,
         onNotificationsNavigate = {
             onNotificationsNavigate()
@@ -51,7 +53,7 @@ private fun HomeScreenPreview() {
         dateState = DateState(
             formattedDate = "01.01.2001"
         ),
-        classList = DataState.Success(
+        classList = ScheduleState.Success(
             listOf(
                 ClassUiData(
                     id = "",
@@ -143,7 +145,7 @@ private fun HomeScreenPreview() {
                 )
             )
         ),
-        examList = DataState.Success(
+        examList = ScheduleState.Success(
             listOf(
                 ExamNetworkData(
                     date = "02.03.2001",
@@ -181,7 +183,7 @@ private fun HomeScreenPreview() {
         ),
         attendanceList = DataState.Empty,
         studentFullName = "Hondar Oleksii Vitaliiovych",
-        connectionState = DataState.Success(true),
+        connectionState = ConnectionState.Success,
         onAttendanceListRequest = {},
         onDateUpdate = {},
         onForwardDateShift = {},
@@ -201,11 +203,11 @@ private fun EmptyHomeScreenPreview() {
         dateState = DateState(
             formattedDate = "02.01.2001"
         ),
-        classList = DataState.Empty,
-        examList = DataState.Empty,
+        classList = ScheduleState.Success(emptyList()),
+        examList = ScheduleState.Success(emptyList()),
         attendanceList = DataState.Empty,
         studentFullName = "",
-        connectionState = DataState.Success(true),
+        connectionState = ConnectionState.Success,
         onAttendanceListRequest = {},
         onDateUpdate = {},
         onForwardDateShift = {},

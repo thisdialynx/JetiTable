@@ -10,9 +10,10 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import lnx.jetitable.screens.home.elements.datepicker.DateState
 import java.util.Locale
+import javax.inject.Inject
 
 @OptIn(ExperimentalMaterial3Api::class)
-class DateManager {
+class DateManager @Inject constructor() {
     private val _selectedDate = MutableStateFlow(Calendar.getInstance())
     val selectedDate = _selectedDate.asStateFlow()
     private val locale = Locale.getDefault()

@@ -1,6 +1,6 @@
 package lnx.jetitable.api.timetable.data.query
 
-data class AttendanceListData(
+data class AttendanceData(
     val fullName: String,
     val role: String,
     val group: String,

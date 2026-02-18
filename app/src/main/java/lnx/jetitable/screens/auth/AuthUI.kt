@@ -48,8 +48,8 @@ fun AuthUI(
     onEmailSend: () -> Unit,
     passwordState: String,
     emailState: String,
-    authState: DataState<out Boolean>,
-    emailRequestState: DataState<out Int>
+    authState: DataState<Boolean>,
+    emailRequestState: DataState<Int>
 ) {
     val context = LocalContext.current
     val openPasswordRecover = remember { mutableStateOf(false) }

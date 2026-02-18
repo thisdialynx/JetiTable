@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun StateStatus(
+    modifier: Modifier = Modifier,
     icon: ImageVector? = null,
     description: String,
     color: Color = MaterialTheme.colorScheme.onSurface
@@ -29,6 +30,7 @@ fun StateStatus(
         } else {
             Icon(
                 imageVector = icon,
+                modifier = modifier,
                 contentDescription = description,
                 tint = color
             )

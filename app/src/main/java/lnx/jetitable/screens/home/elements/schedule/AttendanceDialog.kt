@@ -34,7 +34,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import lnx.jetitable.R
-import lnx.jetitable.api.timetable.data.query.AttendanceListData
+import lnx.jetitable.api.timetable.data.query.AttendanceData
 import lnx.jetitable.misc.DataState
 import lnx.jetitable.ui.components.StateStatus
 import lnx.jetitable.ui.icons.google.Draft
@@ -43,7 +43,7 @@ import lnx.jetitable.ui.icons.google.Info
 @Composable
 fun AttendanceDialog(
     isOpen: Boolean,
-    list: DataState<out List<AttendanceListData>>,
+    list: DataState<List<AttendanceData>>,
     studentFullName: String,
     onDismissRequest: () -> Unit,
 ) {

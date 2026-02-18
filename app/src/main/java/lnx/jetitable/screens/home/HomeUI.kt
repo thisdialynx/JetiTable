@@ -34,24 +34,26 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import lnx.jetitable.R
-import lnx.jetitable.api.timetable.data.query.AttendanceListData
+import lnx.jetitable.api.timetable.data.query.AttendanceData
 import lnx.jetitable.api.timetable.data.query.ExamNetworkData
+import lnx.jetitable.misc.ConnectionState
 import lnx.jetitable.misc.DataState
 import lnx.jetitable.screens.home.data.ClassUiData
 import lnx.jetitable.screens.home.elements.datepicker.DateState
 import lnx.jetitable.screens.home.elements.schedule.ClassScheduleCard
 import lnx.jetitable.screens.home.elements.schedule.ExamScheduleCard
 import lnx.jetitable.ui.components.AppSnackbar
+import lnx.jetitable.repos.ScheduleState
 import lnx.jetitable.ui.icons.google.Settings as SettingsIcon
 
 @Composable
 fun HomeUI(
     dateState: DateState,
-    classList: DataState<out List<ClassUiData>>,
-    examList: DataState<out List<ExamNetworkData>>,
-    attendanceList: DataState<out List<AttendanceListData>>,
+    classList: ScheduleState<List<ClassUiData>>,
+    examList: ScheduleState<List<ExamNetworkData>>,
+    attendanceList: DataState<List<AttendanceData>>,
     studentFullName: String,
-    connectionState: DataState<out Boolean>,
+    connectionState: ConnectionState,
     notificationTipState: Boolean,
     onDateUpdate: (Calendar) -> Unit,
     onForwardDateShift: () -> Unit,
@@ -88,6 +90,18 @@ fun HomeUI(
                     onNotificationsNavigate()
                 }
             }
+        }
+    }
+
+    LaunchedEffect(connectionState) {
+        when (connectionState) {
+            is ConnectionState.Failure -> {
+                snackbarHostState.showSnackbar(
+                    message = context.getString(R.string.no_internet_connection),
+                    withDismissAction = true
+                )
+            }
+            else -> {}
         }
     }
 
