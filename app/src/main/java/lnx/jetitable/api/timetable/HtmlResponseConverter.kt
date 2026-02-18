@@ -4,7 +4,7 @@ import android.util.Log
 import lnx.jetitable.BuildConfig
 import lnx.jetitable.api.timetable.data.login.AccessResponse
 import lnx.jetitable.api.timetable.data.login.User
-import lnx.jetitable.api.timetable.data.query.AttendanceListData
+import lnx.jetitable.api.timetable.data.query.AttendanceData
 import lnx.jetitable.api.timetable.data.query.ClassNetworkData
 import lnx.jetitable.api.timetable.data.query.ExamNetworkData
 import okhttp3.ResponseBody
@@ -18,48 +18,63 @@ import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 import java.util.regex.Pattern
 
+sealed class HtmlConverterState<out T> {
+    data object Loading : HtmlConverterState<Nothing>()
+    data class Success<T>(val data: T) : HtmlConverterState<T>()
+    data class Failure(val exception: Throwable) : HtmlConverterState<Nothing>()
+    data object Empty : HtmlConverterState<Nothing>()
+}
+
 class HtmlConverterFactory : Converter.Factory() {
     override fun responseBodyConverter(
         type: Type,
         annotations: Array<out Annotation?>,
         retrofit: Retrofit
     ): Converter<ResponseBody, *>? {
-        if (type == AccessResponse::class.java) {
-            return Converter<ResponseBody, AccessResponse> {
+
+        if (getRawType(type) != HtmlConverterState::class.java) return null
+
+        val stateType = getParameterUpperBound(0, type as ParameterizedType)
+        if (stateType == AccessResponse::class.java) {
+            return Converter<ResponseBody, HtmlConverterState<AccessResponse>> {
                 parseAccessResponse(it.string())
             }
         }
 
-        val rawType = getRawType(type)
-        if (rawType == List::class.java && type is ParameterizedType) {
-            val parameterType = getParameterUpperBound(0, type)
+        val rawStateType = getRawType(stateType)
+        if (rawStateType == List::class.java && stateType is ParameterizedType) {
+            val listParameterType = getParameterUpperBound(0, stateType)
 
-            when (parameterType) {
+            return when (listParameterType) {
                 ExamNetworkData::class.java -> {
-                    return Converter<ResponseBody, List<ExamNetworkData>> {
+                    Converter<ResponseBody, HtmlConverterState<List<ExamNetworkData>>> {
                         parseExamsHtml(it.string())
                     }
                 }
                 ClassNetworkData::class.java -> {
-                    return Converter<ResponseBody, List<ClassNetworkData>> {
-                        parseLessonHtml(it.string())
+                    Converter<ResponseBody, HtmlConverterState<List<ClassNetworkData>>> {
+                        parseClassesHtml(it.string())
                     }
                 }
-                AttendanceListData::class.java -> {
-                    return Converter<ResponseBody, List<AttendanceListData>> {
+                AttendanceData::class.java -> {
+                    Converter<ResponseBody, HtmlConverterState<List<AttendanceData>>> {
                         parseAttendanceListHtml(it.string())
                     }
                 }
+                else -> null
             }
         }
-
         return null
     }
 }
 
-private fun parseExamsHtml(html: String): List<ExamNetworkData> {
+private fun parseExamsHtml(html: String): HtmlConverterState<List<ExamNetworkData>> {
     val document: Document = Jsoup.parse("<html><body><table>$html</table></body></html>")
     val exams = mutableListOf<ExamNetworkData>()
+
+    if (html.contains("Fatal error")) {
+        return HtmlConverterState.Failure(Exception("Fatal error"))
+    }
 
     try {
         document.select("tr").forEach { row ->
@@ -81,14 +96,23 @@ private fun parseExamsHtml(html: String): List<ExamNetworkData> {
     } catch (e: Exception) {
         Log.e("Exam html parser", "Failed to parse html data", e)
     }
-    return exams
+
+    return if (exams.isEmpty()) {
+        HtmlConverterState.Empty
+    } else {
+        HtmlConverterState.Success(exams)
+    }
 }
 
-private fun parseLessonHtml(html: String): List<ClassNetworkData> {
+private fun parseClassesHtml(html: String): HtmlConverterState<List<ClassNetworkData>> {
     val classes = mutableListOf<ClassNetworkData>()
 
     if (html.contains("відсутні", ignoreCase = true)) {
-        return emptyList()
+        return HtmlConverterState.Empty
+    }
+
+    if (html.contains("Fatal error")) {
+        return HtmlConverterState.Failure(Exception("Fatal error in HTML response"))
     }
 
     val doc: Document = Jsoup.parse("<html><body><table>$html</table></body></html>")
@@ -128,7 +152,21 @@ private fun parseLessonHtml(html: String): List<ClassNetworkData> {
             } ?: emptyList()
 
             val classNetworkData = ClassNetworkData(
-                id, group, number, educator, name, educatorId, date, start, end, items, weeks, meetingLink, moodleLink, type, room
+                id,
+                group,
+                number,
+                educator,
+                name,
+                educatorId,
+                date,
+                start,
+                end,
+                items,
+                weeks,
+                meetingLink,
+                moodleLink,
+                type,
+                room
             )
 
             if (BuildConfig.DEBUG) Log.d("Class html parser", "Extracted data: $classNetworkData")
@@ -137,12 +175,17 @@ private fun parseLessonHtml(html: String): List<ClassNetworkData> {
         }
     } catch (e: Exception) {
         Log.e("Class html parser", "Failed to parse html response", e)
+        return HtmlConverterState.Failure(e)
     }
 
-    return classes
+    return if (classes.isEmpty()) {
+        HtmlConverterState.Empty
+    } else {
+        HtmlConverterState.Success(classes)
+    }
 }
 
-private fun parseAccessResponse(jsonString: String): AccessResponse {
+private fun parseAccessResponse(jsonString: String): HtmlConverterState<AccessResponse> {
     val jsonObject = JSONObject(jsonString)
 
     val access = jsonObject.getJSONArray("access").let { array ->
@@ -166,12 +209,14 @@ private fun parseAccessResponse(jsonString: String): AccessResponse {
         facultyCode = userJsonObject.getInt("kod_faculty")
     )
 
-    return AccessResponse(access, accessToken, status, user)
+    val response = AccessResponse(access, accessToken, status, user)
+
+    return HtmlConverterState.Success(response)
 }
 
-private fun parseAttendanceListHtml(html: String): List<AttendanceListData> {
+private fun parseAttendanceListHtml(html: String): HtmlConverterState<List<AttendanceData>> {
     val document: Document = Jsoup.parse("<html><body><table>$html</table></body></html>")
-    val attendanceList = mutableListOf<AttendanceListData>()
+    val attendanceList = mutableListOf<AttendanceData>()
 
     try {
         document.select("tr").forEach { row ->
@@ -184,18 +229,19 @@ private fun parseAttendanceListHtml(html: String): List<AttendanceListData> {
                 val time = cells[4].text()
                 val joins = cells[5].text()
 
-                val attendanceData = AttendanceListData(fullName, role, group, time, joins)
+                val attendanceData = AttendanceData(fullName, role, group, time, joins)
 
                 if (BuildConfig.DEBUG) Log.d("Attendance list parser", "Extracted data: $attendanceData")
 
                 attendanceList.add(attendanceData)
             } else {
-                return emptyList()
+                return HtmlConverterState.Empty
             }
         }
     } catch (e: Exception) {
         Log.e("Attendance list parser", "Failed to parse attendance html", e)
+        return HtmlConverterState.Failure(e)
     }
 
-    return attendanceList
+    return HtmlConverterState.Success(attendanceList)
 }

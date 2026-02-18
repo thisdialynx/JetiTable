@@ -28,90 +28,70 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import lnx.jetitable.R
 import lnx.jetitable.misc.DataState
+import lnx.jetitable.ui.components.StateStatus
 import lnx.jetitable.ui.icons.google.Check
 import lnx.jetitable.ui.icons.google.Download
 import lnx.jetitable.ui.icons.google.Info
 import lnx.jetitable.ui.icons.google.Upgrade
+import lnx.jetitable.viewmodel.AppUpdateInfo
 import lnx.jetitable.viewmodel.SettingsViewModel
+import lnx.jetitable.viewmodel.UpdateState
 
 @Composable
-fun UpdateCard(updateInfo: DataState<out SettingsViewModel.AppUpdateInfo>) {
+fun UpdateCard(updateState: UpdateState) {
     val isDialogOpen = remember { mutableStateOf(false) }
     val uriHandler = LocalUriHandler.current
 
     Card(
         onClick = {
-            if (updateInfo is DataState.Success || updateInfo is DataState.Empty) {
+            if (updateState is UpdateState.Available) {
                 isDialogOpen.value = true
             }
         },
         colors = CardDefaults.cardColors(
             contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
             containerColor = MaterialTheme.colorScheme.tertiaryContainer
-        )
+        ),
+        modifier = Modifier.fillMaxWidth()
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            when (val info = updateInfo) {
-                is DataState.Error -> {
-                    Icon(
-                        imageVector = Info,
-                        contentDescription = null,
-                        modifier = Modifier.rotate(180f)
-                    )
-                    Text(
-                        text = stringResource(info.messageResId),
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
-                is DataState.Empty -> {
-                    Icon(
-                        imageVector = Check,
-                        contentDescription = null
-                    )
-                    Text(
-                        text = stringResource(R.string.no_updates),
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
-                is DataState.Success -> {
-                    Icon(
-                        imageVector = Upgrade,
-                        contentDescription = null
-                    )
-                    Text(
-                        text = stringResource(R.string.update_available_card, info.data.latestVersion),
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
-                is DataState.Loading -> {
-                    CircularProgressIndicator(
-                        strokeCap = StrokeCap.Round,
-                        modifier = Modifier.then(Modifier.size(24.dp)),
-                        color = MaterialTheme.colorScheme.onTertiaryContainer
-                    )
-                    Text(
-                        text = stringResource(R.string.fetching_updates),
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
+        when (updateState) {
+            is UpdateState.Failure -> {
+                StateStatus(
+                    icon = Info,
+                    modifier = Modifier.rotate(180f),
+                    description = stringResource(updateState.reasonResId),
+                    color = MaterialTheme.colorScheme.onTertiaryContainer
+                )
+            }
+            is UpdateState.Latest -> {
+                StateStatus(
+                    icon = Check,
+                    description = stringResource(R.string.latest_version)
+                )
+            }
+            is UpdateState.Available -> {
+                StateStatus(
+                    icon = Upgrade,
+                    description = stringResource(R.string.update_available_card, updateState.data.latestVersion)
+                )
+            }
+            is UpdateState.Loading -> {
+                StateStatus(
+                    description = stringResource(R.string.loading),
+                    color = MaterialTheme.colorScheme.onTertiaryContainer
+                )
             }
         }
     }
 
     if (isDialogOpen.value) {
-        when (updateInfo) {
-            is DataState.Success -> {
+        when (updateState) {
+            is UpdateState.Available -> {
                 UpdateDialog(
-                    appUpdateInfo = updateInfo.data,
+                    appUpdateInfo = updateState.data,
                     onDismiss = { isDialogOpen.value = false },
                     onDownload = {
-                        uriHandler.openUri(updateInfo.data.downloadUrl)
+                        uriHandler.openUri(updateState.data.downloadUrl)
                         isDialogOpen.value = false
                     }
                 )
@@ -125,7 +105,7 @@ fun UpdateCard(updateInfo: DataState<out SettingsViewModel.AppUpdateInfo>) {
 
 @Composable
 fun UpdateDialog(
-    appUpdateInfo: SettingsViewModel.AppUpdateInfo,
+    appUpdateInfo: AppUpdateInfo,
     onDismiss: () -> Unit,
     onDownload: () -> Unit
 ) {

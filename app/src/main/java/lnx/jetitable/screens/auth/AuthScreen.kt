@@ -3,14 +3,17 @@ package lnx.jetitable.screens.auth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import lnx.jetitable.misc.DataState
 import lnx.jetitable.viewmodel.AuthViewModel
 
 @Composable
-fun AuthScreen(onAuthComplete: () -> Unit) {
-    val viewModel = viewModel<AuthViewModel>()
+fun AuthScreen(
+    viewModel: AuthViewModel = hiltViewModel(),
+    onAuthComplete: () -> Unit
+) {
     val connectionState by viewModel.isConnected.collectAsStateWithLifecycle()
 
     AuthUI(

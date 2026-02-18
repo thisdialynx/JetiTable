@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
+        android:name=".JetiTableApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -21,7 +22,7 @@
         android:theme="@style/Theme.JetiTable"
         tools:targetApi="33">
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.JetiTable.Splash">
             <intent-filter>
@@ -43,8 +44,10 @@
         <service
             android:name=".services.data.DataSyncService"
             android:exported="false" />
-
-
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            tools:node="remove">
+        </provider>
     </application>
-
 </manifest>

@@ -6,15 +6,19 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.Json
 import lnx.jetitable.api.timetable.data.query.ClassNetworkData
 import lnx.jetitable.api.timetable.data.query.ExamNetworkData
+import javax.inject.Inject
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore("schedule")
 
-class ScheduleDataStore(private val context: Context) {
+class ScheduleDataStore @Inject constructor(
+    @ApplicationContext private val context: Context
+) {
     private val json = Json { ignoreUnknownKeys = true }
 
     suspend fun saveClassScheduleList(scheduleList: List<ClassNetworkData>) {

@@ -10,12 +10,15 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import lnx.jetitable.viewmodel.LoadingViewModel
 
 @Composable
-fun LoadingScreen(onAuthNavigate: () -> Unit, onHomeNavigate: () -> Unit) {
-    val viewModel: LoadingViewModel = viewModel()
+fun LoadingScreen(
+    viewModel: LoadingViewModel = hiltViewModel(),
+    onAuthNavigate: () -> Unit, onHomeNavigate: () -> Unit
+) {
     val isAuthorized = viewModel.isAuthorized
 
     LaunchedEffect(isAuthorized) {

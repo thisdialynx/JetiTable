@@ -6,13 +6,14 @@ import lnx.jetitable.api.timetable.data.login.LoginRequest
 import lnx.jetitable.api.timetable.data.login.LoginResponse
 import lnx.jetitable.api.timetable.data.login.MailRequest
 import lnx.jetitable.api.timetable.data.login.MailResponse
-import lnx.jetitable.api.timetable.data.query.AttendanceListData
+import lnx.jetitable.api.timetable.data.query.AttendanceData
 import lnx.jetitable.api.timetable.data.query.AttendanceListRequest
 import lnx.jetitable.api.timetable.data.query.ClassListRequest
 import lnx.jetitable.api.timetable.data.query.ClassNetworkData
 import lnx.jetitable.api.timetable.data.query.ExamListRequest
 import lnx.jetitable.api.timetable.data.query.ExamNetworkData
 import lnx.jetitable.api.timetable.data.query.VerifyPresenceRequest
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Header
 import retrofit2.http.POST
@@ -33,27 +34,27 @@ interface TimeTableApiService {
     @POST(AUTHORISATION_PHP)
     suspend fun checkAccess(
         @Body request: AccessRequest
-    ): AccessResponse
+    ): HtmlConverterState<AccessResponse>
 
     @POST(QUERY_PHP)
     suspend fun get_listLessonTodayStudent(
         @Body request: ClassListRequest
-    ): List<ClassNetworkData>
+    ): HtmlConverterState<List<ClassNetworkData>>
 
     @POST(QUERY_PHP)
     suspend fun get_checkZoom(
         @Body request: VerifyPresenceRequest
-    ): String
+    ): Response<*>
 
     @POST(QUERY_PHP)
     suspend fun get_sessionStudent(
         @Body request: ExamListRequest
-    ): List<ExamNetworkData>
+    ): HtmlConverterState<List<ExamNetworkData>>
 
     @POST(QUERY_PHP)
     suspend fun get_listStudent(
         @Body request: AttendanceListRequest
-    ): List<AttendanceListData>
+    ): Response<HtmlConverterState<List<AttendanceData>>>
 
     companion object {
         const val BASE_URL = "https://timetable.lond.lg.ua"

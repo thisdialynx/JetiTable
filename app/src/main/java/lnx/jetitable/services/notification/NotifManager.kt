@@ -12,6 +12,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
 import androidx.core.content.ContextCompat
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -23,15 +24,18 @@ import lnx.jetitable.datastore.ScheduleDataStore
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import javax.inject.Inject
 
 @Serializable
 enum class EventType { CLASS, EXAM }
 
-class NotifManager(private val context: Context) {
+class NotifManager @Inject constructor(
+    @ApplicationContext private val context: Context,
+    private val appPrefs: AppPreferences,
+    private val scheduleDataStore: ScheduleDataStore
+) {
     private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-    private val appPrefs = AppPreferences(context)
-    private val scheduleDataStore = ScheduleDataStore(context)
     private val scope = CoroutineScope(Dispatchers.Default)
 
     init {
@@ -132,8 +136,7 @@ class NotifManager(private val context: Context) {
         reminderMinutes: Int
     ) {
         try {
-            val pendingIntent = getPendingIntent(date, time, type, name, reminderMinutes)
-            if (pendingIntent == null) return
+            val pendingIntent = getPendingIntent(date, time, type, name, reminderMinutes) ?: return
 
             scheduleAlarm(pendingIntent.second.timeInMillis, pendingIntent.first)
         } catch (e: Exception) {
@@ -148,8 +151,7 @@ class NotifManager(private val context: Context) {
         name: String,
         reminderMinutes: Int
     ) {
-        val pendingIntent = getPendingIntent(date, time, type, name, reminderMinutes)
-        if (pendingIntent == null) return
+        val pendingIntent = getPendingIntent(date, time, type, name, reminderMinutes) ?: return
 
         val cancelledNotif  = alarmManager.cancel(pendingIntent.first)
         Log.d(MANAGER_NAME, "Notification cancelled: $type, $name, $cancelledNotif")

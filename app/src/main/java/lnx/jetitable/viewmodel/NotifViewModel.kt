@@ -1,26 +1,32 @@
 package lnx.jetitable.viewmodel
 
 import android.app.Application
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import lnx.jetitable.datastore.AppPreferences
 import lnx.jetitable.services.notification.NotifManager
+import javax.inject.Inject
 
 data class SchedulePrefs(
     val classPrefs: AppPreferences.ReminderPrefs = AppPreferences.ReminderPrefs(),
     val examPrefs: AppPreferences.ReminderPrefs = AppPreferences.ReminderPrefs()
 )
 
-class NotifViewModel(application: Application) : AndroidViewModel(application) {
-    private val context
-        get() = getApplication<Application>().applicationContext
-    private val appPrefs = AppPreferences(context)
-    private val notifManager = NotifManager(context)
+
+@HiltViewModel
+class NotifViewModel @Inject constructor(
+    private val appPrefs: AppPreferences,
+    private val notifManager: NotifManager
+) : ViewModel() {
     val notificationPreference = appPrefs.getNotificationPreference()
 
     val schedulePrefs = combine(appPrefs.getClassPreferences(), appPrefs.getExamPreferences()) { classPrefs, examPrefs ->

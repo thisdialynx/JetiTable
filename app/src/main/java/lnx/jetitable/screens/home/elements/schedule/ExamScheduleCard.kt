@@ -42,17 +42,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import lnx.jetitable.R
 import lnx.jetitable.api.timetable.data.query.ExamNetworkData
-import lnx.jetitable.misc.DataState
 import lnx.jetitable.screens.home.elements.SiteButton
 import lnx.jetitable.ui.components.StateStatus
 import lnx.jetitable.ui.icons.google.ContractEdit
 import lnx.jetitable.ui.icons.google.Info
 import lnx.jetitable.ui.icons.google.Mood
+import lnx.jetitable.repos.ScheduleState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExamScheduleCard(
-    examList: DataState<out List<ExamNetworkData>>
+    examList: ScheduleState<List<ExamNetworkData>>
 ) {
     val localUriHandler = LocalUriHandler.current
     val clipboardManager = LocalClipboard.current
@@ -120,11 +120,16 @@ private fun CardTitle(
 private fun Content(
     localUriHandler: UriHandler,
     clipboardManager: Clipboard,
-    examList: DataState<out List<ExamNetworkData>>
+    examList: ScheduleState<List<ExamNetworkData>>
 ) {
-    val targetColor = if (examList is DataState.Success)
-        MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp) else
-        MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)
+    val targetColor = when (examList) {
+        is ScheduleState.Success -> {
+            if (examList.data.isEmpty()) MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp) else {
+                MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp)
+            }
+        }
+        else ->  MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)
+    }
 
     Card(
         colors = CardDefaults.cardColors(
@@ -140,32 +145,33 @@ private fun Content(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 when (examList) {
-                    is DataState.Empty -> {
-                        StateStatus(
-                            icon = Mood,
-                            description = stringResource(R.string.no_exams)
-                        )
+                    is ScheduleState.Success -> {
+                        if (examList.data.isEmpty()) {
+                            StateStatus(
+                                icon = Mood,
+                                description = stringResource(R.string.no_exams)
+                            )
+                        } else {
+                            examList.data.forEachIndexed { index, examItem ->
+                                ContentRow(
+                                    index = index,
+                                    isLastElement = index == examList.data.size - 1,
+                                    examData = examItem,
+                                    localUriHandler = localUriHandler,
+                                    clipboardManager = clipboardManager
+                                )
+                            }
+                        }
                     }
-                    is DataState.Loading -> {
+                    is ScheduleState.Loading -> {
                         StateStatus(
                             description = stringResource(R.string.getting_list)
                         )
                     }
-                    is DataState.Success -> {
-                        examList.data.forEachIndexed { index, examItem ->
-                            ContentRow(
-                                index = index,
-                                isLastElement = index == examList.data.size - 1,
-                                examData = examItem,
-                                localUriHandler = localUriHandler,
-                                clipboardManager = clipboardManager
-                            )
-                        }
-                    }
-                    is DataState.Error -> {
+                    is ScheduleState.Failure -> {
                         StateStatus(
                             icon = Info,
-                            description = stringResource(examList.messageResId)
+                            description = stringResource(examList.reason.messageResId)
                         )
                     }
                 }
@@ -345,6 +351,7 @@ private fun DetailsContent(
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Spacer(modifier = Modifier.height(8.dp))
+
                 if (data.url.isNotBlank()) {
                     SiteButton(
                         url = data.url,

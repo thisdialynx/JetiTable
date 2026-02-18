@@ -7,15 +7,19 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import lnx.jetitable.api.timetable.data.login.AccessResponse
 import lnx.jetitable.api.timetable.data.login.User
+import javax.inject.Inject
 
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "user_data_store")
 
-class UserDataStore (private val context: Context) {
+class UserInfoStore @Inject constructor(
+    @ApplicationContext private val context: Context
+) {
 
     suspend fun saveApiUserData(response: AccessResponse) {
         context.dataStore.edit {

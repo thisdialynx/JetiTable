@@ -49,7 +49,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import lnx.jetitable.R
-import lnx.jetitable.api.timetable.data.query.AttendanceListData
+import lnx.jetitable.api.timetable.data.query.AttendanceData
+import lnx.jetitable.misc.ConnectionState
 import lnx.jetitable.misc.DataState
 import lnx.jetitable.misc.DateManager
 import lnx.jetitable.screens.home.data.ClassUiData
@@ -60,16 +61,16 @@ import lnx.jetitable.ui.components.StateStatus
 import lnx.jetitable.ui.icons.Moodle
 import lnx.jetitable.ui.icons.google.CalendarMonth
 import lnx.jetitable.ui.icons.google.Info
-import lnx.jetitable.ui.icons.google.Mood
+import lnx.jetitable.repos.ScheduleState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ClassScheduleCard(
-    classList: DataState<out List<ClassUiData>>,
-    attendanceList: DataState<out List<AttendanceListData>>,
+    classList: ScheduleState<List<ClassUiData>>,
+    attendanceList: DataState<List<AttendanceData>>,
     studentFullName: String,
     dateState: DateState,
-    connectionState: DataState<out Boolean>,
+    connectionState: ConnectionState,
     onAttendanceListRequest: (ClassUiData) -> Unit,
     onPresenceVerify: (ClassUiData) -> Unit,
     onDateUpdate: (Calendar) -> Unit,
@@ -97,7 +98,7 @@ fun ClassScheduleCard(
 @Composable
 private fun CardTitle(
     dateState: DateState,
-    connectionState: DataState<out Boolean>,
+    connectionState: ConnectionState,
     onDateUpdate: (Calendar) -> Unit,
     onForwardDateShift: () -> Unit,
     onBackwardDateShift: () -> Unit
@@ -122,7 +123,7 @@ private fun CardTitle(
         IconButton(
             onClick = onBackwardDateShift,
             modifier = Modifier.padding(end = 4.dp),
-            enabled = connectionState == DataState.Success(true)
+            enabled = connectionState == ConnectionState.Success
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowLeft,
@@ -131,7 +132,7 @@ private fun CardTitle(
         }
         IconButton(
             onClick = onForwardDateShift,
-            enabled = connectionState == DataState.Success(true)
+            enabled = connectionState == ConnectionState.Success
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowRight,
@@ -145,15 +146,20 @@ private fun CardTitle(
 private fun Content(
     localUriHandler: UriHandler,
     clipboardManager: Clipboard,
-    classList: DataState<out List<ClassUiData>>,
-    attendanceList: DataState<out List<AttendanceListData>>,
+    classList: ScheduleState<List<ClassUiData>>,
+    attendanceList: DataState<List<AttendanceData>>,
     studentFullName: String,
     onAttendanceListRequest: (ClassUiData) -> Unit,
     onPresenceVerify: (ClassUiData) -> Unit
 ) {
-    val targetColor = if (classList is DataState.Success)
-        MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp) else
-        MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)
+    val targetColor = when (classList) {
+        is ScheduleState.Success -> {
+            if (classList.data.isEmpty()) MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp) else {
+                MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp)
+            }
+        }
+        else ->  MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp)
+    }
 
     Card(
         colors = CardDefaults.cardColors(
@@ -169,18 +175,7 @@ private fun Content(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 when (classList) {
-                    is DataState.Empty -> {
-                        StateStatus(
-                            icon = Mood,
-                            description = stringResource(R.string.no_classes)
-                        )
-                    }
-                    is DataState.Loading -> {
-                        StateStatus(
-                            description = stringResource(R.string.getting_list)
-                        )
-                    }
-                    is DataState.Success -> {
+                    is ScheduleState.Success -> {
                         classList.data.forEachIndexed { index, classItem ->
                             val cardColors = if (classItem.isNow) {
                                 MaterialTheme.colorScheme.primaryContainer to MaterialTheme.colorScheme.onPrimaryContainer
@@ -202,10 +197,15 @@ private fun Content(
                             )
                         }
                     }
-                    is DataState.Error -> {
+                    is ScheduleState.Loading -> {
+                        StateStatus(
+                            description = stringResource(R.string.loading)
+                        )
+                    }
+                    is ScheduleState.Failure -> {
                         StateStatus(
                             icon = Info,
-                            description = stringResource(classList.messageResId)
+                            description = stringResource(classList.reason.messageResId)
                         )
                     }
                 }
@@ -221,7 +221,7 @@ private fun ContentRow(
     isLastElement: Boolean,
     contentColors: Pair<Color, Color>,
     classUiData: ClassUiData,
-    attendanceList: DataState<out List<AttendanceListData>>,
+    attendanceList: DataState<List<AttendanceData>>,
     studentFullName: String,
     localUriHandler: UriHandler,
     clipboardManager: Clipboard,
@@ -370,7 +370,7 @@ private fun MainContent(
 @Composable
 private fun DetailsContent(
     data: ClassUiData,
-    attendanceList: DataState<out List<AttendanceListData>>,
+    attendanceList: DataState<List<AttendanceData>>,
     studentFullName: String,
     cardColors: Pair<Color, Color>,
     shape: RoundedCornerShape,

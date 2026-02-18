@@ -3,14 +3,17 @@ package lnx.jetitable.screens.notifications
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import lnx.jetitable.viewmodel.NotifViewModel
 import lnx.jetitable.viewmodel.SchedulePrefs
 
 @Composable
-fun NotificationsScreen(onBack: () -> Unit) {
-    val viewModel = viewModel<NotifViewModel>()
+fun NotificationsScreen(
+    viewModel: NotifViewModel = hiltViewModel(),
+    onBack: () -> Unit
+) {
     val notificationPreference by viewModel.notificationPreference.collectAsStateWithLifecycle(null)
     val schedulePrefs by viewModel.schedulePrefs.collectAsStateWithLifecycle(SchedulePrefs())
 

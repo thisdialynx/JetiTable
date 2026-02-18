@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import lnx.jetitable.R
+import lnx.jetitable.misc.ConnectionState
 import lnx.jetitable.misc.DataState
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -37,13 +38,13 @@ fun DatePickerView(
     formattedDate: String,
     datePickerState: DatePickerState,
     onDateSelected: (Calendar) -> Unit,
-    connectionState: DataState<out Boolean>
+    connectionState: ConnectionState
 ) {
     var showDialog by remember { mutableStateOf(false) }
     val arrowRotation = animateFloatAsState(
         targetValue = if (showDialog) 180f else 0f
     )
-    val buttonTextColor = if (connectionState == DataState.Success(true)) {
+    val buttonTextColor = if (connectionState == ConnectionState.Success) {
         MaterialTheme.colorScheme.primary
     } else {
         MaterialTheme.colorScheme.onSurfaceVariant
@@ -76,7 +77,7 @@ fun DatePickerView(
         onClick = { showDialog = true },
         shape = RoundedCornerShape(8.dp),
         color = Color.Transparent,
-        enabled = connectionState == DataState.Success(true)
+        enabled = connectionState == ConnectionState.Success
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

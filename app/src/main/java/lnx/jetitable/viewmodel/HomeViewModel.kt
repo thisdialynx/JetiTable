@@ -1,72 +1,64 @@
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package lnx.jetitable.viewmodel
 
-import android.app.Application
+import android.content.Context
 import android.icu.util.Calendar
-import android.util.Log
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import lnx.jetitable.BuildConfig
-import lnx.jetitable.R
-import lnx.jetitable.api.RetrofitHolder
-import lnx.jetitable.api.timetable.TimeTableApiService.Companion.ATTENDANCE_LIST
-import lnx.jetitable.api.timetable.TimeTableApiService.Companion.CHECK_ZOOM
-import lnx.jetitable.api.timetable.TimeTableApiService.Companion.DAILY_CLASS_LIST
-import lnx.jetitable.api.timetable.TimeTableApiService.Companion.EXAM_LIST
-import lnx.jetitable.api.timetable.TimeTableApiService.Companion.STATE
 import lnx.jetitable.api.timetable.data.login.User
-import lnx.jetitable.api.timetable.data.query.AttendanceListData
-import lnx.jetitable.api.timetable.data.query.AttendanceListRequest
-import lnx.jetitable.api.timetable.data.query.ClassListRequest
+import lnx.jetitable.api.timetable.data.query.AttendanceData
 import lnx.jetitable.api.timetable.data.query.ClassNetworkData
-import lnx.jetitable.api.timetable.data.query.ExamListRequest
-import lnx.jetitable.api.timetable.data.query.ExamNetworkData
-import lnx.jetitable.api.timetable.data.query.VerifyPresenceRequest
 import lnx.jetitable.datastore.AppPreferences
-import lnx.jetitable.datastore.ScheduleDataStore
-import lnx.jetitable.datastore.UserDataStore
-import lnx.jetitable.misc.AndroidConnectivityObserver
+import lnx.jetitable.datastore.UserInfoStore
+import lnx.jetitable.misc.ConnectionState
+import lnx.jetitable.misc.ConnectivityObserver
 import lnx.jetitable.misc.DataState
-import lnx.jetitable.misc.DataState.Empty
-import lnx.jetitable.misc.DataState.Error
-import lnx.jetitable.misc.DataState.Loading
-import lnx.jetitable.misc.DataState.Success
 import lnx.jetitable.misc.DateManager
+import lnx.jetitable.repos.AttendanceRepository
+import lnx.jetitable.repos.ScheduleRepository
+import lnx.jetitable.repos.ScheduleState
 import lnx.jetitable.screens.home.data.ClassUiData
-import lnx.jetitable.services.data.DataSyncService.Companion.DATA_SYNC_SERVICE_NAME
+import lnx.jetitable.services.data.DataSyncService
 import lnx.jetitable.services.data.UserDataWorker
+import javax.inject.Inject
 
-class HomeViewModel(application: Application) : AndroidViewModel(application) {
-    private val context
-        get() = getApplication<Application>().applicationContext
-
-    private val connectivityObserver = AndroidConnectivityObserver(context)
-    private val dateManager = DateManager()
+@HiltViewModel
+class HomeViewModel @Inject constructor(
+    private val userInfoStore: UserInfoStore,
+    private val scheduleRepository: ScheduleRepository,
+    private val attendanceRepository: AttendanceRepository,
+    private val appPrefs: AppPreferences,
+    private val dateManager: DateManager,
+    private val connectivityObserver: ConnectivityObserver,
+    @ApplicationContext private val context: Context
+) : ViewModel() {
     val dateState = dateManager.dateStateFlow
-    private val userDataStore = UserDataStore(context)
-    private val scheduleDataStore = ScheduleDataStore(context)
-    private val service = RetrofitHolder.getTimeTableApiInstance(context)
-    private val appPrefs = AppPreferences(context)
 
     init {
         val syncRequest = OneTimeWorkRequestBuilder<UserDataWorker>()
-            .addTag(DATA_SYNC_SERVICE_NAME)
+            .addTag(DataSyncService.Companion.DATA_SYNC_SERVICE_NAME)
             .build()
 
-        WorkManager.getInstance(context).enqueue(syncRequest)
+        WorkManager.Companion.getInstance(context).enqueue(syncRequest)
     }
     private val currentTime = flow {
         while (true) {
@@ -80,97 +72,68 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         .isConnected
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = Loading
+            started = SharingStarted.Companion.WhileSubscribed(5000),
+            initialValue = ConnectionState.Loading
         )
 
-    val userData = userDataStore.getApiUserData()
+    val userData = userInfoStore.getApiUserData()
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
+            started = SharingStarted.Companion.WhileSubscribed(5000),
             initialValue = User()
         )
 
     val notificationTipState = appPrefs.getNotificationTipPreference()
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
+            started = SharingStarted.Companion.WhileSubscribed(5000),
             initialValue = false
         )
 
-    private val _attendanceListState = MutableStateFlow<DataState<out List<AttendanceListData>>>(Loading)
+    private val _attendanceListState =
+        MutableStateFlow<DataState<List<AttendanceData>>>(DataState.Loading)
     val attendanceListState = _attendanceListState.asStateFlow()
 
     val classesFlow = combine(
-        userData,
+        userInfoStore.getApiUserData(),
         dateManager.selectedDate,
-        currentTime,
         isConnected
-    ) { userData, date, time, isConnected ->
-        val currentDate = Calendar.getInstance()
-        val formattedTime = dateManager.timeFormat.format(currentDate.time)
-        val formattedDate = dateManager.dateFormat.format(currentDate.time)
-
-        when (isConnected) {
-            Success(false) -> {
-                val storedSchedule = scheduleDataStore.getClassList().first()
-                    .map { it.toUiData(formattedDate, formattedTime) }
-
-                if (storedSchedule.isEmpty()) Error(R.string.no_internet_connection)
-                    else Success(storedSchedule)
-            }
-            Success(true) -> {
-                try {
-                    val classes = getClasses(userData.group to userData.groupId)
-                        .map { it.toUiData(formattedDate, formattedTime)}
-
-                    if (classes.isEmpty()) Empty else Success(classes)
-                } catch (e: Exception) {
-                    val storedSchedule = scheduleDataStore.getClassList().first()
-                        .map { it.toUiData(formattedDate, formattedTime) }
-
-                    if (storedSchedule.isNotEmpty()) Success(storedSchedule)
-                        else Error(R.string.schedule_load_fail, e)
-                }
-            }
-            is Error -> Error(R.string.internet_connection_check_fail)
-            is Loading -> Loading
-            else -> Error(R.string.something_went_wrong)
+    ) { user, date, _ -> user to date }
+        .flatMapLatest { (user, date) ->
+            scheduleRepository.getClasses(user, date)
         }
-    }
+        .map { dataState ->
+            val currentDate = Calendar.getInstance()
+            val formattedTime = dateManager.timeFormat.format(currentDate.time)
+            val formattedDate = dateManager.dateFormat.format(currentDate.time)
+
+            when (dataState) {
+                is ScheduleState.Success -> {
+                    val uiData = dataState.data.map { it.toUiData(formattedDate, formattedTime) }
+                    ScheduleState.Success(uiData)
+                }
+                is ScheduleState.Loading -> ScheduleState.Loading
+                is ScheduleState.Failure -> ScheduleState.Failure(dataState.reason, dataState.exception)
+            }
+        }
         .flowOn(Dispatchers.IO)
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = Loading
+            started = SharingStarted.Companion.WhileSubscribed(5000),
+            initialValue = ScheduleState.Loading
         )
-
-    val examsFlow = combine(userData, isConnected) { userData, isConnected ->
-        when (isConnected) {
-            Success(true) -> {
-                try {
-                    val exams = getExams(userData.group to userData.groupId)
-                    if (exams.isEmpty()) Empty else Success(exams)
-                } catch (e: Exception) {
-                    Error(R.string.schedule_load_fail, e)
-                }
-            }
-            Success(false) -> {
-                val storedSchedule = scheduleDataStore.getExamList().first()
-
-                if (storedSchedule.isEmpty()) Error(R.string.no_internet_connection)
-                    else Success(storedSchedule)
-            }
-            is Error -> Error(R.string.internet_connection_check_fail)
-            is Loading -> Loading
-            else -> Error(R.string.something_went_wrong)
+    val examsFlow = combine(
+        userInfoStore.getApiUserData(),
+        isConnected
+    ) { user, _ -> user }
+        .flatMapLatest { user ->
+            scheduleRepository.getExams(user)
         }
-    }
         .flowOn(Dispatchers.IO)
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = Loading
+            started = SharingStarted.Companion.WhileSubscribed(5000),
+            initialValue = ScheduleState.Loading
         )
 
     fun disableNotificationTip() {
@@ -189,30 +152,6 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     fun updateDate(calendar: Calendar) {
         dateManager.updateDate(calendar)
-    }
-
-    private suspend fun getClasses(group: Pair<String, String>): List<ClassNetworkData> {
-        var classList: List<ClassNetworkData>
-
-        withContext(Dispatchers.IO) {
-            try {
-                classList = service.get_listLessonTodayStudent(
-                    ClassListRequest(
-                        DAILY_CLASS_LIST,
-                        group.first,
-                        group.second,
-                        dateManager.getFormattedDate(),
-                        dateManager.getAcademicYears(),
-                        dateManager.getSemester().toString()
-                    )
-                )
-
-            } catch (e: Exception) {
-                Log.e("Lesson list request", "Error in lesson list retrieval", e)
-                classList = emptyList()
-            }
-        }
-        return classList
     }
 
     private fun ClassNetworkData.toUiData(currentDate: String, currentTime: String): ClassUiData {
@@ -240,83 +179,18 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         )
     }
 
-    private suspend fun getExams(group: Pair<String, String>): List<ExamNetworkData> {
-        var examList: List<ExamNetworkData>
-        withContext(Dispatchers.IO) {
-            try {
-                examList = service.get_sessionStudent(
-                    ExamListRequest(
-                        EXAM_LIST,
-                        group.first,
-                        group.second,
-                        dateManager.getAcademicYears(),
-                        dateManager.getSemester().toString()
-                    )
-                )
-            } catch (e: Exception) {
-                Log.e("Exam list request", "Error in exam list retrieval", e)
-                examList = emptyList()
-            }
-        }
-        return examList
-    }
-
-    fun getAttendanceList(uiClass: ClassUiData) {
-        val studentsAcademyGroup = "1" // temp
-
+    fun loadAttendanceLog(classData: ClassUiData) {
         viewModelScope.launch(Dispatchers.IO) {
-            _attendanceListState.value = Loading
-            try {
-                val list = service.get_listStudent(
-                    AttendanceListRequest(
-                        ATTENDANCE_LIST,
-                        uiClass.group,
-                        uiClass.number,
-                        uiClass.name,
-                        uiClass.id,
-                        uiClass.type,
-                        studentsAcademyGroup,
-                        uiClass.date,
-                        uiClass.educatorId
-                    )
-                )
-
-                _attendanceListState.value = if (list.isEmpty()) Empty else Success(list)
-            } catch (e: Exception) {
-                Log.e("Attendance", "Failed to load", e)
-                _attendanceListState.value = Error(R.string.something_went_wrong, e)
-            }
-        }
-    }
-
-    fun verifyPresence(uiClass: ClassUiData) {
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val response = service.get_checkZoom(
-                    VerifyPresenceRequest(
-                        CHECK_ZOOM,
-                        STATE,
-                        userData.value.group,
-                        userData.value.fullName,
-                        userData.value.userId.toString(),
-                        uiClass.number,
-                        uiClass.name,
-                        uiClass.id,
-                        uiClass.type,
-                        uiClass.educator,
-                        uiClass.educatorId,
-                        uiClass.date,
-                        "${uiClass.start}:00",
-                        "${uiClass.end}:00",
-                    )
-                )
-
-                if (response == "ok" && BuildConfig.DEBUG) {
-                    Log.d("Presence verifier", "Verification successful")
+            attendanceRepository.getAttendanceList(classData)
+                .collect { dataState ->
+                    _attendanceListState.value = dataState
                 }
-            } catch (e: Exception) {
-                Log.e("Presence verifier", "Verification failed", e)
-            }
+        }
+    }
+
+    fun verifyAttendance(classData: ClassUiData) {
+        viewModelScope.launch(Dispatchers.IO) {
+            attendanceRepository.verifyAttendance(classData).collect()
         }
     }
 }
