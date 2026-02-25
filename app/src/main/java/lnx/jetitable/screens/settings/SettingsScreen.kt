@@ -5,10 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import lnx.jetitable.R
-import lnx.jetitable.misc.DataState
-import lnx.jetitable.viewmodel.AppUpdateInfo
 import lnx.jetitable.viewmodel.SettingsViewModel
 import lnx.jetitable.viewmodel.UpdateState
 import lnx.jetitable.viewmodel.UserInfoData
