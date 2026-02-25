@@ -17,7 +17,6 @@ import lnx.jetitable.api.timetable.TimeTableApiService.Companion.SEND_MAIL
 import lnx.jetitable.api.timetable.data.login.LoginRequest
 import lnx.jetitable.api.timetable.data.login.MailRequest
 import lnx.jetitable.misc.AndroidConnectivityObserver
-import lnx.jetitable.misc.ConnectionState
 import lnx.jetitable.misc.DataState
 import okhttp3.Credentials
 import javax.inject.Inject
