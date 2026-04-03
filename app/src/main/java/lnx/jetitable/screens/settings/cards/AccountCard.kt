@@ -113,13 +113,15 @@ fun AccountContent(
             ),
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.onSecondaryContainer)
         ) {
+            val signOutStr = stringResource(id = R.string.sign_out)
+
             Icon(
                 imageVector = Logout,
-                contentDescription = stringResource(id = R.string.sign_out),
+                contentDescription = signOutStr,
                 modifier = Modifier.size(ButtonDefaults.IconSize)
             )
             Text(
-                text = stringResource(id = R.string.sign_out), modifier = Modifier.padding(start = 4.dp),
+                text = signOutStr, modifier = Modifier.padding(start = 4.dp),
                 style = MaterialTheme.typography.titleSmall
             )
         }

@@ -120,6 +120,12 @@ private fun DialogPermission(
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
+        val buttonText = if (isPermissionGranted) {
+            stringResource(id = R.string.granted_button_title)
+        } else {
+            stringResource(id = R.string.grant_button_title)
+        }
+
         Text(
             text = stringResource(id = permissionResId),
             modifier = Modifier
@@ -131,11 +137,7 @@ private fun DialogPermission(
             enabled = !isPermissionGranted
         ) {
             Text(
-                text = if (isPermissionGranted) {
-                    stringResource(id = R.string.granted_button_title)
-                } else {
-                    stringResource(id = R.string.grant_button_title)
-                },
+                text = buttonText,
                 fontWeight = FontWeight.Bold
             )
         }
