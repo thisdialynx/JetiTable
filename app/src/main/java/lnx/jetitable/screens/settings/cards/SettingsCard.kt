@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -18,24 +17,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import lnx.jetitable.screens.home.elements.schedule.getCardShape
 import lnx.jetitable.screens.settings.SettingItem
 
 @Composable
 fun SettingsCard(onDestinationNavigate: (String) -> Unit) {
     SettingItem.entries.forEachIndexed { index, item ->
         val isLastItem = index == SettingItem.entries.size - 1
-
-        val topStart = if (index == 0) 12.dp else 4.dp
-        val topEnd = if (index == 0) 12.dp else 4.dp
-        val bottomStart = if (isLastItem) 12.dp else 4.dp
-        val bottomEnd = if (isLastItem) 12.dp else 4.dp
-
-        val shape = RoundedCornerShape(
-            topStart = topStart,
-            topEnd = topEnd,
-            bottomStart = bottomStart,
-            bottomEnd = bottomEnd
-        )
+        val shape = getCardShape(index, isLastItem)
 
         if (index > 0) Spacer(modifier = Modifier.height(2.dp))
 
