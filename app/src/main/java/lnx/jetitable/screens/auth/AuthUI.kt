@@ -28,7 +28,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
@@ -51,7 +51,7 @@ fun AuthUI(
     authState: DataState<Boolean>,
     emailRequestState: DataState<Int>
 ) {
-    val context = LocalContext.current
+    val resources = LocalResources.current
     val openPasswordRecover = remember { mutableStateOf(false) }
     val openNoticeDialog = remember { mutableStateOf(true) }
     val snackbarHostState = remember { SnackbarHostState() }
@@ -63,7 +63,7 @@ fun AuthUI(
                 onAuthComplete()
             }
             is DataState.Error -> {
-                showSnackbar(context.getString(authState.messageResId), snackbarHostState)
+                showSnackbar(resources.getString(authState.messageResId), snackbarHostState)
             }
             else -> {}
         }
@@ -72,10 +72,10 @@ fun AuthUI(
     LaunchedEffect(emailRequestState) {
         when (emailRequestState) {
             is DataState.Success -> {
-                showSnackbar(context.getString(emailRequestState.data), snackbarHostState)
+                showSnackbar(resources.getString(emailRequestState.data), snackbarHostState)
             }
             is DataState.Error -> {
-                showSnackbar(context.getString(emailRequestState.messageResId), snackbarHostState)
+                showSnackbar(resources.getString(emailRequestState.messageResId), snackbarHostState)
             }
             else -> {}
         }
