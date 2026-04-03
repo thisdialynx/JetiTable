@@ -18,7 +18,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -38,6 +37,7 @@ import lnx.jetitable.misc.DataState
 import lnx.jetitable.screens.auth.dialogs.PasswordRecoverDialog
 import lnx.jetitable.screens.auth.dialogs.UnofficialAlertDialog
 import lnx.jetitable.ui.components.AppSnackbar
+import lnx.jetitable.ui.components.showSnackbar
 
 @Composable
 fun AuthUI(
@@ -155,14 +155,4 @@ fun AuthUI(
         )
         UnofficialAlertDialog(isOpen = openNoticeDialog)
     }
-}
-
-suspend fun showSnackbar(
-    message: String,
-    snackbarHostState: SnackbarHostState
-) {
-    snackbarHostState.showSnackbar(
-        message = message,
-        duration = SnackbarDuration.Short
-    )
 }

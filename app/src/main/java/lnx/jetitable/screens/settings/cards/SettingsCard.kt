@@ -17,8 +17,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import lnx.jetitable.screens.home.elements.schedule.getCardShape
 import lnx.jetitable.screens.settings.SettingItem
+import lnx.jetitable.ui.components.getCardShape
 
 @Composable
 fun SettingsCard(onDestinationNavigate: (String) -> Unit) {

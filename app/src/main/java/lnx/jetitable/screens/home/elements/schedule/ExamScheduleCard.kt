@@ -42,12 +42,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import lnx.jetitable.R
 import lnx.jetitable.api.timetable.data.query.ExamNetworkData
-import lnx.jetitable.screens.home.elements.SiteButton
+import lnx.jetitable.repos.ScheduleState
+import lnx.jetitable.ui.components.SiteButton
 import lnx.jetitable.ui.components.StateStatus
+import lnx.jetitable.ui.components.getCardShape
+import lnx.jetitable.ui.components.getMeetingIcon
 import lnx.jetitable.ui.icons.google.ContractEdit
 import lnx.jetitable.ui.icons.google.Info
 import lnx.jetitable.ui.icons.google.Mood
-import lnx.jetitable.repos.ScheduleState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

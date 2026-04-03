@@ -1,16 +1,12 @@
-package lnx.jetitable.screens.home.elements.schedule
+package lnx.jetitable.ui.components
 
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import lnx.jetitable.ui.icons.GoogleMeet
-import lnx.jetitable.ui.icons.MsTeams
-import lnx.jetitable.ui.icons.ZoomMeeting
-import lnx.jetitable.ui.icons.google.Link
 
 fun getCardShape(index: Int, isLastElement: Boolean): RoundedCornerShape {
     val roundedCorner = 12.dp
     val semiRounded = 4.dp
+
     return when {
         index == 0 && !isLastElement -> {
             RoundedCornerShape(
@@ -20,6 +16,7 @@ fun getCardShape(index: Int, isLastElement: Boolean): RoundedCornerShape {
                 bottomEnd = semiRounded
             )
         }
+
         index != 0 && isLastElement -> {
             RoundedCornerShape(
                 topStart = semiRounded,
@@ -28,6 +25,7 @@ fun getCardShape(index: Int, isLastElement: Boolean): RoundedCornerShape {
                 bottomEnd = roundedCorner
             )
         }
+
         index != 0 && !isLastElement -> {
             RoundedCornerShape(
                 topStart = semiRounded,
@@ -36,6 +34,7 @@ fun getCardShape(index: Int, isLastElement: Boolean): RoundedCornerShape {
                 bottomEnd = semiRounded
             )
         }
+
         else -> {
             RoundedCornerShape(
                 topStart = roundedCorner,
@@ -44,14 +43,5 @@ fun getCardShape(index: Int, isLastElement: Boolean): RoundedCornerShape {
                 bottomEnd = roundedCorner
             )
         }
-    }
-}
-
-fun getMeetingIcon(url: String): ImageVector {
-    return when {
-        url.contains("zoom.us") -> ZoomMeeting
-        url.contains("meet.google.com") -> GoogleMeet
-        url.contains("teams.microsoft.com") -> MsTeams
-        else -> Link
     }
 }

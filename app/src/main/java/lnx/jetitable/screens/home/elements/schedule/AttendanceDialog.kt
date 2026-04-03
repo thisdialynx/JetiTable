@@ -37,6 +37,7 @@ import lnx.jetitable.R
 import lnx.jetitable.api.timetable.data.query.AttendanceData
 import lnx.jetitable.misc.DataState
 import lnx.jetitable.ui.components.StateStatus
+import lnx.jetitable.ui.components.getCardShape
 import lnx.jetitable.ui.icons.google.Draft
 import lnx.jetitable.ui.icons.google.Info
 

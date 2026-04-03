@@ -53,15 +53,17 @@ import lnx.jetitable.api.timetable.data.query.AttendanceData
 import lnx.jetitable.misc.ConnectionState
 import lnx.jetitable.misc.DataState
 import lnx.jetitable.misc.DateManager
+import lnx.jetitable.repos.ScheduleState
 import lnx.jetitable.screens.home.data.ClassUiData
-import lnx.jetitable.screens.home.elements.SiteButton
 import lnx.jetitable.screens.home.elements.datepicker.DatePickerView
 import lnx.jetitable.screens.home.elements.datepicker.DateState
+import lnx.jetitable.ui.components.SiteButton
 import lnx.jetitable.ui.components.StateStatus
+import lnx.jetitable.ui.components.getCardShape
+import lnx.jetitable.ui.components.getMeetingIcon
 import lnx.jetitable.ui.icons.Moodle
 import lnx.jetitable.ui.icons.google.CalendarMonth
 import lnx.jetitable.ui.icons.google.Info
-import lnx.jetitable.repos.ScheduleState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
