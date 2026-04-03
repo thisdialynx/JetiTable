@@ -57,25 +57,25 @@ fun AuthUI(
     val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(authState) {
-        when (val state = authState) {
+        when (authState) {
             is DataState.Success -> {
                 delay(500)
                 onAuthComplete()
             }
             is DataState.Error -> {
-                showSnackbar( context.getString(state.messageResId), snackbarHostState)
+                showSnackbar(context.getString(authState.messageResId), snackbarHostState)
             }
             else -> {}
         }
     }
 
     LaunchedEffect(emailRequestState) {
-        when (val state = emailRequestState) {
+        when (emailRequestState) {
             is DataState.Success -> {
-                showSnackbar( context.getString(state.data), snackbarHostState)
+                showSnackbar(context.getString(emailRequestState.data), snackbarHostState)
             }
             is DataState.Error -> {
-                showSnackbar( context.getString(state.messageResId), snackbarHostState)
+                showSnackbar(context.getString(emailRequestState.messageResId), snackbarHostState)
             }
             else -> {}
         }
