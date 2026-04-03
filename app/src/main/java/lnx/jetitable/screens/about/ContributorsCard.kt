@@ -22,8 +22,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import lnx.jetitable.screens.home.elements.schedule.getCardShape
-import lnx.jetitable.screens.settings.SettingItem
+import lnx.jetitable.ui.components.getCardShape
+import lnx.jetitable.ui.components.SettingsItems
 
 @Composable
 fun ContributorsCard() {
@@ -32,7 +32,7 @@ fun ContributorsCard() {
         verticalArrangement = Arrangement.spacedBy(2.dp)
     ) {
         ContributorItem.entries.forEachIndexed { index, item ->
-            val isLastItem = index == SettingItem.entries.size - 1
+            val isLastItem = index == SettingsItems.entries.size - 1
             val shape = getCardShape(index, isLastItem)
 
             Surface(
