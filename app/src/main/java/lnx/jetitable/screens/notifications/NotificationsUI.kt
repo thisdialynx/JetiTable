@@ -117,6 +117,8 @@ fun NotificationsUI(
             )
         },
     ) { paddingValues ->
+        val isSettingsEnabled = notificationsEnabled == true
+
         Column(
             modifier = Modifier
                 .padding(paddingValues)
@@ -180,7 +182,7 @@ fun NotificationsUI(
             EventOptionsCard(
                 icon = CalendarMonth,
                 title = stringResource(R.string.activity_type_classes),
-                enabled = notificationsEnabled == true,
+                enabled = isSettingsEnabled,
                 checked = schedulePrefs.classPrefs.isEnabled,
                 selectedMinutes = schedulePrefs.classPrefs.minutes,
                 onCheckedChange = onClassSwitchChange,
@@ -189,7 +191,7 @@ fun NotificationsUI(
             EventOptionsCard(
                 icon = ContractEdit,
                 title = stringResource(R.string.activity_type_exams),
-                enabled = notificationsEnabled == true,
+                enabled = isSettingsEnabled,
                 checked = schedulePrefs.examPrefs.isEnabled,
                 selectedMinutes = schedulePrefs.examPrefs.minutes,
                 onCheckedChange = onExamSwitchChange,
