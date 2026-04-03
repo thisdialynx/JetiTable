@@ -17,13 +17,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import lnx.jetitable.screens.settings.SettingItem
+import lnx.jetitable.ui.components.SettingsItems
 import lnx.jetitable.ui.components.getCardShape
 
 @Composable
 fun SettingsCard(onDestinationNavigate: (String) -> Unit) {
-    SettingItem.entries.forEachIndexed { index, item ->
-        val isLastItem = index == SettingItem.entries.size - 1
+    SettingsItems.entries.forEachIndexed { index, item ->
+        val isLastItem = index == SettingsItems.entries.size - 1
         val shape = getCardShape(index, isLastItem)
 
         if (index > 0) Spacer(modifier = Modifier.height(2.dp))

@@ -16,27 +16,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import lnx.jetitable.R
-import lnx.jetitable.navigation.About
-import lnx.jetitable.navigation.Notifications
 import lnx.jetitable.screens.settings.cards.AccountCard
 import lnx.jetitable.screens.settings.cards.SettingsCard
 import lnx.jetitable.screens.settings.cards.UpdateCard
 import lnx.jetitable.viewmodel.UpdateState
 import lnx.jetitable.viewmodel.UserInfoState
-
-enum class SettingItem(
-    val titleResId: Int,
-    val descriptionResId: Int,
-    val icon: ImageVector,
-    val destination: String
-) {
-    NOTIFICATIONS(R.string.notifications_settings_entry_title, R.string.notifications_settings_entry_description, lnx.jetitable.ui.icons.google.Notifications, Notifications.route),
-    ABOUT(R.string.about_screen_title, R.string.about_screen_description, lnx.jetitable.ui.icons.google.Info, About.route)
-}
 
 @Composable
 fun SettingsUI(
