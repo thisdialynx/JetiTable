@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -23,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import lnx.jetitable.screens.home.elements.schedule.getCardShape
 import lnx.jetitable.screens.settings.SettingItem
 
 @Composable
@@ -33,18 +33,7 @@ fun ContributorsCard() {
     ) {
         ContributorItem.entries.forEachIndexed { index, item ->
             val isLastItem = index == SettingItem.entries.size - 1
-            
-            val topStart = if (index == 0) 12.dp else 4.dp
-            val topEnd = if (index == 0) 12.dp else 4.dp
-            val bottomStart = if (isLastItem) 12.dp else 4.dp
-            val bottomEnd = if (isLastItem) 12.dp else 4.dp
-
-            val shape = RoundedCornerShape(
-                topStart = topStart,
-                topEnd = topEnd,
-                bottomStart = bottomStart,
-                bottomEnd = bottomEnd
-            )
+            val shape = getCardShape(index, isLastItem)
 
             Surface(
                 color = MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp),
