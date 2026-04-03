@@ -1,4 +1,4 @@
-package lnx.jetitable.screens.home.elements
+package lnx.jetitable.ui.components
 
 import android.content.ClipData
 import android.util.Log
@@ -23,6 +23,10 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import lnx.jetitable.R
+import lnx.jetitable.ui.icons.GoogleMeet
+import lnx.jetitable.ui.icons.MsTeams
+import lnx.jetitable.ui.icons.ZoomMeeting
+import lnx.jetitable.ui.icons.google.Link
 
 @Composable
 fun SiteButton(
@@ -68,5 +72,14 @@ fun SiteButton(
                 modifier = Modifier.padding(8.dp)
             )
         }
+    }
+}
+
+fun getMeetingIcon(url: String): ImageVector {
+    return when {
+        url.contains("zoom.us") -> ZoomMeeting
+        url.contains("meet.google.com") -> GoogleMeet
+        url.contains("teams.microsoft.com") -> MsTeams
+        else -> Link
     }
 }
