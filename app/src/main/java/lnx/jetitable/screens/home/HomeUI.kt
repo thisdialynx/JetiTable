@@ -29,7 +29,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
@@ -38,12 +37,12 @@ import lnx.jetitable.api.timetable.data.query.AttendanceData
 import lnx.jetitable.api.timetable.data.query.ExamNetworkData
 import lnx.jetitable.misc.ConnectionState
 import lnx.jetitable.misc.DataState
+import lnx.jetitable.repos.ScheduleState
 import lnx.jetitable.screens.home.data.ClassUiData
 import lnx.jetitable.screens.home.elements.datepicker.DateState
 import lnx.jetitable.screens.home.elements.schedule.ClassScheduleCard
 import lnx.jetitable.screens.home.elements.schedule.ExamScheduleCard
 import lnx.jetitable.ui.components.AppSnackbar
-import lnx.jetitable.repos.ScheduleState
 import lnx.jetitable.ui.icons.google.Settings as SettingsIcon
 
 @Composable
@@ -67,7 +66,10 @@ fun HomeUI(
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     var title by rememberSaveable { mutableIntStateOf(R.string.welcome_title) }
     val snackbarHostState = remember { SnackbarHostState() }
-    val context = LocalContext.current
+
+    val notifTipDescResId = stringResource(R.string.notification_tip_description)
+    val answerYesResId = stringResource(R.string.answer_yes)
+    val noInternetResId = stringResource(R.string.no_internet_connection)
 
     LaunchedEffect(Unit) {
         delay(3000)
@@ -78,8 +80,8 @@ fun HomeUI(
         if (notificationTipState) {
             val result = snackbarHostState
                 .showSnackbar(
-                    message = context.getString(R.string.notification_tip_description),
-                    actionLabel = context.getString(R.string.answer_yes),
+                    message = notifTipDescResId,
+                    actionLabel = answerYesResId,
                     withDismissAction = true
                 )
             when (result) {
@@ -97,7 +99,7 @@ fun HomeUI(
         when (connectionState) {
             is ConnectionState.Failure -> {
                 snackbarHostState.showSnackbar(
-                    message = context.getString(R.string.no_internet_connection),
+                    message = noInternetResId,
                     withDismissAction = true
                 )
             }
