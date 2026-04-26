@@ -36,8 +36,7 @@ import lnx.jetitable.R
 import lnx.jetitable.misc.DataState
 import lnx.jetitable.screens.auth.dialogs.PasswordRecoverDialog
 import lnx.jetitable.screens.auth.dialogs.UnofficialAlertDialog
-import lnx.jetitable.ui.components.AppSnackbar
-import lnx.jetitable.ui.components.showSnackbar
+import lnx.jetitable.ui.components.ThemedSnackbar
 
 @Composable
 fun AuthUI(
@@ -63,7 +62,7 @@ fun AuthUI(
                 onAuthComplete()
             }
             is DataState.Error -> {
-                showSnackbar(resources.getString(authState.messageResId), snackbarHostState)
+                snackbarHostState.showSnackbar(resources.getString(authState.messageResId))
             }
             else -> {}
         }
@@ -72,10 +71,10 @@ fun AuthUI(
     LaunchedEffect(emailRequestState) {
         when (emailRequestState) {
             is DataState.Success -> {
-                showSnackbar(resources.getString(emailRequestState.data), snackbarHostState)
+                snackbarHostState.showSnackbar(resources.getString(emailRequestState.data))
             }
             is DataState.Error -> {
-                showSnackbar(resources.getString(emailRequestState.messageResId), snackbarHostState)
+                snackbarHostState.showSnackbar(resources.getString(emailRequestState.messageResId))
             }
             else -> {}
         }
@@ -84,7 +83,7 @@ fun AuthUI(
     Scaffold(
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState) {
-                AppSnackbar(
+                ThemedSnackbar(
                     snackbarData = it
                 )
             }
