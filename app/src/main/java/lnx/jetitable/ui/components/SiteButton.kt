@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import lnx.jetitable.R
 import lnx.jetitable.ui.icons.GoogleMeet
+import lnx.jetitable.ui.icons.Moodle
 import lnx.jetitable.ui.icons.MsTeams
 import lnx.jetitable.ui.icons.ZoomMeeting
 import lnx.jetitable.ui.icons.google.Link
@@ -32,7 +33,6 @@ import lnx.jetitable.ui.icons.google.Link
 fun SiteButton(
     modifier: Modifier = Modifier,
     url: String,
-    icon: ImageVector,
     color: Color,
     uriHandler: UriHandler,
     onButtonClick: () -> Unit = {},
@@ -40,6 +40,7 @@ fun SiteButton(
 ) {
     val label = stringResource(R.string.meeting_url_label)
     val haptic = LocalHapticFeedback.current
+    val icon = getSiteIcon(url)
 
     CompositionLocalProvider(value = LocalMinimumInteractiveComponentSize provides Dp.Unspecified) {
         Card(
@@ -75,11 +76,12 @@ fun SiteButton(
     }
 }
 
-fun getMeetingIcon(url: String): ImageVector {
+fun getSiteIcon(url: String): ImageVector {
     return when {
         url.contains("zoom.us") -> ZoomMeeting
         url.contains("meet.google.com") -> GoogleMeet
         url.contains("teams.microsoft.com") -> MsTeams
+        url.contains("moodle2.snu.edu.ua") -> Moodle
         else -> Link
     }
 }

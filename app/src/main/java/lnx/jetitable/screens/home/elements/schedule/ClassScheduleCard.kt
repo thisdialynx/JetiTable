@@ -60,8 +60,6 @@ import lnx.jetitable.screens.home.elements.datepicker.DateState
 import lnx.jetitable.ui.components.SiteButton
 import lnx.jetitable.ui.components.StateStatus
 import lnx.jetitable.ui.components.getCardShape
-import lnx.jetitable.ui.components.getMeetingIcon
-import lnx.jetitable.ui.icons.Moodle
 import lnx.jetitable.ui.icons.google.CalendarMonth
 import lnx.jetitable.ui.icons.google.Info
 
@@ -337,7 +335,6 @@ private fun MainContent(
                     if (data.meetingLink.isNotEmpty()) {
                         SiteButton(
                             url = data.meetingLink,
-                            icon = getMeetingIcon(data.meetingLink),
                             color = MaterialTheme.colorScheme.secondary,
                             uriHandler = localUriHandler,
                             clipboardManager = clipboardManager,
@@ -352,7 +349,6 @@ private fun MainContent(
                     if (data.moodleLink.isNotEmpty()) {
                         SiteButton(
                             url = data.moodleLink,
-                            icon = Moodle,
                             color = MaterialTheme.colorScheme.tertiary,
                             uriHandler = localUriHandler,
                             clipboardManager = clipboardManager,
@@ -517,7 +513,6 @@ private fun DetailsContent(
                     if (data.meetingLink.isNotEmpty()) {
                         SiteButton(
                             url = data.meetingLink,
-                            icon = getMeetingIcon(data.meetingLink),
                             color = MaterialTheme.colorScheme.secondary,
                             uriHandler = localUriHandler,
                             clipboardManager = clipboardManager,
@@ -532,7 +527,6 @@ private fun DetailsContent(
                     if (data.moodleLink.isNotEmpty()) {
                         SiteButton(
                             url = data.moodleLink,
-                            icon = Moodle,
                             color = MaterialTheme.colorScheme.tertiary,
                             uriHandler = localUriHandler,
                             clipboardManager = clipboardManager,
