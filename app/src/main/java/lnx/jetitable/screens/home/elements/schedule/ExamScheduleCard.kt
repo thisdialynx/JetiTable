@@ -46,7 +46,6 @@ import lnx.jetitable.repos.ScheduleState
 import lnx.jetitable.ui.components.SiteButton
 import lnx.jetitable.ui.components.StateStatus
 import lnx.jetitable.ui.components.getCardShape
-import lnx.jetitable.ui.components.getMeetingIcon
 import lnx.jetitable.ui.icons.google.ContractEdit
 import lnx.jetitable.ui.icons.google.Info
 import lnx.jetitable.ui.icons.google.Mood
@@ -277,7 +276,6 @@ private fun MainContent(
                     if (data.url.isNotBlank()) {
                         SiteButton(
                             url = data.url,
-                            icon = getMeetingIcon(data.url),
                             color = MaterialTheme.colorScheme.secondary,
                             uriHandler = localUriHandler,
                             clipboardManager = clipboardManager,
@@ -357,7 +355,6 @@ private fun DetailsContent(
                 if (data.url.isNotBlank()) {
                     SiteButton(
                         url = data.url,
-                        icon = getMeetingIcon(data.url),
                         color = MaterialTheme.colorScheme.secondary,
                         uriHandler = localUriHandler,
                         clipboardManager = clipboardManager,
