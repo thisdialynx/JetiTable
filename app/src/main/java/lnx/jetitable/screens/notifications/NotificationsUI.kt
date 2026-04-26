@@ -53,7 +53,7 @@ import com.google.accompanist.permissions.rememberPermissionState
 import lnx.jetitable.R
 import lnx.jetitable.screens.notifications.cards.EventOptionsCard
 import lnx.jetitable.screens.notifications.dialogs.PermissionRequestDialog
-import lnx.jetitable.ui.components.AppSnackbar
+import lnx.jetitable.ui.components.ThemedSnackbar
 import lnx.jetitable.ui.icons.google.CalendarMonth
 import lnx.jetitable.ui.icons.google.ContractEdit
 import lnx.jetitable.viewmodel.SchedulePrefs
@@ -96,7 +96,7 @@ fun NotificationsUI(
     Scaffold(
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState) {
-                AppSnackbar(it)
+                ThemedSnackbar(it)
             }
         },
         topBar = {

@@ -4,15 +4,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarData
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun AppSnackbar(
+fun ThemedSnackbar(
     snackbarData: SnackbarData,
     modifier: Modifier = Modifier
 ) {
@@ -24,16 +22,5 @@ fun AppSnackbar(
         dismissActionContentColor = MaterialTheme.colorScheme.secondary,
         snackbarData = snackbarData,
         shape = RoundedCornerShape(12.dp)
-    )
-}
-
-
-suspend fun showSnackbar(
-    message: String,
-    snackbarHostState: SnackbarHostState
-) {
-    snackbarHostState.showSnackbar(
-        message = message,
-        duration = SnackbarDuration.Short
     )
 }

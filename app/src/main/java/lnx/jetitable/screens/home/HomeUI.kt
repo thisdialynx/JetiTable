@@ -42,7 +42,7 @@ import lnx.jetitable.screens.home.data.ClassUiData
 import lnx.jetitable.screens.home.elements.datepicker.DateState
 import lnx.jetitable.screens.home.elements.schedule.ClassScheduleCard
 import lnx.jetitable.screens.home.elements.schedule.ExamScheduleCard
-import lnx.jetitable.ui.components.AppSnackbar
+import lnx.jetitable.ui.components.ThemedSnackbar
 import lnx.jetitable.ui.icons.google.Settings as SettingsIcon
 
 @Composable
@@ -110,7 +110,7 @@ fun HomeUI(
     Scaffold(
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState) {
-                AppSnackbar(it)
+                ThemedSnackbar(it)
             }
         },
         topBar = {
