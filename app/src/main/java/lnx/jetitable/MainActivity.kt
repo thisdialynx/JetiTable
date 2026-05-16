@@ -17,18 +17,18 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import lnx.jetitable.features.about.presentation.AboutScreen
+import lnx.jetitable.features.auth.presentation.AuthScreen
+import lnx.jetitable.features.home.presentation.HomeScreen
+import lnx.jetitable.features.notifications.presentation.NotificationsScreen
+import lnx.jetitable.features.settings.presentation.SettingsScreen
+import lnx.jetitable.features.splash.presentation.SplashScreen
 import lnx.jetitable.navigation.About
 import lnx.jetitable.navigation.Auth
 import lnx.jetitable.navigation.Home
 import lnx.jetitable.navigation.Loading
 import lnx.jetitable.navigation.Notifications
 import lnx.jetitable.navigation.Settings
-import lnx.jetitable.screens.about.AboutScreen
-import lnx.jetitable.screens.auth.AuthScreen
-import lnx.jetitable.screens.home.HomeScreen
-import lnx.jetitable.screens.loading.LoadingScreen
-import lnx.jetitable.screens.notifications.NotificationsScreen
-import lnx.jetitable.screens.settings.SettingsScreen
 import lnx.jetitable.ui.theme.JetiTableTheme
 
 const val SCREEN_TRANSITION_MILLIS = 200
@@ -108,12 +108,18 @@ fun AppNavigation() {
         composable(route = Settings.route) {
             SettingsScreen(
                 onBack = { navController.popBackStack() },
-                onDestinationNavigate = { navController.navigate(it) }
+                onDestinationNavigate = { navController.navigate(it) },
+                onNavigateToAuth = {
+                    navController.navigate(Auth.route) {
+                        popUpTo(0) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                }
             )
         }
 
         composable(route = Loading.route) {
-            LoadingScreen(
+            SplashScreen(
                 onHomeNavigate = {
                     navController.navigate(Home.route) {
                         popUpTo(Loading.route) { inclusive = true }

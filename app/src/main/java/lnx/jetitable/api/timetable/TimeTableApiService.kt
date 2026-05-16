@@ -24,22 +24,22 @@ interface TimeTableApiService {
     suspend fun checkPassword(
         @Header("Authorization") token: String,
         @Body request: LoginRequest
-    ): LoginResponse
+    ): Response<LoginResponse>
 
     @POST(AUTHORISATION_PHP)
     suspend fun sendMail(
         @Body request: MailRequest
-    ): MailResponse
+    ): Response<MailResponse>
 
     @POST(AUTHORISATION_PHP)
     suspend fun checkAccess(
         @Body request: AccessRequest
-    ): HtmlConverterState<AccessResponse>
+    ): Response<HtmlConverterState<AccessResponse>>
 
     @POST(QUERY_PHP)
     suspend fun get_listLessonTodayStudent(
         @Body request: ClassListRequest
-    ): HtmlConverterState<List<ClassNetworkData>>
+    ): Response<HtmlConverterState<List<ClassNetworkData>>>
 
     @POST(QUERY_PHP)
     suspend fun get_checkZoom(
@@ -49,7 +49,7 @@ interface TimeTableApiService {
     @POST(QUERY_PHP)
     suspend fun get_sessionStudent(
         @Body request: ExamListRequest
-    ): HtmlConverterState<List<ExamNetworkData>>
+    ): Response<HtmlConverterState<List<ExamNetworkData>>>
 
     @POST(QUERY_PHP)
     suspend fun get_listStudent(
@@ -65,13 +65,13 @@ interface TimeTableApiService {
 
         // Avtorization.php methods
         const val CHECK_PASSWORD = "placeholder"
-        const val SEND_MAIL = "placeholder"
+        const val PASSWORD_RECOVERY = "placeholder"
         const val CHECK_ACCESS = "placeholder"
 
         // getQuery.php methods and parameters
         const val DAILY_CLASS_LIST = "placeholder"
         const val STATE = "placeholder"
-        const val CHECK_ZOOM = "placeholder"
+        const val PRESENCE_VERIFICATION = "placeholder"
         const val EXAM_LIST = "placeholder"
         const val ATTENDANCE_LIST = "placeholder"
     }

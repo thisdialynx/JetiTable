@@ -3,12 +3,12 @@ package lnx.jetitable.ui.components
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.unit.dp
 
-fun getCardShape(index: Int, isLastElement: Boolean): RoundedCornerShape {
+fun getColumnCardShape(index: Int, isLast: Boolean): RoundedCornerShape {
     val roundedCorner = 12.dp
     val semiRounded = 4.dp
 
     return when {
-        index == 0 && !isLastElement -> {
+        index == 0 && !isLast -> {
             RoundedCornerShape(
                 topStart = roundedCorner,
                 topEnd = roundedCorner,
@@ -17,7 +17,7 @@ fun getCardShape(index: Int, isLastElement: Boolean): RoundedCornerShape {
             )
         }
 
-        index != 0 && isLastElement -> {
+        index != 0 && isLast -> {
             RoundedCornerShape(
                 topStart = semiRounded,
                 topEnd = semiRounded,
@@ -26,22 +26,45 @@ fun getCardShape(index: Int, isLastElement: Boolean): RoundedCornerShape {
             )
         }
 
-        index != 0 && !isLastElement -> {
-            RoundedCornerShape(
-                topStart = semiRounded,
-                topEnd = semiRounded,
-                bottomStart = semiRounded,
-                bottomEnd = semiRounded
-            )
+        index != 0 && !isLast -> {
+            RoundedCornerShape(semiRounded)
         }
 
         else -> {
+            RoundedCornerShape(roundedCorner)
+        }
+    }
+}
+
+fun getRowCardShape(index: Int, isLast: Boolean): RoundedCornerShape {
+    val roundedCorner = 12.dp
+    val semiRounded = 4.dp
+
+    return when {
+        index == 0 && !isLast -> {
             RoundedCornerShape(
                 topStart = roundedCorner,
-                topEnd = roundedCorner,
+                topEnd = semiRounded,
                 bottomStart = roundedCorner,
+                bottomEnd = semiRounded
+            )
+        }
+
+        index != 0 && isLast -> {
+            RoundedCornerShape(
+                topStart = semiRounded,
+                topEnd = roundedCorner,
+                bottomStart = semiRounded,
                 bottomEnd = roundedCorner
             )
+        }
+
+        index != 0 && !isLast -> {
+            RoundedCornerShape(semiRounded)
+        }
+
+        else -> {
+            RoundedCornerShape(roundedCorner)
         }
     }
 }

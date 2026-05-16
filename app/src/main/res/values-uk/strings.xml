@@ -12,8 +12,8 @@
     <string name="invalid_email">Неправильна адреса електронної пошти</string>
     <string name="authorized">Авторизація успішна!</string>
     <string name="forgot_password_dialog_title">Відновлення пароля</string>
-    <string name="forgot_password_dialog_description">Якщо введені дані правильні, ви отримаєте лист із паролем на електронну пошту.</string>
-    <string name="send">Відправити</string>
+    <string name="forgot_password_dialog_description">Якщо введені дані правильні, ви отримаєте лист із паролем на вказану електронну пошту.</string>
+    <string name="send">Надіслати</string>
     <string name="dismiss">Відхилити</string>
     <string name="continue_action">Продовжити</string>
     <string name="quit">Вийти</string>
@@ -21,7 +21,6 @@
     <string name="unofficial_app_description">Цей застосунок не є офіційним продуктом Східноукраїнського національного університету імені Володимира Даля. Університет не несе відповідальності за його зміст та використання. Користувач бере на себе всі ризики, пов\'язані з використанням цього застосунку. За необхідності, звертайтеся до офіційних джерел для отримання точної інформації.</string>
     <string name="welcome_title">Ласкаво просимо!</string>
     <string name="failed_to_fetch_data">Не вдалося отримати дані</string>
-    <string name="no_classes">Заняття на вказану дату відсутні</string>
     <string name="educator">Викладач: %1$s</string>
     <string name="class_number">Номер з/п: %1$s</string>
     <string name="group">Група: %1$s</string>
@@ -34,22 +33,19 @@
     <string name="timetable_account">Акаунт %1$s</string>
     <string name="spring_semester">Весняний семестр</string>
     <string name="autumn_semester">Осінній семестр</string>
-    <string name="support">Підтримка</string>
     <string name="exam_schedule">Розклад сесії</string>
     <string name="no_exams">Розклад сесії не опубліковано</string>
     <string name="date">Дата: %1$s</string>
-    <string name="home_screen">Головний екран</string>
+    <string name="home_screen">Головна</string>
     <string name="settings">Налаштування</string>
     <string name="product">Продукт</string>
     <string name="sign_out">Вийти</string>
-    <string name="getting_list">Завантаження розкладу…</string>
     <string name="hide_password">Приховати пароль</string>
     <string name="show_password">Показати пароль</string>
     <string name="status">Статус: %1$s</string>
-    <string name="about_screen_description">Версія застосунку, посилання та дописувачі</string>
-    <string name="no_internet_connection">Немає інтернет з\'єднання</string>
+    <string name="about_screen_description">Версія застосунку, посилання й учасники проєкту</string>
     <string name="class_room">Аудиторія: %1$s</string>
-    <string name="could_not_check_for_updates">Не вдалося перевірити наявність оновлень</string>
+    <string name="could_not_check_for_updates">Не вдалося перевірити на наявність оновлень</string>
     <string name="update_available_card">Оновлення %1$s доступне! Натисніть щоб дізнатися більше</string>
     <string name="no_updates">Установлена остання версія застосунку</string>
     <string name="download_action">Завантажити</string>
@@ -82,7 +78,7 @@
     <string name="priority_card_title">Пріоритет</string>
     <string name="time_before_card_title">Час до події</string>
     <string name="priority_low">Низький</string>
-    <string name="priority_default">За замовченням</string>
+    <string name="priority_default">Як усталено</string>
     <string name="priority_high">Високий</string>
     <string name="before_event_minutes">%1$s хвилин(-а)</string>
     <string name="notification_tip_description">Хочете отримувати нагадування про майбутні події?</string>
@@ -95,5 +91,7 @@
     <string name="attendance_log">Журнал відвідуваності</string>
     <string name="debug_update_unavailable">Перевірка оновлень у debug версії вимкнена</string>
     <string name="no_cached_schedule">Немає збереженого розкладу</string>
-    <string name="no_schedule_available_for_today">Розклад на поточний день відсутній</string>
+    <string name="no_schedule_available_for_today">Розклад на сьогодні відсутній</string>
+    <string name="network_error">Помилка мережі</string>
+    <string name="unknown_error">Виникла невідома помилка</string>
 </resources>

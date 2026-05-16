@@ -11,13 +11,12 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.first
 import lnx.jetitable.api.timetable.TimeTableApiService.Companion.AUTHORISATION_PHP
 import lnx.jetitable.api.timetable.TimeTableApiService.Companion.BASE_URL
+import lnx.jetitable.api.timetable.domain.models.UserInfoState
+import lnx.jetitable.api.timetable.domain.repository.UserInfoRepository
 import lnx.jetitable.datastore.CookieDataStore
 import lnx.jetitable.datastore.UserInfoStore
-import lnx.jetitable.repos.ScheduleFailureReason
-import lnx.jetitable.repos.ScheduleRepository
-import lnx.jetitable.repos.ScheduleState
-import lnx.jetitable.repos.UserInfoRepository
-import lnx.jetitable.repos.UserInfoState
+import lnx.jetitable.features.home.domain.models.ScheduleResult
+import lnx.jetitable.features.home.domain.repository.ScheduleRepository
 import lnx.jetitable.services.notification.NotifManager
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import java.net.ConnectException
@@ -60,37 +59,34 @@ class UserDataWorker @AssistedInject constructor(
     }
 
     private suspend fun fetchUserData(): Boolean {
-        return when (val result = userInfoRepository.refreshUserInfo()) {
+        return when (userInfoRepository.refreshUserInfo()) {
             is UserInfoState.Success -> {
                 Log.d(USER_INFO_FETCHER, "User info refreshed successfully")
                 true
             }
             is UserInfoState.Failure -> {
-                Log.e(USER_INFO_FETCHER, "Failed to refresh user info", result.e)
+                Log.e(USER_INFO_FETCHER, "Failed to refresh user info")
                 false
             }
         }
     }
 
     private suspend fun fetchSchedule(): Boolean {
-        val userData = userInfoStore.getApiUserData().first()
+        val userData = userInfoStore.getUserInfo().first()
 
         if (userData.group.isEmpty()) {
             Log.w(SCHEDULE_FETCHER, "Skipping schedule fetch because user data is missing")
             return false
         }
-        val today = Calendar.getInstance()
+        val calendar = Calendar.getInstance()
 
-        val classResponse = scheduleRepository.refreshClasses(userData, today)
-        val examResponse = scheduleRepository.refreshExams(userData)
+        val classResponse = scheduleRepository.getClasses(calendar)
+        val examResponse = scheduleRepository.getExams()
 
-        val wasClassesSuccess = classResponse !is ScheduleState.Failure || classResponse.reason == ScheduleFailureReason.EMPTY
-        val wasExamsSuccess = examResponse !is ScheduleState.Failure || examResponse.reason == ScheduleFailureReason.EMPTY
+        val success =
+            classResponse is ScheduleResult.Success && examResponse is ScheduleResult.Success
 
-        if (!wasClassesSuccess) Log.e(SCHEDULE_FETCHER, "Failed to refresh classes: ${classResponse.reason}")
-        if (!wasExamsSuccess) Log.e(SCHEDULE_FETCHER, "Failed to refresh exams: ${examResponse.reason}")
-
-        return wasClassesSuccess || wasExamsSuccess
+        return success
     }
 
     companion object {
