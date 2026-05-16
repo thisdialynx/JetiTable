@@ -34,7 +34,6 @@
     <string name="timetable_account">%1$s account</string>
     <string name="spring_semester">Spring semester</string>
     <string name="autumn_semester">Autumn semester</string>
-    <string name="support">Support</string>
     <string name="github" translatable="false">GitHub</string>
     <string name="exam_schedule">Exam schedule</string>
     <string name="no_exams">The exam schedule is not published yet</string>
@@ -43,12 +42,10 @@
     <string name="settings">Settings</string>
     <string name="product">Product</string>
     <string name="sign_out">Sign out</string>
-    <string name="getting_list">Getting list…</string>
     <string name="hide_password">Hide password</string>
     <string name="show_password">Show password</string>
     <string name="status">Status: %1$s</string>
     <string name="about_screen_description">App version, links and contributors</string>
-    <string name="no_internet_connection">No internet connection</string>
     <string name="class_room">Room: %1$s</string>
     <string name="could_not_check_for_updates">Couldn\'t check for updates</string>
     <string name="update_available_card">Update %1$s available! Tap here for more info</string>
@@ -97,4 +94,6 @@
     <string name="debug_update_unavailable">Check for updates is disabled in debug builds</string>
     <string name="no_cached_schedule">No saved schedule available</string>
     <string name="no_schedule_available_for_today">No schedule available for today</string>
+    <string name="network_error">Network error</string>
+    <string name="unknown_error">Unknown error occurred</string>
 </resources>

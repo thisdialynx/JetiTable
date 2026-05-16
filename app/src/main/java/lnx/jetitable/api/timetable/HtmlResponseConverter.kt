@@ -3,10 +3,10 @@ package lnx.jetitable.api.timetable
 import android.util.Log
 import lnx.jetitable.BuildConfig
 import lnx.jetitable.api.timetable.data.login.AccessResponse
-import lnx.jetitable.api.timetable.data.login.User
 import lnx.jetitable.api.timetable.data.query.AttendanceData
 import lnx.jetitable.api.timetable.data.query.ClassNetworkData
 import lnx.jetitable.api.timetable.data.query.ExamNetworkData
+import lnx.jetitable.api.timetable.domain.models.User
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import org.jsoup.Jsoup
@@ -19,7 +19,6 @@ import java.lang.reflect.Type
 import java.util.regex.Pattern
 
 sealed class HtmlConverterState<out T> {
-    data object Loading : HtmlConverterState<Nothing>()
     data class Success<T>(val data: T) : HtmlConverterState<T>()
     data class Failure(val exception: Throwable) : HtmlConverterState<Nothing>()
     data object Empty : HtmlConverterState<Nothing>()

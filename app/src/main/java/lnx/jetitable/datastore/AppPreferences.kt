@@ -35,6 +35,7 @@ class AppPreferences @Inject constructor(
             minutes?.let {
                 dataStore[CLASS_REMINDER_MINUTES] = it
             }
+
             isEnabled?.let {
                 dataStore[IS_CLASS_REMINDER_ENABLED] = it
             }
@@ -45,7 +46,8 @@ class AppPreferences @Inject constructor(
         .map { data ->
         val minutes = data[CLASS_REMINDER_MINUTES] ?: 15
         val isEnabled = data[IS_CLASS_REMINDER_ENABLED] == true
-        ReminderPrefs(minutes, isEnabled)
+
+            ReminderPrefs(minutes, isEnabled)
     }
 
     suspend fun saveExamPreferences(
@@ -56,6 +58,7 @@ class AppPreferences @Inject constructor(
             minutes?.let {
                 dataStore[EXAM_REMINDER_MINUTES] = it
             }
+
             isEnabled?.let {
                 dataStore[IS_EXAM_REMINDER_ENABLED] = it
             }
@@ -66,7 +69,8 @@ class AppPreferences @Inject constructor(
         .map { data ->
         val minutes = data[EXAM_REMINDER_MINUTES] ?: 15
         val isEnabled = data[IS_EXAM_REMINDER_ENABLED] == true
-        ReminderPrefs(minutes, isEnabled)
+
+            ReminderPrefs(minutes, isEnabled)
     }
 
     suspend fun saveNotificationTipPreference(value: Boolean) = context.dataStore.edit {
@@ -83,8 +87,8 @@ class AppPreferences @Inject constructor(
     }
 
     data class ReminderPrefs(
-        val minutes: Int = 15,
-        val isEnabled: Boolean = false
+        val minutes: Int,
+        val isEnabled: Boolean
     )
 
     companion object {

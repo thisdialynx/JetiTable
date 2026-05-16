@@ -10,8 +10,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import lnx.jetitable.api.timetable.data.login.AccessResponse
-import lnx.jetitable.api.timetable.data.login.User
+import lnx.jetitable.api.timetable.domain.models.User
 import javax.inject.Inject
 
 
@@ -21,21 +20,21 @@ class UserInfoStore @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
 
-    suspend fun saveApiUserData(response: AccessResponse) {
+    suspend fun saveUserInfo(user: User) {
         context.dataStore.edit {
-            it[FULL_NAME] = response.user.fullName
-            it[FULL_NAME_ID] = response.user.fullNameId
-            it[GROUP] = response.user.group
-            it[GROUP_ID] = response.user.groupId
-            it[IS_FULL_TIME] = response.user.isFullTime
-            it[STATUS] = response.user.status
-            it[USER_ID] = response.user.userId
-            it[KEY] = response.user.key
-            it[FACULTY_CODE] = response.user.facultyCode
+            it[FULL_NAME] = user.fullName
+            it[FULL_NAME_ID] = user.fullNameId
+            it[GROUP] = user.group
+            it[GROUP_ID] = user.groupId
+            it[IS_FULL_TIME] = user.isFullTime
+            it[STATUS] = user.status
+            it[USER_ID] = user.userId
+            it[KEY] = user.key
+            it[FACULTY_CODE] = user.facultyCode
         }
     }
 
-    fun getApiUserData(): Flow<User> {
+    fun getUserInfo(): Flow<User> {
         return context.dataStore.data.map {
             User(
                 fullName = it[FULL_NAME] ?: "",
