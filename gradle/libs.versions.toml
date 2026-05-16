@@ -23,7 +23,7 @@ retrofit = "3.0.0"
 jsoupJsoup = "1.22.2"
 
 # android
-agp = "9.0.1"
+agp = "9.2.1"
 coreSplashscreen = "1.2.0"
 coreKtx = "1.18.0"
 datastorePreferences = "1.2.1"
