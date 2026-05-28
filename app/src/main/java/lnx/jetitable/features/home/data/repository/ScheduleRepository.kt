@@ -110,9 +110,7 @@ class ScheduleRepositoryImpl @Inject constructor(
             if (response.isSuccessful) {
                 when (val body = response.body()) {
                     is HtmlConverterState.Success -> {
-                        if (currentDay == dateHelper.selectedDate) dataStore.saveExamScheduleList(
-                            body.data
-                        )
+                        dataStore.saveExamScheduleList(body.data)
                         Success(body.data)
                     }
 
@@ -132,6 +130,8 @@ class ScheduleRepositoryImpl @Inject constructor(
             }
         } catch (e: IOException) {
             val cache = dataStore.getExamList().first()
+
+            Log.d("exam cache", cache.toString())
 
             if (cache.isNotEmpty()) {
                 Success(cache)
