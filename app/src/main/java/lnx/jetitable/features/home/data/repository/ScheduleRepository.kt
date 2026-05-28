@@ -16,7 +16,8 @@ import lnx.jetitable.datastore.ScheduleDataStore
 import lnx.jetitable.datastore.UserInfoStore
 import lnx.jetitable.features.home.domain.models.ScheduleFetchFailureReason
 import lnx.jetitable.features.home.domain.models.ScheduleResult
-import lnx.jetitable.features.home.domain.models.ScheduleResult.*
+import lnx.jetitable.features.home.domain.models.ScheduleResult.Failure
+import lnx.jetitable.features.home.domain.models.ScheduleResult.Success
 import lnx.jetitable.features.home.domain.repository.ScheduleRepository
 import lnx.jetitable.misc.DateHelper
 import java.io.IOException
@@ -61,7 +62,7 @@ class ScheduleRepositoryImpl @Inject constructor(
                         if (currentDay == dateHelper.selectedDate) dataStore.saveClassScheduleList(
                             body.data
                         )
-                        Log.d("Day comparsion result", "${currentDay == dateHelper.selectedDate}")
+                        Log.d("Day comparison result", "${currentDay == dateHelper.selectedDate}")
 
                         Success(body.data)
                     }
@@ -137,38 +138,6 @@ class ScheduleRepositoryImpl @Inject constructor(
             } else {
                 Failure(ScheduleFetchFailureReason.NO_CACHE)
             }
-        } catch (e: Exception) {
-            Failure(ScheduleFetchFailureReason.UNKNOWN_ERROR)
-        }
-    }
-
-    override suspend fun getSavedClasses(): ScheduleResult<List<ClassNetworkData>> {
-        return try {
-            val classes = dataStore.getClassList().first()
-
-            if (classes.isEmpty()) {
-                Failure(ScheduleFetchFailureReason.EMPTY)
-            } else {
-                Success(classes)
-            }
-        } catch (e: IOException) {
-            Failure(ScheduleFetchFailureReason.IO_ERROR)
-        } catch (e: Exception) {
-            Failure(ScheduleFetchFailureReason.UNKNOWN_ERROR)
-        }
-    }
-
-    override suspend fun getSavedExams(): ScheduleResult<List<ExamNetworkData>> {
-        return try {
-            val exams = dataStore.getExamList().first()
-
-            if (exams.isEmpty()) {
-                Failure(ScheduleFetchFailureReason.EMPTY)
-            } else {
-                Success(exams)
-            }
-        } catch (e: IOException) {
-            Failure(ScheduleFetchFailureReason.IO_ERROR)
         } catch (e: Exception) {
             Failure(ScheduleFetchFailureReason.UNKNOWN_ERROR)
         }

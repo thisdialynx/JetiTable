@@ -8,6 +8,4 @@ import lnx.jetitable.features.home.domain.models.ScheduleResult
 interface ScheduleRepository {
     suspend fun getClasses(calendar: Calendar): ScheduleResult<List<ClassNetworkData>>
     suspend fun getExams(): ScheduleResult<List<ExamNetworkData>>
-    suspend fun getSavedClasses(): ScheduleResult<List<ClassNetworkData>>
-    suspend fun getSavedExams(): ScheduleResult<List<ExamNetworkData>>
 }
