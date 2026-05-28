@@ -104,6 +104,10 @@ class HomeViewModel @Inject constructor(
         }
 
         enqueueSyncRequestUseCase()
+
+        viewModelScope.launch {
+            loadExams()
+        }
     }
 
     fun disableNotificationTip() {
