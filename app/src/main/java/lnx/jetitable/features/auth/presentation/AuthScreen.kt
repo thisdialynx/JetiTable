@@ -65,7 +65,12 @@ fun AuthScreen(
                 )
             }
 
-            EmailRequestStatus.Success -> TODO()
+            EmailRequestStatus.Success -> {
+                snackbarHostState.showSnackbar(
+                    message = resources.getString(R.string.password_sent),
+                    duration = SnackbarDuration.Short
+                )
+            }
             else -> {}
         }
     }
