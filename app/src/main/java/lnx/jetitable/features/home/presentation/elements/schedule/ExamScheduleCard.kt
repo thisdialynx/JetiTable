@@ -39,6 +39,7 @@ import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import lnx.jetitable.R
 import lnx.jetitable.api.timetable.data.query.ExamNetworkData
@@ -284,6 +285,8 @@ private fun MainContent(
                                 animatedVisibilityScope = animatedVisibilityScope,
                                 resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds
                             ),
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
                     )
 
                     if (data.url.isNotBlank()) {
