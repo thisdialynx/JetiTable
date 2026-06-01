@@ -68,9 +68,9 @@ class DateHelper @Inject constructor() {
     }
 
     fun getCurrentSemesterWeek(): Int {
-        val currentDate = Calendar.getInstance()
+        val currentDate: Calendar = Calendar.getInstance()
         val semesterStartMonth = if (getSemester() == SemesterType.AUTUMN) 8 else 1
-        val semesterStart = Calendar.getInstance().apply {
+        val semesterStart: Calendar = Calendar.getInstance().apply {
             set(Calendar.MONTH, semesterStartMonth)
             set(Calendar.DAY_OF_MONTH, 1)
         }

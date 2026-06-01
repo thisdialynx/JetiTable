@@ -161,7 +161,7 @@ class NotifManager @Inject constructor(
         val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
         val date = dateFormat.parse("$dateString $timeString")!!
 
-        val calendar = Calendar.getInstance()
+        val calendar: Calendar = Calendar.getInstance()
         calendar.time = date
 
         Log.d(MANAGER_NAME, "Date and calendar: $date, $calendar")

@@ -56,7 +56,8 @@ fun DatePickerView(
                     onClick = {
                         showDialog = false
                         datePickerState.selectedDateMillis?.let { millis ->
-                            val newDate = Calendar.getInstance().apply { timeInMillis = millis }
+                            val newDate: Calendar =
+                                Calendar.getInstance().apply { timeInMillis = millis }
                             onDateSelected(newDate)
                         }
                     },

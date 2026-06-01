@@ -16,7 +16,8 @@ import lnx.jetitable.datastore.ScheduleDataStore
 import lnx.jetitable.datastore.UserInfoStore
 import lnx.jetitable.features.home.domain.models.ScheduleFetchFailureReason
 import lnx.jetitable.features.home.domain.models.ScheduleResult
-import lnx.jetitable.features.home.domain.models.ScheduleResult.*
+import lnx.jetitable.features.home.domain.models.ScheduleResult.Failure
+import lnx.jetitable.features.home.domain.models.ScheduleResult.Success
 import lnx.jetitable.features.home.domain.repository.ScheduleRepository
 import lnx.jetitable.misc.DateHelper
 import java.io.IOException
@@ -36,7 +37,7 @@ class ScheduleRepositoryImpl @Inject constructor(
         SemesterType.SPRING -> 2
         SemesterType.UNKNOWN -> Failure(ScheduleFetchFailureReason.UNKNOWN_ERROR)
     }
-    val currentDay = Calendar.getInstance()
+    val currentDay: Calendar = Calendar.getInstance()
 
     override suspend fun getClasses(calendar: Calendar): ScheduleResult<List<ClassNetworkData>> {
 

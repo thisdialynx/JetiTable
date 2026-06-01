@@ -78,7 +78,7 @@ class UserDataWorker @AssistedInject constructor(
             Log.w(SCHEDULE_FETCHER, "Skipping schedule fetch because user data is missing")
             return false
         }
-        val calendar = Calendar.getInstance()
+        val calendar: Calendar = Calendar.getInstance()
 
         val classResponse = scheduleRepository.getClasses(calendar)
         val examResponse = scheduleRepository.getExams()
