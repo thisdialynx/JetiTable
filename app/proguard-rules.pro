@@ -20,6 +20,4 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keep class lnx.jetitable.api.timetable.data.** { *; }
--keep class lnx.jetitable.api.github.GitHubRelease { *; }
--keep class lnx.jetitable.api.github.GitHubAsset { *; }
+-keep class lnx.jetitable.api.** { *; }
