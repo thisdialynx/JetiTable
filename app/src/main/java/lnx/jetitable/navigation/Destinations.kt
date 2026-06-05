@@ -16,8 +16,8 @@ object Settings: Destinations {
 object About: Destinations {
     override val route = "About"
 }
-object Loading: Destinations {
-    override val route = "Loading"
+object Splash : Destinations {
+    override val route = "Splash"
 }
 object Notifications: Destinations {
     override val route = "Notifications"

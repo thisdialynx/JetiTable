@@ -26,9 +26,9 @@ import lnx.jetitable.features.splash.presentation.SplashScreen
 import lnx.jetitable.navigation.About
 import lnx.jetitable.navigation.Auth
 import lnx.jetitable.navigation.Home
-import lnx.jetitable.navigation.Loading
 import lnx.jetitable.navigation.Notifications
 import lnx.jetitable.navigation.Settings
+import lnx.jetitable.navigation.Splash
 import lnx.jetitable.ui.theme.JetiTableTheme
 
 const val SCREEN_TRANSITION_MILLIS = 200
@@ -56,7 +56,7 @@ fun AppNavigation() {
 
     NavHost(
         navController = navController,
-        startDestination = Loading.route,
+        startDestination = Splash.route,
         enterTransition = {
             slideInHorizontally(
                 initialOffsetX = { SCREEN_TRANSITION_MILLIS }
@@ -89,7 +89,7 @@ fun AppNavigation() {
         composable(route = Auth.route) {
             AuthScreen(
                 onAuthComplete = {
-                    navController.navigate(Loading.route) {
+                    navController.navigate(Splash.route) {
                         popUpTo(Auth.route) { inclusive = true }
                     }
                 }
@@ -118,16 +118,16 @@ fun AppNavigation() {
             )
         }
 
-        composable(route = Loading.route) {
+        composable(route = Splash.route) {
             SplashScreen(
                 onHomeNavigate = {
                     navController.navigate(Home.route) {
-                        popUpTo(Loading.route) { inclusive = true }
+                        popUpTo(Splash.route) { inclusive = true }
                     }
                 },
                 onAuthNavigate = {
                     navController.navigate(Auth.route) {
-                        popUpTo(Loading.route) { inclusive = true }
+                        popUpTo(Splash.route) { inclusive = true }
                     }
                 }
             )
