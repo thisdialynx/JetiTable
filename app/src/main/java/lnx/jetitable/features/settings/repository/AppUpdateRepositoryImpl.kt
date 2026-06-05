@@ -6,6 +6,7 @@ import lnx.jetitable.features.settings.domain.model.UpdateCheckError
 import lnx.jetitable.features.settings.domain.model.UpdateResult
 import lnx.jetitable.features.settings.domain.repository.AppUpdateRepository
 import okio.IOException
+import timber.log.Timber
 import javax.inject.Inject
 
 class AppUpdateRepositoryImpl @Inject constructor(
@@ -30,8 +31,10 @@ class AppUpdateRepositoryImpl @Inject constructor(
                 )
             } else UpdateResult.Latest
         } catch (e: IOException) {
+            Timber.e(e)
             UpdateResult.Failure(UpdateCheckError.NETWORK_ERROR)
         } catch (e: Exception) {
+            Timber.e(e)
             UpdateResult.Failure(UpdateCheckError.UNKNOWN_ERROR)
         }
     }

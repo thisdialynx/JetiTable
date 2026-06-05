@@ -2,7 +2,6 @@ package lnx.jetitable.services.data
 
 import android.content.Context
 import android.icu.util.Calendar
-import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
@@ -19,7 +18,8 @@ import lnx.jetitable.features.home.domain.models.ScheduleResult
 import lnx.jetitable.features.home.domain.repository.ScheduleRepository
 import lnx.jetitable.services.notification.NotifManager
 import okhttp3.HttpUrl.Companion.toHttpUrl
-import java.net.ConnectException
+import timber.log.Timber
+import java.io.IOException
 
 @HiltWorker
 class UserDataWorker @AssistedInject constructor(
@@ -49,11 +49,11 @@ class UserDataWorker @AssistedInject constructor(
                 Result.failure()
             }
 
-        } catch (e: ConnectException) {
-            Log.e(DATA_SYNC_WORKER_NAME, "No connection", e)
+        } catch (e: IOException) {
+            Timber.e(e, "No internet connection")
             Result.failure()
         } catch (e: Exception) {
-            Log.e(DATA_SYNC_WORKER_NAME, "Unable to sync data", e)
+            Timber.e(e, "Unable to sync user info")
             Result.failure()
         }
     }
@@ -61,11 +61,11 @@ class UserDataWorker @AssistedInject constructor(
     private suspend fun fetchUserData(): Boolean {
         return when (userInfoRepository.refreshUserInfo()) {
             is UserInfoState.Success -> {
-                Log.d(USER_INFO_FETCHER, "User info refreshed successfully")
+                Timber.d("User info fetched")
                 true
             }
             is UserInfoState.Failure -> {
-                Log.e(USER_INFO_FETCHER, "Failed to refresh user info")
+                Timber.e("Failed to fetch the user info")
                 false
             }
         }
@@ -75,7 +75,7 @@ class UserDataWorker @AssistedInject constructor(
         val userData = userInfoStore.getUserInfo().first()
 
         if (userData.group.isEmpty()) {
-            Log.w(SCHEDULE_FETCHER, "Skipping schedule fetch because user data is missing")
+            Timber.w("Schedule fetch skipped, user data is missing")
             return false
         }
         val calendar: Calendar = Calendar.getInstance()
@@ -87,11 +87,5 @@ class UserDataWorker @AssistedInject constructor(
             classResponse is ScheduleResult.Success && examResponse is ScheduleResult.Success
 
         return success
-    }
-
-    companion object {
-        private const val DATA_SYNC_WORKER_NAME = "data_sync_worker"
-        private const val SCHEDULE_FETCHER = "schedule_fetcher"
-        private const val USER_INFO_FETCHER = "user_info_fetcher"
     }
 }

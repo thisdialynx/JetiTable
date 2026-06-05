@@ -1,7 +1,5 @@
 package lnx.jetitable.api.timetable
 
-import android.util.Log
-import lnx.jetitable.BuildConfig
 import lnx.jetitable.api.timetable.data.login.AccessResponse
 import lnx.jetitable.api.timetable.data.query.AttendanceData
 import lnx.jetitable.api.timetable.data.query.ClassNetworkData
@@ -14,13 +12,14 @@ import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import retrofit2.Converter
 import retrofit2.Retrofit
+import timber.log.Timber
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 import java.util.regex.Pattern
 
 sealed class HtmlConverterState<out T> {
     data class Success<T>(val data: T) : HtmlConverterState<T>()
-    data class Failure(val exception: Throwable) : HtmlConverterState<Nothing>()
+    data object Failure : HtmlConverterState<Nothing>()
     data object Empty : HtmlConverterState<Nothing>()
 }
 
@@ -72,7 +71,8 @@ private fun parseExamsHtml(html: String): HtmlConverterState<List<ExamNetworkDat
     val exams = mutableListOf<ExamNetworkData>()
 
     if (html.contains("Fatal error")) {
-        return HtmlConverterState.Failure(Exception("Fatal error"))
+        Timber.e("Fatal error")
+        return HtmlConverterState.Failure
     }
 
     try {
@@ -88,12 +88,12 @@ private fun parseExamsHtml(html: String): HtmlConverterState<List<ExamNetworkDat
 
             val examNetworkData = ExamNetworkData(date, time, classNumber, className, educator, url)
 
-            if (BuildConfig.DEBUG) Log.d("Exam html parser", "Extracted data: $examNetworkData")
+            Timber.d("Extracted data: $examNetworkData")
 
             exams.add(examNetworkData)
         }
     } catch (e: Exception) {
-        Log.e("Exam html parser", "Failed to parse html data", e)
+        Timber.e(e, "Failed to parse html response")
     }
 
     return if (exams.isEmpty()) {
@@ -111,7 +111,8 @@ private fun parseClassesHtml(html: String): HtmlConverterState<List<ClassNetwork
     }
 
     if (html.contains("Fatal error")) {
-        return HtmlConverterState.Failure(Exception("Fatal error in HTML response"))
+        Timber.e("Fatal error")
+        return HtmlConverterState.Failure
     }
 
     val doc: Document = Jsoup.parse("<html><body><table>$html</table></body></html>")
@@ -168,13 +169,13 @@ private fun parseClassesHtml(html: String): HtmlConverterState<List<ClassNetwork
                 room
             )
 
-            if (BuildConfig.DEBUG) Log.d("Class html parser", "Extracted data: $classNetworkData")
+            Timber.d("Extracted data: $classNetworkData")
 
             classes.add(classNetworkData)
         }
     } catch (e: Exception) {
-        Log.e("Class html parser", "Failed to parse html response", e)
-        return HtmlConverterState.Failure(e)
+        Timber.e(e, "Failed to parse html response")
+        return HtmlConverterState.Failure
     }
 
     return if (classes.isEmpty()) {
@@ -230,7 +231,7 @@ private fun parseAttendanceListHtml(html: String): HtmlConverterState<List<Atten
 
                 val attendanceData = AttendanceData(fullName, role, group, time, joins)
 
-                if (BuildConfig.DEBUG) Log.d("Attendance list parser", "Extracted data: $attendanceData")
+                Timber.d("Extracted data: $attendanceData")
 
                 attendanceList.add(attendanceData)
             } else {
@@ -238,8 +239,8 @@ private fun parseAttendanceListHtml(html: String): HtmlConverterState<List<Atten
             }
         }
     } catch (e: Exception) {
-        Log.e("Attendance list parser", "Failed to parse attendance html", e)
-        return HtmlConverterState.Failure(e)
+        Timber.e(e, "Failed to parse attendance html")
+        return HtmlConverterState.Failure
     }
 
     return HtmlConverterState.Success(attendanceList)

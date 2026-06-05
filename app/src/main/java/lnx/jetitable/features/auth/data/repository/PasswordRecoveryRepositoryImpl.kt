@@ -7,6 +7,7 @@ import lnx.jetitable.features.auth.domain.model.RecoveryError
 import lnx.jetitable.features.auth.domain.model.RecoveryResult
 import lnx.jetitable.features.auth.domain.repository.PasswordRecoveryRepository
 import okio.IOException
+import timber.log.Timber
 import javax.inject.Inject
 
 class PasswordRecoveryRepositoryImpl @Inject constructor(
@@ -22,8 +23,10 @@ class PasswordRecoveryRepositoryImpl @Inject constructor(
             if (response.isSuccessful) RecoveryResult.Success
             else RecoveryResult.Failure(RecoveryError.INVALID_CREDENTIALS)
         } catch (e: IOException) {
+            Timber.e(e)
             RecoveryResult.Failure(RecoveryError.NETWORK_ERROR)
         } catch (e: Exception) {
+            Timber.e(e)
             RecoveryResult.Failure(RecoveryError.UNKNOWN_ERROR)
         }
     }

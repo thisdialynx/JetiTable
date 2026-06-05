@@ -11,6 +11,7 @@ import lnx.jetitable.features.home.domain.models.AttendanceResult
 import lnx.jetitable.features.home.domain.models.AttendanceVerificationResult
 import lnx.jetitable.features.home.domain.repository.AttendanceRepository
 import lnx.jetitable.features.home.presentation.ClassUiData
+import timber.log.Timber
 import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -46,8 +47,10 @@ class AttendanceRepositoryImpl @Inject constructor(
                 AttendanceResult.Failure(AttendanceFailureReason.NETWORK_ERROR)
             }
         } catch (e: IOException) {
+            Timber.e(e)
             AttendanceResult.Failure(AttendanceFailureReason.NETWORK_ERROR)
         } catch (e: Exception) {
+            Timber.e(e)
             AttendanceResult.Failure(AttendanceFailureReason.UNKNOWN_ERROR)
         }
     }
@@ -81,8 +84,10 @@ class AttendanceRepositoryImpl @Inject constructor(
                 AttendanceVerificationResult.Failure(AttendanceFailureReason.UNKNOWN_ERROR)
             }
         } catch (e: IOException) {
+            Timber.e(e)
             AttendanceVerificationResult.Failure(AttendanceFailureReason.NETWORK_ERROR)
         } catch (e: Exception) {
+            Timber.e(e)
             AttendanceVerificationResult.Failure(AttendanceFailureReason.UNKNOWN_ERROR)
         }
     }

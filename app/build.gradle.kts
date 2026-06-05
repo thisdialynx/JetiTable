@@ -73,6 +73,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.timber)
     implementation(libs.androidx.startup)
     implementation(libs.hilt.library)
     implementation(libs.accompanist.permissions)

@@ -10,6 +10,7 @@ import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkRequest
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -42,6 +43,8 @@ class DataSyncService @Inject constructor() : Service() {
             ExistingPeriodicWorkPolicy.UPDATE,
             syncRequest
         )
+
+        Timber.d("Periodic work enqueued")
     }
     companion object {
         const val DATA_SYNC_SERVICE_NAME = "data_sync_service"

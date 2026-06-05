@@ -1,7 +1,6 @@
 package lnx.jetitable.features.home.data.repository
 
 import android.icu.util.Calendar
-import android.util.Log
 import kotlinx.coroutines.flow.first
 import lnx.jetitable.api.timetable.HtmlConverterState
 import lnx.jetitable.api.timetable.TimeTableApiService
@@ -20,6 +19,7 @@ import lnx.jetitable.features.home.domain.models.ScheduleResult.Failure
 import lnx.jetitable.features.home.domain.models.ScheduleResult.Success
 import lnx.jetitable.features.home.domain.repository.ScheduleRepository
 import lnx.jetitable.misc.DateHelper
+import timber.log.Timber
 import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -62,7 +62,6 @@ class ScheduleRepositoryImpl @Inject constructor(
                         if (currentDay == dateHelper.selectedDate) dataStore.saveClassScheduleList(
                             body.data
                         )
-                        Log.d("Day comparsion result", "${currentDay == dateHelper.selectedDate}")
 
                         Success(body.data)
                     }
@@ -87,9 +86,11 @@ class ScheduleRepositoryImpl @Inject constructor(
             if (cache.isNotEmpty()) {
                 Success(cache)
             } else {
+                Timber.e(e)
                 Failure(ScheduleFetchFailureReason.NO_CACHE)
             }
         } catch (e: Exception) {
+            Timber.e(e)
             Failure(ScheduleFetchFailureReason.UNKNOWN_ERROR)
         }
     }
@@ -131,14 +132,14 @@ class ScheduleRepositoryImpl @Inject constructor(
         } catch (e: IOException) {
             val cache = dataStore.getExamList().first()
 
-            Log.d("exam cache", cache.toString())
-
             if (cache.isNotEmpty()) {
                 Success(cache)
             } else {
+                Timber.e(e)
                 Failure(ScheduleFetchFailureReason.NO_CACHE)
             }
         } catch (e: Exception) {
+            Timber.e(e)
             Failure(ScheduleFetchFailureReason.UNKNOWN_ERROR)
         }
     }

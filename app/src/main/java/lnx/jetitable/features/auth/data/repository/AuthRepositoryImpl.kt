@@ -1,6 +1,5 @@
 package lnx.jetitable.features.auth.data.repository
 
-import android.util.Log
 import lnx.jetitable.api.timetable.HtmlConverterState
 import lnx.jetitable.api.timetable.TimeTableApiService
 import lnx.jetitable.api.timetable.TimeTableApiService.Companion.CHECK_ACCESS
@@ -14,6 +13,7 @@ import lnx.jetitable.features.auth.domain.repository.AuthRepository
 import lnx.jetitable.misc.DateHelper
 import okhttp3.Credentials
 import okio.IOException
+import timber.log.Timber
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
@@ -31,7 +31,6 @@ class AuthRepositoryImpl @Inject constructor(
 
             if (passResponse.isSuccessful) {
                 val semester = if (dateHelper.getSemester() == SemesterType.AUTUMN) 1 else 2
-                Log.d("Semester Int", "$semester")
                 val year = dateHelper.getAcademicYears()
 
                 val accessResponse = api.checkAccess(
@@ -60,8 +59,10 @@ class AuthRepositoryImpl @Inject constructor(
                 AuthResult.Failure(AuthError.INVALID_CREDENTIALS)
             }
         } catch (e: IOException) {
+            Timber.e(e)
             AuthResult.Failure(AuthError.NETWORK_ERROR)
         } catch (e: Exception) {
+            Timber.e(e)
             AuthResult.Failure(AuthError.UNKNOWN_ERROR)
         }
     }

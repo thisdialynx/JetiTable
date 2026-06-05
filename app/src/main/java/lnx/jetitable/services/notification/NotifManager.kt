@@ -10,7 +10,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
-import android.util.Log
 import androidx.core.content.ContextCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
@@ -21,6 +20,7 @@ import kotlinx.serialization.Serializable
 import lnx.jetitable.R
 import lnx.jetitable.datastore.AppPreferences
 import lnx.jetitable.datastore.ScheduleDataStore
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -57,7 +57,7 @@ class NotifManager @Inject constructor(
 
         if (!isPermissionsGranted) {
             appPrefs.saveNotificationPreference(false)
-            Log.d(MANAGER_NAME, "Permissions are not granted, disabling notifications... $isNotifsEnabled, $exactAlarmPermission, $notifPermission")
+            Timber.d("Missing permissions, disabling notifications... $isNotifsEnabled, $exactAlarmPermission, $notifPermission")
             return
         }
 
@@ -140,7 +140,7 @@ class NotifManager @Inject constructor(
 
             scheduleAlarm(pendingIntent.second.timeInMillis, pendingIntent.first)
         } catch (e: Exception) {
-            Log.e(MANAGER_NAME, "Error scheduling $type notification", e)
+            Timber.e(e, "Error scheduling $type notification")
         }
     }
 
@@ -153,8 +153,8 @@ class NotifManager @Inject constructor(
     ) {
         val pendingIntent = getPendingIntent(date, time, type, name, reminderMinutes) ?: return
 
-        val cancelledNotif  = alarmManager.cancel(pendingIntent.first)
-        Log.d(MANAGER_NAME, "Notification cancelled: $type, $name, $cancelledNotif")
+        val notification = alarmManager.cancel(pendingIntent.first)
+        Timber.d("Notification cancelled: $type, $name, $notification")
     }
 
     private fun parseDateTime(dateString: String, timeString: String): Calendar {
@@ -164,14 +164,13 @@ class NotifManager @Inject constructor(
         val calendar: Calendar = Calendar.getInstance()
         calendar.time = date
 
-        Log.d(MANAGER_NAME, "Date and calendar: $date, $calendar")
         return calendar
     }
 
     private fun scheduleAlarm(triggerAtMillis: Long, pendingIntent: PendingIntent) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             if (!alarmManager.canScheduleExactAlarms()) {
-                Log.e(MANAGER_NAME, "Permission for scheduling exact alarms and reminders are not granted")
+                Timber.d("Missing permissions, disabling notifications...")
 
                 scope.launch {
                     appPrefs.saveNotificationPreference(false)
@@ -186,7 +185,7 @@ class NotifManager @Inject constructor(
             triggerAtMillis,
             pendingIntent
         )
-        Log.d(MANAGER_NAME, "Alarm scheduled")
+        Timber.d("Alarm for $pendingIntent is scheduled")
     }
 
     private fun getPendingIntent(
@@ -213,7 +212,6 @@ class NotifManager @Inject constructor(
     }
 
     companion object {
-        private const val MANAGER_NAME = "ScheduleNotificationManager"
         private const val CHANNEL_CLASS_REMINDER = "class_reminder_channel"
         private const val CHANNEL_EXAM_REMINDER = "exam_reminder_channel"
     }

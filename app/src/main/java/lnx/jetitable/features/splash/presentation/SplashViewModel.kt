@@ -13,6 +13,7 @@ import lnx.jetitable.datastore.CookieDataStore
 import lnx.jetitable.features.splash.domain.model.SplashState
 import lnx.jetitable.misc.AndroidSyncManager
 import okhttp3.HttpUrl.Companion.toHttpUrl
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -41,7 +42,7 @@ class SplashViewModel @Inject constructor(
                     SplashState.Unauthorized
                 }
 
-            Log.d("Authorization check", "isAuthorized: ${_splashState.value}")
+            Timber.d("isAuthorized: ${_splashState.value}")
         }
     }
 }
