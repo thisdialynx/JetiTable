@@ -89,7 +89,7 @@ fun AppNavigation() {
         composable(route = Auth.route) {
             AuthScreen(
                 onAuthComplete = {
-                    navController.navigate(Home.route) {
+                    navController.navigate(Loading.route) {
                         popUpTo(Auth.route) { inclusive = true }
                     }
                 }
