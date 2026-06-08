@@ -17,7 +17,7 @@ android {
         applicationId = "lnx.jetitable"
         minSdk = 24
         targetSdk = 37
-        versionCode = 33
+        versionCode = 34
         versionName = "0.3.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
