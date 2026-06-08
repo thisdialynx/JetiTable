@@ -24,6 +24,9 @@ JetiTable is an open source application for the TimeTable scheduling information
 > [!IMPORTANT]
 > This is NOT an officially supported product by the university
 
+## State of the project
+Due to my graduation and with [changes to the policy on installing third-party apps](https://keepandroidopen.org/) this project will be archived. Thank you to everyone who tested my app and motivated me to continue developing this project! :)
+
 ## Features
 - Class (including presence verification) and exam schedule
 - Event reminders
