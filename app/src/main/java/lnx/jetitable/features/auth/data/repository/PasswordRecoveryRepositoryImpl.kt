@@ -16,7 +16,7 @@ class PasswordRecoveryRepositoryImpl @Inject constructor(
 
     override suspend fun sendRecoveryEmail(login: String): RecoveryResult {
         return try {
-            val response = api.sendMail(
+            val response = api.sendRecoveryEmail(
                 MailRequest(PASSWORD_RECOVERY, login)
             )
 

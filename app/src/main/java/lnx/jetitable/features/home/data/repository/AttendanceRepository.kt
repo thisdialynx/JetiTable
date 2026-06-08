@@ -25,7 +25,7 @@ class AttendanceRepositoryImpl @Inject constructor(
         val studentsAcademyGroupOnly = "1" // TODO: Implement switching
 
         return try {
-            val response = apiService.get_listStudent(
+            val response = apiService.getClassAttendanceList(
                 AttendanceListRequest(
                     TimeTableApiService.ATTENDANCE_LIST,
                     classData.group,
@@ -59,7 +59,7 @@ class AttendanceRepositoryImpl @Inject constructor(
         val userData = dataStore.getUserInfo().first()
 
         return try {
-            val response = apiService.get_checkZoom(
+            val response = apiService.verifyPresence(
                 VerifyPresenceRequest(
                     TimeTableApiService.PRESENCE_VERIFICATION,
                     TimeTableApiService.STATE,

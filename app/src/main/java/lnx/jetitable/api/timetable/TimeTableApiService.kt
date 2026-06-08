@@ -22,13 +22,13 @@ import retrofit2.http.POST
 interface TimeTableApiService {
 
     @POST(AUTHORISATION_PHP)
-    suspend fun checkPassword(
+    suspend fun authorize(
         @Header("Authorization") token: String,
         @Body request: LoginRequest
     ): Response<LoginResponse>
 
     @POST(AUTHORISATION_PHP)
-    suspend fun sendMail(
+    suspend fun sendRecoveryEmail(
         @Body request: MailRequest
     ): Response<MailResponse>
 
@@ -38,22 +38,22 @@ interface TimeTableApiService {
     ): Response<HtmlConverterState<AccessResponse>>
 
     @POST(QUERY_PHP)
-    suspend fun get_listLessonTodayStudent(
+    suspend fun getClassList(
         @Body request: ClassListRequest
     ): Response<HtmlConverterState<List<ClassNetworkData>>>
 
     @POST(QUERY_PHP)
-    suspend fun get_checkZoom(
+    suspend fun verifyPresence(
         @Body request: VerifyPresenceRequest
     ): Response<*>
 
     @POST(QUERY_PHP)
-    suspend fun get_sessionStudent(
+    suspend fun getExamList(
         @Body request: ExamListRequest
     ): Response<HtmlConverterState<List<ExamNetworkData>>>
 
     @POST(QUERY_PHP)
-    suspend fun get_listStudent(
+    suspend fun getClassAttendanceList(
         @Body request: AttendanceListRequest
     ): Response<HtmlConverterState<List<AttendanceData>>>
 

@@ -24,7 +24,7 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun login(login: String, password: String): AuthResult {
         return try {
             val basicAuth = Credentials.basic(login, password)
-            val passResponse = api.checkPassword(
+            val passResponse = api.authorize(
                 basicAuth,
                 LoginRequest(CHECK_PASSWORD, login, password)
             )

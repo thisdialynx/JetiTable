@@ -45,7 +45,7 @@ class ScheduleRepositoryImpl @Inject constructor(
             val formattedDate = dateHelper.dateFormat.format(calendar.time)
             val user = userInfo.getUserInfo().first()
 
-            val response = api.get_listLessonTodayStudent(
+            val response = api.getClassList(
                 ClassListRequest(
                     DAILY_CLASS_LIST,
                     group = user.group,
@@ -98,7 +98,7 @@ class ScheduleRepositoryImpl @Inject constructor(
     override suspend fun getExams(): ScheduleResult<List<ExamNetworkData>> {
         return try {
             val user = userInfo.getUserInfo().first()
-            val response = api.get_sessionStudent(
+            val response = api.getExamList(
                 ExamListRequest(
                     param = EXAM_LIST,
                     group = user.group,
