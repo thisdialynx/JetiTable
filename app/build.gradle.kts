@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.androidApplication)
@@ -23,6 +24,38 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        val localProperties = Properties()
+
+        val localPropertiesFile = rootProject.file("local.properties")
+        if (localPropertiesFile.exists()) {
+            localProperties.load(localPropertiesFile.inputStream())
+        }
+
+        val apiBaseUrl = localProperties.getProperty("API_BASE_URL") ?: ""
+        val apiAuthorisationEndpoint =
+            localProperties.getProperty("API_AUTHORISATION_ENDPOINT") ?: ""
+        val apiQueryEndpoint = localProperties.getProperty("API_QUERY_ENDPOINT") ?: ""
+        val apiCheckPassword = localProperties.getProperty("API_CHECK_PASSWORD") ?: ""
+        val apiPasswordRecovery = localProperties.getProperty("API_PASSWORD_RECOVERY") ?: ""
+        val apiCheckAccess = localProperties.getProperty("API_CHECK_ACCESS") ?: ""
+        val apiDailyClassList = localProperties.getProperty("API_DAILY_CLASS_LIST") ?: ""
+        val apiPresenceVerification = localProperties.getProperty("API_PRESENCE_VERIFICATION") ?: ""
+        val apiExamList = localProperties.getProperty("API_EXAM_LIST") ?: ""
+        val apiAttendanceList = localProperties.getProperty("API_ATTENDANCE_LIST") ?: ""
+        val apiState = localProperties.getProperty("API_STATE") ?: ""
+
+        buildConfigField("String", "API_BASE_URL", "\"$apiBaseUrl\"")
+        buildConfigField("String", "API_AUTHORISATION_ENDPOINT", "\"$apiAuthorisationEndpoint\"")
+        buildConfigField("String", "API_QUERY_ENDPOINT", "\"$apiQueryEndpoint\"")
+        buildConfigField("String", "API_CHECK_PASSWORD", "\"$apiCheckPassword\"")
+        buildConfigField("String", "API_PASSWORD_RECOVERY", "\"$apiPasswordRecovery\"")
+        buildConfigField("String", "API_CHECK_ACCESS", "\"$apiCheckAccess\"")
+        buildConfigField("String", "API_DAILY_CLASS_LIST", "\"$apiDailyClassList\"")
+        buildConfigField("String", "API_PRESENCE_VERIFICATION", "\"$apiPresenceVerification\"")
+        buildConfigField("String", "API_EXAM_LIST", "\"$apiExamList\"")
+        buildConfigField("String", "API_ATTENDANCE_LIST", "\"$apiAttendanceList\"")
+        buildConfigField("String", "API_STATE", "\"$apiState\"")
     }
 
     buildTypes {
