@@ -10,12 +10,12 @@ plugins {
 
 android {
     namespace = "lnx.jetitable"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "lnx.jetitable"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 33
         versionName = "0.3.0"
 
