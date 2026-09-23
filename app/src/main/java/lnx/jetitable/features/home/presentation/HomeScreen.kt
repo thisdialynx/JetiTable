@@ -22,6 +22,7 @@ import lnx.jetitable.api.timetable.data.query.ExamNetworkData
 import lnx.jetitable.features.home.domain.models.ScheduleResult
 import lnx.jetitable.features.home.presentation.elements.HomeScreenState
 import lnx.jetitable.features.home.presentation.elements.datepicker.DateState
+import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun HomeScreen(
@@ -38,7 +39,7 @@ fun HomeScreen(
     val answerYesResId = stringResource(R.string.answer_yes)
 
     LaunchedEffect(Unit) {
-        delay(3000)
+        delay(3000.milliseconds)
         titleResId = R.string.home_screen
     }
 
