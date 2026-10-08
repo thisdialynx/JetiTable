@@ -38,6 +38,7 @@ import lnx.jetitable.features.home.domain.models.AttendanceFailureReason
 import lnx.jetitable.features.home.domain.models.AttendanceResult
 import lnx.jetitable.ui.components.StateStatus
 import lnx.jetitable.ui.components.getColumnCardShape
+import lnx.jetitable.ui.icons.google.Circle
 import lnx.jetitable.ui.icons.google.Draft
 import lnx.jetitable.ui.icons.google.Error
 
@@ -72,6 +73,7 @@ fun AttendanceDialog(
                             val reasonResId = when (list.error) {
                                 AttendanceFailureReason.NETWORK_ERROR -> R.string.network_error
                                 AttendanceFailureReason.UNKNOWN_ERROR -> R.string.unknown_error
+                                AttendanceFailureReason.NO_DATA -> R.string.no_data
                             }
 
                             Card(
@@ -82,7 +84,7 @@ fun AttendanceDialog(
                             ) {
                                 StateStatus(
                                     description = stringResource(reasonResId),
-                                    icon = Error
+                                    icon = if (list.error == AttendanceFailureReason.NO_DATA) Circle else Error
                                 )
                             }
                         }

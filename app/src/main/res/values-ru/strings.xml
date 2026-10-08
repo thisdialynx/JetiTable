@@ -94,4 +94,5 @@
     <string name="no_schedule_available_for_today">Расписание на текущий день отсутствует</string>
     <string name="network_error">Ошибка сети</string>
     <string name="unknown_error">Произошла неизвестная ошибка</string>
+    <string name="no_data">Нет данных</string>
 </resources>

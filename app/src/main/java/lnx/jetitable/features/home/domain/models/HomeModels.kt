@@ -14,7 +14,8 @@ enum class ScheduleFetchFailureReason {
 
 enum class AttendanceFailureReason {
     NETWORK_ERROR,
-    UNKNOWN_ERROR
+    UNKNOWN_ERROR,
+    NO_DATA
 }
 
 sealed class AttendanceVerificationResult {

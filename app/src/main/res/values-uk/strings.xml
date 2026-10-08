@@ -94,4 +94,5 @@
     <string name="no_schedule_available_for_today">Розклад на сьогодні відсутній</string>
     <string name="network_error">Помилка мережі</string>
     <string name="unknown_error">Виникла невідома помилка</string>
+    <string name="no_data">Немає даних</string>
 </resources>

@@ -38,11 +38,16 @@ class AttendanceRepositoryImpl @Inject constructor(
                     classData.educatorId
                 )
             )
-            val responseBody = response.body()
-            val data = (responseBody as HtmlConverterState.Success).data
 
             if (response.isSuccessful) {
-                AttendanceResult.Success(data)
+                when (val body = response.body()) {
+                    HtmlConverterState.Empty -> {
+                        AttendanceResult.Failure(AttendanceFailureReason.NO_DATA)
+                    }
+
+                    HtmlConverterState.Failure, null -> throw Exception()
+                    is HtmlConverterState.Success -> AttendanceResult.Success(body.data)
+                }
             } else {
                 AttendanceResult.Failure(AttendanceFailureReason.NETWORK_ERROR)
             }
