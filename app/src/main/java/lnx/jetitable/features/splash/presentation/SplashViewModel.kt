@@ -1,6 +1,5 @@
 package lnx.jetitable.features.splash.presentation
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,6 +15,7 @@ import lnx.jetitable.misc.AndroidSyncManager
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import timber.log.Timber
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
@@ -32,7 +32,7 @@ class SplashViewModel @Inject constructor(
 
     private fun checkToken() {
         viewModelScope.launch {
-            delay(1)
+            delay(1.milliseconds)
 
             val cookies = cookieDataStore.loadForRequest("$BASE_URL/$AUTHORISATION_PHP".toHttpUrl())
 
