@@ -10,7 +10,7 @@ navigationCompose = "2.9.8"
 
 # kotlin
 kotlin = "2.4.0"
-kspVersion = "2.3.4"
+kspVersion = "2.3.6"
 
 # kotlinx
 kotlinxSerializationJson = "1.11.0"
@@ -26,7 +26,7 @@ jsoupJsoup = "1.22.2"
 timber = "5.0.1"
 
 # android
-agp = "9.2.1"
+agp = "9.4.1"
 coreSplashscreen = "1.2.0"
 coreKtx = "1.19.0"
 datastorePreferences = "1.2.1"
