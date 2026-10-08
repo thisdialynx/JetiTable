@@ -5,7 +5,6 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
@@ -22,27 +21,33 @@ class CookieDataStore @Inject constructor(
     private val dataStore = context.dataStore
 
     override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
-        val key = stringPreferencesKey(url.toString())
-        val cookieString = cookies.joinToString(";") { it.toString() }
+        val key = stringPreferencesKey(url.host)
 
         runBlocking {
+            val existingCookies = loadForRequest(url).toMutableList()
+
+            for (newCookie in cookies) {
+                existingCookies.removeAll { it.name == newCookie.name }
+                existingCookies.add(newCookie)
+            }
+
+            val cookieLines = existingCookies.joinToString("\n") { it.toString() }
+
             dataStore.edit {
-                it[key] = cookieString
+                it[key] = cookieLines
             }
         }
     }
 
     override fun loadForRequest(url: HttpUrl): List<Cookie> {
-        val key = stringPreferencesKey(url.toString())
-        val cookies: Flow<String?> = dataStore.data.map {
-            it[key]
+        val key = stringPreferencesKey(url.host)
+        val cookies = runBlocking {
+            dataStore.data.map { it[key] }.first()
         }
 
-        val cookieString = runBlocking {
-            cookies.first()
-        }
+        if (cookies.isNullOrEmpty()) return emptyList()
 
-        return cookieString?.split(";")?.mapNotNull { Cookie.parse(url, it) } ?: emptyList()
+        return cookies.split("\n").mapNotNull { Cookie.parse(url, it) }
     }
 
     fun clearCookies() {
